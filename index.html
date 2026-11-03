@@ -261,6 +261,12 @@
             color: var(--text-muted);
         }
 
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .btn-primary {
             background: var(--primary);
             color: white;
@@ -293,6 +299,18 @@
 
         .btn-emerald:hover {
             background: #059669 !important;
+        }
+
+        .btn-amber {
+            background: var(--accent-amber) !important;
+            color: black !important;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25) !important;
+        }
+
+        .btn-violet {
+            background: var(--accent-violet) !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25) !important;
         }
 
         .btn-ai {
@@ -341,6 +359,7 @@
         .badge-level-adult { background: #CFFAFE; color: #155E75; }
         .badge-my-upload { background: #D1FAE5; color: #10B981; }
         .badge-ai-generated { background: #F3E8FF; color: #7E22CE; }
+        .badge-role { background: #E0E7FF; color: #3730A3; }
 
         /* Form Controls */
         .form-group {
@@ -435,7 +454,7 @@
             background: var(--surface);
             border-radius: 20px;
             width: 100%;
-            max-width: 560px;
+            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
             padding: 24px;
@@ -539,6 +558,152 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Video Player Screen Simulation */
+        .video-player-screen {
+            background: #0F172A;
+            border-radius: 16px;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            border: 2px solid #334155;
+        }
+
+        .video-scene-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1E1B4B 0%, #312E81 60%, #0F172A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .video-characters-stage {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            z-index: 2;
+        }
+
+        .stage-avatar {
+            font-size: 56px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+            animation: floatAvatar 3s ease-in-out infinite alternate;
+        }
+
+        .stage-avatar:nth-child(2) {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes floatAvatar {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        /* Live Subtitle Banner Overlay */
+        .video-subtitle-overlay {
+            position: absolute;
+            bottom: 48px;
+            left: 5%;
+            width: 90%;
+            text-align: center;
+            z-index: 5;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .sub-style-yellow {
+            background: rgba(0, 0, 0, 0.75);
+            color: #FBBF24;
+            border: 1px solid #F59E0B;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .sub-style-white {
+            background: rgba(15, 23, 42, 0.85);
+            color: #FFFFFF;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .sub-style-karaoke {
+            background: linear-gradient(90deg, #EC4899, #8B5CF6);
+            color: #FFFFFF;
+            box-shadow: 0 4px 16px rgba(236, 72, 153, 0.5);
+        }
+
+        .video-controls-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.85);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .video-play-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .video-scrubber {
+            flex: 1;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .video-time-code {
+            color: #94A3B8;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Subtitle Editor List Item */
+        .subtitle-line-row {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-badge {
+            background: #E2E8F0;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
         /* Lesson Plan Phase Box */
         .phase-card {
             background: #F8FAFC;
@@ -549,20 +714,56 @@
             margin-bottom: 8px;
         }
 
+        /* Dialogue Line Speech Bubble */
+        .speech-bubble-card {
+            background: #F8FAFC;
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .speech-bubble-card.active-speaking {
+            background: #EEF2FF;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+            transform: translateX(4px);
+        }
+
+        .speaker-avatar {
+            font-size: 28px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
         /* Emoji Selector Row */
         .emoji-selector {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-top: 4px;
+            flex-wrap: wrap;
         }
 
         .emoji-option {
-            font-size: 24px;
-            padding: 8px 12px;
+            font-size: 22px;
+            padding: 8px 10px;
             border: 2px solid var(--border);
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
+            user-select: none;
         }
 
         .emoji-option.selected {
@@ -648,7 +849,7 @@
                     <div>
                         <span class="badge" style="background: #F59E0B; color: black; margin-bottom: 8px;">TEACHER STUDIO</span>
                         <h3>Welcome to My English Studio!</h3>
-                        <p>Manage students, worksheets, AI lesson plans, dialogues, and video projects in one place.</p>
+                        <p>Manage students, worksheets, AI lesson plans, cartoon characters, dialogues, and video projects.</p>
                     </div>
                 </div>
 
@@ -656,7 +857,7 @@
                     <div class="studio-card" onclick="switchSection('students')">
                         <div>
                             <p style="color: var(--text-muted); font-size: 12px;">Total Students</p>
-                            <h2 id="dash-count-students" style="color: var(--emerald); font-size: 28px;">4</h2>
+                            <h2 id="dash-count-students" style="color: var(--emerald); font-size: 28px;">2</h2>
                             <p style="font-size: 11px; color: var(--emerald);">Active Student Roster</p>
                         </div>
                         <div style="font-size: 24px; align-self: flex-end;">🎓</div>
@@ -664,7 +865,7 @@
                     <div class="studio-card" onclick="switchSection('worksheets')">
                         <div>
                             <p style="color: var(--text-muted); font-size: 12px;">Total Worksheets</p>
-                            <h2 id="dash-count-worksheets" style="color: var(--primary); font-size: 28px;">5</h2>
+                            <h2 id="dash-count-worksheets" style="color: var(--primary); font-size: 28px;">2</h2>
                             <p style="font-size: 11px; color: var(--emerald);">PDFs & Photos</p>
                         </div>
                         <div style="font-size: 24px; align-self: flex-end;">📁</div>
@@ -672,7 +873,7 @@
                     <div class="studio-card" onclick="switchSection('lessons')">
                         <div>
                             <p style="color: var(--text-muted); font-size: 12px;">Active Lessons</p>
-                            <h2 id="dash-count-lessons" style="color: var(--secondary); font-size: 28px;">4</h2>
+                            <h2 id="dash-count-lessons" style="color: var(--secondary); font-size: 28px;">1</h2>
                             <p style="font-size: 11px; color: var(--text-muted);">AI & Custom Plans</p>
                         </div>
                         <div style="font-size: 24px; align-self: flex-end;">📚</div>
@@ -685,10 +886,18 @@
                         </div>
                         <div style="font-size: 24px; align-self: flex-end;">🎙️</div>
                     </div>
+                    <div class="studio-card" onclick="switchSection('characters')">
+                        <div>
+                            <p style="color: var(--text-muted); font-size: 12px;">Cartoon Characters</p>
+                            <h2 id="dash-count-characters" style="color: var(--accent-rose); font-size: 28px;">6</h2>
+                            <p style="font-size: 11px; color: var(--text-muted);">Avatars & Voices</p>
+                        </div>
+                        <div style="font-size: 24px; align-self: flex-end;">🎭</div>
+                    </div>
                     <div class="studio-card" onclick="switchSection('video-projects')">
                         <div>
                             <p style="color: var(--text-muted); font-size: 12px;">Video Projects</p>
-                            <h2 id="dash-count-videos" style="color: var(--accent-violet); font-size: 28px;">3</h2>
+                            <h2 id="dash-count-videos" style="color: var(--accent-violet); font-size: 28px;">2</h2>
                             <p style="font-size: 11px; color: var(--text-muted);">MP4 & Subtitles</p>
                         </div>
                         <div style="font-size: 24px; align-self: flex-end;">🎬</div>
@@ -766,23 +975,46 @@
             <section id="section-scripts" class="section-view">
                 <div class="page-header">
                     <div class="page-title">
-                        <h2>Teaching Scripts</h2>
-                        <p>Dialogues, teacher explanations and student conversations</p>
+                        <h2>Teaching Scripts & Roleplays</h2>
+                        <p>Interactive dialogues, audio catchphrases, teacher explanations and student conversations</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="btn-open-ai-script-modal" class="btn-primary btn-ai" onclick="openAiScriptModal()">
+                            <span>✨</span> AI Script Generator
+                        </button>
+                        <button id="btn-open-script-modal" class="btn-primary btn-amber" onclick="openAddScriptModal()">
+                            <span>➕</span> Create New Script
+                        </button>
                     </div>
                 </div>
+
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="script-search-input" class="form-input" placeholder="Search scripts by title, topic, or character..." oninput="renderScripts()">
+                </div>
+
                 <div id="scripts-list" class="grid-cards" style="grid-template-columns: 1fr;">
                     <!-- Dynamic Scripts -->
                 </div>
             </section>
 
-            <!-- 6. CHARACTERS SECTION -->
+            <!-- 6. CARTOON CHARACTERS SECTION -->
             <section id="section-characters" class="section-view">
                 <div class="page-header">
                     <div class="page-title">
-                        <h2>Cartoon Characters</h2>
-                        <p>Organize teacher and student avatars for dialogue scripts</p>
+                        <h2>Cartoon Characters & Voice Avatars</h2>
+                        <p>Organize teacher, student, and mascot avatars for dialogue scripts</p>
                     </div>
+                    <button id="btn-open-character-modal" class="btn-primary btn-violet" onclick="openAddCharacterModal()">
+                        <span>➕</span> Add Cartoon Character
+                    </button>
                 </div>
+
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="character-search-input" class="form-input" placeholder="Search characters by name, role, or voice..." oninput="renderCharacters()">
+                </div>
+
                 <div id="characters-grid" class="grid-cards">
                     <!-- Dynamic Characters -->
                 </div>
@@ -792,10 +1024,19 @@
             <section id="section-video-projects" class="section-view">
                 <div class="page-header">
                     <div class="page-title">
-                        <h2>Video Projects</h2>
-                        <p>Manage video scripts, voiceovers, subtitles & MP4 videos</p>
+                        <h2>Video Projects & Subtitle Studio</h2>
+                        <p>Manage video scripts, voiceovers, subtitles & MP4 video lessons</p>
                     </div>
+                    <button id="btn-open-video-modal" class="btn-primary btn-violet" onclick="openAddVideoModal()">
+                        <span>🎬</span> New Video Project
+                    </button>
                 </div>
+
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="video-search-input" class="form-input" placeholder="Search video projects by title or level..." oninput="renderVideos()">
+                </div>
+
                 <div id="videos-grid" class="grid-cards">
                     <!-- Dynamic Video Projects -->
                 </div>
@@ -1029,19 +1270,341 @@
         </div>
     </div>
 
+    <!-- MODAL 7: ADD CARTOON CHARACTER MODAL -->
+    <div id="add-character-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎭 Add Cartoon Character Avatar</h3>
+                <button class="close-btn" onclick="closeAddCharacterModal()">&times;</button>
+            </div>
+
+            <form id="character-form" onsubmit="handleCharacterFormSubmit(event)">
+                <div class="form-group">
+                    <label>Choose Avatar Emoji *</label>
+                    <div class="emoji-selector">
+                        <div class="emoji-option selected" onclick="selectCharacterEmoji(this, '👩‍🏫')">👩‍🏫</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🦁')">🦁</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🦉')">🦉</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🐻')">🐻</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🐰')">🐰</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🐧')">🐧</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🤖')">🤖</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🦊')">🦊</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-character-name">Character Name *</label>
+                    <input type="text" id="input-character-name" class="form-input" placeholder="e.g. Sparky the Dragon" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-character-role">Character Role *</label>
+                    <select id="input-character-role" class="form-select" required>
+                        <option value="Lead Teacher">Lead Teacher</option>
+                        <option value="Cartoon Mascot" selected>Cartoon Mascot</option>
+                        <option value="Student Buddy">Student Buddy</option>
+                        <option value="Phonics Pal">Phonics Pal</option>
+                        <option value="Grammar Assistant">Grammar Assistant</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-character-voice">Voice Tone Profile *</label>
+                    <select id="input-character-voice" class="form-select" required>
+                        <option value="Energetic & High Pitch">Energetic & High Pitch</option>
+                        <option value="Gentle & Warm" selected>Gentle & Warm</option>
+                        <option value="Wise & Clear">Wise & Clear</option>
+                        <option value="Playful & Funny">Playful & Funny</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-character-catchphrase">Signature Catchphrase *</label>
+                    <input type="text" id="input-character-catchphrase" class="form-input" placeholder="e.g. Roar into new vocabulary words today!" required>
+                </div>
+
+                <button type="submit" class="btn-primary btn-violet" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">
+                    💾 Save Cartoon Character
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 8: CARTOON CHARACTER PREVIEW MODAL -->
+    <div id="preview-character-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="preview-character-name">Character Avatar</h3>
+                <button class="close-btn" onclick="closeCharacterPreviewModal()">&times;</button>
+            </div>
+            <div id="preview-character-body">
+                <!-- Dynamic Character Preview -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 9: ADD TEACHING SCRIPT MODAL -->
+    <div id="add-script-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎙️ Create Teaching Script</h3>
+                <button class="close-btn" onclick="closeAddScriptModal()">&times;</button>
+            </div>
+
+            <form id="script-form" onsubmit="handleScriptFormSubmit(event)">
+                <div class="form-group">
+                    <label for="input-script-title">Script Title *</label>
+                    <input type="text" id="input-script-title" class="form-input" placeholder="e.g. Asking for Directions in the City" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-script-level">School Level *</label>
+                    <select id="input-script-level" class="form-select" required>
+                        <option value="PRIMARY">Primary (K-5)</option>
+                        <option value="MIDDLE" selected>Middle School (6-8)</option>
+                        <option value="HIGH">High School (9-12)</option>
+                        <option value="ADULT">Adult & Business</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-script-topic">Lesson Topic *</label>
+                    <input type="text" id="input-script-topic" class="form-input" placeholder="e.g. City Places, Prepositions of Place" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Characters *</label>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <select id="input-script-char1" class="form-select"></select>
+                        <select id="input-script-char2" class="form-select"></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Dialogue Lines *</label>
+                    <div id="script-lines-container">
+                        <div class="form-group" style="margin-bottom:8px;">
+                            <input type="text" class="form-input line-input-text" placeholder="Line 1: Character A text..." required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:8px;">
+                            <input type="text" class="form-input line-input-text" placeholder="Line 2: Character B text..." required>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-primary" style="background:#64748B; font-size:11px; padding:6px 12px; margin-top:4px;" onclick="addScriptLineInput()">
+                        ➕ Add Another Line
+                    </button>
+                </div>
+
+                <button type="submit" class="btn-primary btn-amber" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">
+                    💾 Save Teaching Script
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 10: INTERACTIVE SCRIPT PLAYER MODAL -->
+    <div id="preview-script-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 620px;">
+            <div class="modal-header">
+                <div>
+                    <h3 id="preview-script-title">Interactive Dialogue Reader</h3>
+                    <p id="preview-script-subtitle" style="font-size:12px; color:var(--text-muted);"></p>
+                </div>
+                <button class="close-btn" onclick="closeScriptPreviewModal()">&times;</button>
+            </div>
+            
+            <div style="display:flex; gap:10px; margin-bottom:16px;">
+                <button id="btn-autoplay-script" class="btn-primary btn-emerald" onclick="autoPlayScript()">
+                    ▶️ Read Full Dialogue
+                </button>
+                <button class="btn-primary" style="background:#64748B;" onclick="stopScriptAudio()">
+                    ⏹️ Stop Audio
+                </button>
+            </div>
+
+            <div id="preview-script-lines" style="max-height: 50vh; overflow-y: auto; padding-right: 4px;">
+                <!-- Dynamic Dialogue Speech Bubbles -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 11: AI SCRIPT GENERATOR MODAL -->
+    <div id="ai-script-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✨ AI Teaching Script Generator</h3>
+                <button class="close-btn" onclick="closeAiScriptModal()">&times;</button>
+            </div>
+
+            <div id="ai-script-form-view">
+                <div class="form-group">
+                    <label for="ai-script-topic">Dialogue Topic / Focus *</label>
+                    <input type="text" id="ai-script-topic" class="form-input" placeholder="e.g. Asking for Directions, At the Airport, Talking About Hobbies">
+                </div>
+
+                <div class="form-group">
+                    <label for="ai-script-level">School Level *</label>
+                    <select id="ai-script-level" class="form-select">
+                        <option value="PRIMARY">Primary (K-5)</option>
+                        <option value="MIDDLE" selected>Middle School (6-8)</option>
+                        <option value="HIGH">High School (9-12)</option>
+                        <option value="ADULT">Adult & Business</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary btn-ai" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;" onclick="generateAiScript()">
+                    ✨ Generate Cartoon Dialogue Script
+                </button>
+            </div>
+
+            <div id="ai-script-loading-view" style="display: none;">
+                <div class="ai-loading-box">
+                    <div class="ai-spinner"></div>
+                    <h4 style="color: #7E22CE; font-weight: 800; font-size: 16px;">Generating Dialogue Script...</h4>
+                    <p style="font-size: 12px; color: var(--text-dark); font-weight: 600;">
+                        Matching cartoon character voices and writing natural ESL dialogue...
+                    </p>
+                </div>
+            </div>
+
+            <div id="ai-script-result-view" style="display: none;">
+                <!-- AI Script Output -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 12: ADD VIDEO PROJECT MODAL -->
+    <div id="add-video-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎬 New Video Project</h3>
+                <button class="close-btn" onclick="closeAddVideoModal()">&times;</button>
+            </div>
+
+            <form id="video-form" onsubmit="handleVideoFormSubmit(event)">
+                <div class="form-group">
+                    <label for="input-video-title">Project Title *</label>
+                    <input type="text" id="input-video-title" class="form-input" placeholder="e.g. Daily English: Restaurant Order Cartoon" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-video-level">School Level *</label>
+                    <select id="input-video-level" class="form-select" required>
+                        <option value="PRIMARY">Primary (K-5)</option>
+                        <option value="MIDDLE" selected>Middle School (6-8)</option>
+                        <option value="HIGH">High School (9-12)</option>
+                        <option value="ADULT">Adult & Business</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-video-script">Linked Teaching Script</label>
+                    <select id="input-video-script" class="form-select">
+                        <option value="">-- Select Script --</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary btn-violet" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">
+                    💾 Create Video Project
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 13: SUBTITLE & VIDEO STUDIO MODAL -->
+    <div id="preview-video-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 640px;">
+            <div class="modal-header">
+                <div>
+                    <h3 id="video-studio-title">Subtitle & Video Studio</h3>
+                    <p id="video-studio-subtitle" style="font-size:12px; color:var(--text-muted);"></p>
+                </div>
+                <button class="close-btn" onclick="closeVideoStudioModal()">&times;</button>
+            </div>
+
+            <!-- Animated Interactive Video Player Screen -->
+            <div class="video-player-screen">
+                <div class="video-scene-backdrop">
+                    <div class="video-characters-stage">
+                        <div id="stage-avatar-1" class="stage-avatar">👩‍🏫</div>
+                        <div id="stage-avatar-2" class="stage-avatar">🦁</div>
+                    </div>
+                </div>
+
+                <div id="live-subtitle-banner" class="video-subtitle-overlay sub-style-yellow">
+                    "Hello students! Welcome to Sunshine Cafe!"
+                </div>
+
+                <div class="video-controls-bar">
+                    <button id="btn-play-video" class="video-play-btn" onclick="toggleVideoPlayback()">▶</button>
+                    <input type="range" id="video-scrubber-input" class="video-scrubber" value="0" min="0" max="100" oninput="seekVideoPlayback(this.value)">
+                    <span id="video-timer-display" class="video-time-code">00:00 / 02:05</span>
+                </div>
+            </div>
+
+            <!-- Subtitle Track Style Selector -->
+            <div style="margin-top:16px; margin-bottom:12px;">
+                <label style="font-size:12px; font-weight:800; color:var(--text-dark);">Subtitle Style Preset:</label>
+                <div style="display:flex; gap:8px; margin-top:6px;">
+                    <button class="btn-primary" style="font-size:11px; padding:6px 10px; background:#F59E0B; color:black;" onclick="setSubtitleStyle('sub-style-yellow')">🟡 Yellow Highlight</button>
+                    <button class="btn-primary" style="font-size:11px; padding:6px 10px; background:#475569;" onclick="setSubtitleStyle('sub-style-white')">⚪ Clean White</button>
+                    <button class="btn-primary" style="font-size:11px; padding:6px 10px; background:#EC4899;" onclick="setSubtitleStyle('sub-style-karaoke')">🎤 Karaoke Glow</button>
+                </div>
+            </div>
+
+            <!-- Subtitle Lines Editor -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <label style="font-size:12px; font-weight:800; color:var(--text-dark);">Synchronized Subtitle Captions Track:</label>
+                    <button class="btn-primary" style="font-size:10px; padding:4px 8px; background:#0D9488;" onclick="addNewSubtitleLine()">➕ Add Caption</button>
+                </div>
+                <div id="subtitle-editor-list" style="max-height:180px; overflow-y:auto;">
+                    <!-- Dynamic Subtitle Rows -->
+                </div>
+            </div>
+
+            <!-- Video Export Actions -->
+            <div id="render-progress-box" style="display:none; background:#EEF2FF; border:1px solid #C7D2FE; padding:12px; border-radius:12px; margin-bottom:12px; text-align:center;">
+                <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:4px;">Rendering MP4 Video with Embedded Subtitles...</div>
+                <div style="background:#E2E8F0; height:8px; border-radius:4px; overflow:hidden;">
+                    <div id="render-bar-fill" style="width:0%; height:100%; background:var(--primary); transition:width 0.2s;"></div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:space-between;">
+                <button class="btn-primary btn-emerald" style="flex:1; justify-content:center;" onclick="startMp4Rendering()">
+                    ⬇️ Render & Download MP4
+                </button>
+                <button class="btn-primary" style="background:#64748B; flex:1; justify-content:center;" onclick="alert('Exported SRT subtitle file successfully!')">
+                    📄 Export .SRT File
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript App Logic -->
     <script>
         // App State Store
         const AppState = {
             activeSection: 'dashboard',
-            selectedEmoji: '👦',
+            selectedStudentEmoji: '👦',
+            selectedCharacterEmoji: '👩‍🏫',
             generatedAiLesson: null,
+            generatedAiScript: null,
             selectedFile: null,
             fileType: 'PDF',
             fileName: '',
             fileDataUrl: null,
+            isPlayingAudio: false,
+            isPlayingVideo: false,
+            videoTimerInterval: null,
+            videoCurrentSecond: 0,
+            videoTotalDuration: 125,
+            currentSubtitleStyle: 'sub-style-yellow',
+            activeVideoProject: null,
             students: [
-                { id: 'st_1', name: 'Leo Smith', emoji: '👦', level: 'PRIMARY', grade: '4th Grade', englishLevel: 'Elementary A2', attendance: 96, notes: 'Eager student! Loves Magic E phonics chants.', assignedWorksheetCount: 3 },
+                { id: 'st_1', name: 'Leo Smith', emoji: '👦', level: 'PRIMARY', grade: '4th Grade', englishLevel: 'Elementary A2', attendance: 96, notes: 'Eager student! Loves Magic E phonics chants and animal roleplays.', assignedWorksheetCount: 3 },
                 { id: 'st_2', name: 'Maya Lin', emoji: '👧', level: 'MIDDLE', grade: '7th Grade', englishLevel: 'Intermediate B1', attendance: 98, notes: 'Analytical grammar learner. Focus on Present Perfect vs Past Simple timelines.', assignedWorksheetCount: 4 }
             ],
             worksheets: [
@@ -1067,16 +1630,113 @@
                     ]
                 }
             ],
-            scripts: [
-                { title: 'Ordering Food at a Cafe Dialogue', topic: 'Food & Politeness', level: 'PRIMARY', linesCount: 5 }
-            ],
             characters: [
-                { name: 'Teacher Emma', role: 'Lead Teacher', emoji: '👩‍🏫', catchphrase: 'Wonderful attempt! Let\'s practice together!' }
+                { id: 'ch_1', name: 'Teacher Emma', role: 'Lead Teacher', emoji: '👩‍🏫', voiceTone: 'Wise & Clear', catchphrase: 'Wonderful attempt! Let\'s practice together step by step!' },
+                { id: 'ch_2', name: 'Leo the Lion', role: 'Cartoon Mascot', emoji: '🦁', voiceTone: 'Energetic & High Pitch', catchphrase: 'Roar! English speaking is fun and easy!' },
+                { id: 'ch_3', name: 'Maya the Owl', role: 'Phonics Pal', emoji: '🦉', voiceTone: 'Gentle & Warm', catchphrase: 'Hoot hoot! Time for a quick grammar check!' },
+                { id: 'ch_4', name: 'Barnaby Bear', role: 'Student Buddy', emoji: '🐻', voiceTone: 'Wise & Clear', catchphrase: 'Bear-y good job on your pronunciation today!' },
+                { id: 'ch_5', name: 'Benny Bunny', role: 'Mascot', emoji: '🐰', voiceTone: 'Playful & Funny', catchphrase: 'Hop into new vocabulary words with me!' },
+                { id: 'ch_6', name: 'Penny Penguin', role: 'Phonics Pal', emoji: '🐧', voiceTone: 'Gentle & Warm', catchphrase: 'Listen carefully and repeat after me!' }
+            ],
+            scripts: [
+                {
+                    id: 'sc_1',
+                    title: 'Ordering Food at a Cafe Dialogue',
+                    topic: 'Food & Politeness',
+                    level: 'PRIMARY',
+                    char1: 'Teacher Emma',
+                    char1Emoji: '👩‍🏫',
+                    char2: 'Leo the Lion',
+                    char2Emoji: '🦁',
+                    lines: [
+                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'Hello Leo! Welcome to Sunshine Cafe. What would you like today?' },
+                        { speaker: 'Leo the Lion', emoji: '🦁', text: 'Hi Teacher Emma! I would like a chocolate muffin and orange juice, please.' },
+                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'Certainly! Would you like a small or large orange juice?' },
+                        { speaker: 'Leo the Lion', emoji: '🦁', text: 'A large juice, please. How much is that?' },
+                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'That is 5 dollars total. Here is your order!' }
+                    ]
+                },
+                {
+                    id: 'sc_2',
+                    title: 'At the Zoo: Animals & Comparative Adjectives',
+                    topic: 'Animals & Vocabulary',
+                    level: 'PRIMARY',
+                    char1: 'Maya the Owl',
+                    char1Emoji: '🦉',
+                    char2: 'Barnaby Bear',
+                    char2Emoji: '🐻',
+                    lines: [
+                        { speaker: 'Maya the Owl', emoji: '🦉', text: 'Look Barnaby! That giraffe is so tall!' },
+                        { speaker: 'Barnaby Bear', emoji: '🐻', text: 'Yes Maya! And look at the elephant, it is bigger than the hippopotamus!' },
+                        { speaker: 'Maya the Owl', emoji: '🦉', text: 'Which animal is your favorite?' },
+                        { speaker: 'Barnaby Bear', emoji: '🐻', text: 'I like the fluffy pandas because they eat bamboo happily!' }
+                    ]
+                },
+                {
+                    id: 'sc_3',
+                    title: 'Planning a Weekend Trip',
+                    topic: 'Future Tense & Travel',
+                    level: 'MIDDLE',
+                    char1: 'Teacher Emma',
+                    char1Emoji: '👩‍🏫',
+                    char2: 'Maya the Owl',
+                    char2Emoji: '🦉',
+                    lines: [
+                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'Maya, where are you going to visit this coming weekend?' },
+                        { speaker: 'Maya the Owl', emoji: '🦉', text: 'I am going to visit the Science Museum with my family on Saturday.' },
+                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'That sounds exciting! What will you see there?' },
+                        { speaker: 'Maya the Owl', emoji: '🦉', text: 'We will explore the space exploration exhibit and robot laboratory!' }
+                    ]
+                }
             ],
             videoProjects: [
-                { title: 'Daily English: Cafe Order', level: 'PRIMARY', status: 'Finished MP4', duration: '125s' }
+                {
+                    id: 'vid_1',
+                    title: 'Daily English: Cafe Order Cartoon',
+                    level: 'PRIMARY',
+                    status: 'Finished MP4',
+                    duration: '125s',
+                    scriptTitle: 'Ordering Food at a Cafe Dialogue',
+                    subtitles: [
+                        { time: '00:01 - 00:04', text: 'Hello Leo! Welcome to Sunshine Cafe.' },
+                        { time: '00:05 - 00:09', text: 'I would like a chocolate muffin and orange juice, please.' },
+                        { time: '00:10 - 00:14', text: 'Certainly! Would you like small or large?' },
+                        { time: '00:15 - 00:18', text: 'A large juice, please. How much is that?' }
+                    ]
+                },
+                {
+                    id: 'vid_2',
+                    title: 'Grammar Animation: Present Tense',
+                    level: 'MIDDLE',
+                    status: 'In Subtitle Studio',
+                    duration: '180s',
+                    scriptTitle: 'Planning a Weekend Trip',
+                    subtitles: [
+                        { time: '00:01 - 00:04', text: 'Where are you going to visit this weekend?' },
+                        { time: '00:05 - 00:08', text: 'I am going to visit the Science Museum!' }
+                    ]
+                }
             ]
         };
+
+        // Speech Audio Synthesizer Handler (Web SpeechSynthesis with Fallback)
+        function speakText(text, voiceTone = 'Gentle') {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.95;
+                utterance.pitch = voiceTone.includes('High') ? 1.3 : voiceTone.includes('Playful') ? 1.2 : 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function stopScriptAudio() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            AppState.isPlayingAudio = false;
+            document.querySelectorAll('.speech-bubble-card').forEach(el => el.classList.remove('active-speaking'));
+        }
 
         // Navigation Switcher
         function switchSection(sectionId) {
@@ -1097,45 +1757,45 @@
             document.getElementById('left-dashboard').classList.toggle('collapsed');
         });
 
-        // Modal Controls (EXPLICIT GLOBAL SCOPE)
-        function openWorksheetUploadModal() {
-            const modal = document.getElementById('upload-worksheet-modal');
-            if (modal) modal.classList.add('show');
+        // Modals Control
+        function openWorksheetUploadModal() { document.getElementById('upload-worksheet-modal')?.classList.add('show'); }
+        function closeWorksheetUploadModal() { document.getElementById('upload-worksheet-modal')?.classList.remove('show'); }
+        function openAddStudentModal() { document.getElementById('add-student-modal')?.classList.add('show'); }
+        function closeAddStudentModal() { document.getElementById('add-student-modal')?.classList.remove('show'); }
+        function openAddCharacterModal() { document.getElementById('add-character-modal')?.classList.add('show'); }
+        function closeAddCharacterModal() { document.getElementById('add-character-modal')?.classList.remove('show'); }
+        function openAddScriptModal() {
+            populateScriptCharacterDropdowns();
+            document.getElementById('add-script-modal')?.classList.add('show');
         }
-
-        function closeWorksheetUploadModal() {
-            const modal = document.getElementById('upload-worksheet-modal');
-            if (modal) modal.classList.remove('show');
+        function closeAddScriptModal() { document.getElementById('add-script-modal')?.classList.remove('show'); }
+        function openAddVideoModal() {
+            populateVideoScriptDropdown();
+            document.getElementById('add-video-modal')?.classList.add('show');
         }
-
-        function openAddStudentModal() {
-            const modal = document.getElementById('add-student-modal');
-            if (modal) modal.classList.add('show');
-        }
-
-        function closeAddStudentModal() {
-            const modal = document.getElementById('add-student-modal');
-            if (modal) modal.classList.remove('show');
-        }
+        function closeAddVideoModal() { document.getElementById('add-video-modal')?.classList.remove('show'); }
 
         function openAiLessonPlanModal() {
             document.getElementById('ai-form-view').style.display = 'block';
             document.getElementById('ai-loading-view').style.display = 'none';
             document.getElementById('ai-result-view').style.display = 'none';
-            const modal = document.getElementById('ai-lesson-modal');
-            if (modal) modal.classList.add('show');
+            document.getElementById('ai-lesson-modal')?.classList.add('show');
         }
+        function closeAiLessonPlanModal() { document.getElementById('ai-lesson-modal')?.classList.remove('show'); }
 
-        function closeAiLessonPlanModal() {
-            const modal = document.getElementById('ai-lesson-modal');
-            if (modal) modal.classList.remove('show');
+        function openAiScriptModal() {
+            document.getElementById('ai-script-form-view').style.display = 'block';
+            document.getElementById('ai-script-loading-view').style.display = 'none';
+            document.getElementById('ai-script-result-view').style.display = 'none';
+            document.getElementById('ai-script-modal')?.classList.add('show');
         }
+        function closeAiScriptModal() { document.getElementById('ai-script-modal')?.classList.remove('show'); }
 
         // Student Handlers
         function selectStudentEmoji(el, emoji) {
-            document.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
+            el.parentElement.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
             el.classList.add('selected');
-            AppState.selectedEmoji = emoji;
+            AppState.selectedStudentEmoji = emoji;
         }
 
         function handleStudentFormSubmit(event) {
@@ -1150,7 +1810,7 @@
             const newStudent = {
                 id: 'st_' + Date.now(),
                 name: name,
-                emoji: AppState.selectedEmoji || '👦',
+                emoji: AppState.selectedStudentEmoji || '👦',
                 level: level,
                 grade: grade,
                 englishLevel: englishLevel,
@@ -1235,7 +1895,7 @@
             document.getElementById('preview-student-modal').classList.remove('show');
         }
 
-        // Worksheet File Handler & Submit
+        // Worksheet Handlers
         function handleFileSelection(event, type) {
             const file = event.target.files[0];
             if (file) {
@@ -1244,9 +1904,7 @@
                 AppState.fileName = file.name;
 
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    AppState.fileDataUrl = e.target.result;
-                };
+                reader.onload = function(e) { AppState.fileDataUrl = e.target.result; };
                 reader.readAsDataURL(file);
 
                 const statusBox = document.getElementById('file-attachment-status');
@@ -1330,7 +1988,7 @@
                 <p style="font-size:13px; color:var(--primary); font-weight:700; margin-bottom:12px;">Lesson Topic: ${ws.topic}</p>
                 
                 <div style="background:#F8FAFC; border:1px solid var(--border); padding:16px; border-radius:12px; margin-bottom:16px; text-align:center;">
-                    ${ws.fileDataUrl && ws.fileType === 'PHOTO' ? `<img src="${ws.fileDataUrl}" class="file-preview-thumbnail" />` : `<div style="font-size:36px; margin-bottom:8px;">📄</div><p style="font-size:12px; font-weight:700;">${ws.fileName}</p><p style="font-size:11px; color:var(--text-muted);">PDF Document Ready for Class Printing</p>`}
+                    ${ws.fileDataUrl && ws.fileType === 'PHOTO' ? `<img src="${ws.fileDataUrl}" style="max-width:100%; max-height:220px; border-radius:10px;" />` : `<div style="font-size:36px; margin-bottom:8px;">📄</div><p style="font-size:12px; font-weight:700;">${ws.fileName}</p><p style="font-size:11px; color:var(--text-muted);">PDF Document Ready for Class Printing</p>`}
                 </div>
 
                 <div style="display:flex; justify-content:space-between; gap:10px;">
@@ -1345,7 +2003,572 @@
             document.getElementById('preview-worksheet-modal').classList.remove('show');
         }
 
-        // AI Generator
+        // Cartoon Characters Handlers
+        function selectCharacterEmoji(el, emoji) {
+            el.parentElement.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            AppState.selectedCharacterEmoji = emoji;
+        }
+
+        function handleCharacterFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('input-character-name').value;
+            const role = document.getElementById('input-character-role').value;
+            const voice = document.getElementById('input-character-voice').value;
+            const catchphrase = document.getElementById('input-character-catchphrase').value;
+
+            const newChar = {
+                id: 'ch_' + Date.now(),
+                name: name,
+                role: role,
+                emoji: AppState.selectedCharacterEmoji || '👩‍🏫',
+                voiceTone: voice,
+                catchphrase: catchphrase
+            };
+
+            AppState.characters.unshift(newChar);
+            renderCharacters();
+            updateDashboardCounts();
+            closeAddCharacterModal();
+            alert(`Character "${name}" added to your Studio library!`);
+        }
+
+        function renderCharacters() {
+            const container = document.getElementById('characters-grid');
+            if (!container) return;
+
+            const searchVal = (document.getElementById('character-search-input')?.value || '').toLowerCase();
+            const filtered = AppState.characters.filter(c =>
+                c.name.toLowerCase().includes(searchVal) ||
+                c.role.toLowerCase().includes(searchVal) ||
+                c.voiceTone.toLowerCase().includes(searchVal)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--text-muted);">No cartoon characters found</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(ch => `
+                <div class="studio-card" onclick="openCharacterPreview('${ch.id}')">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span style="font-size: 32px;">${ch.emoji}</span>
+                            <span class="badge badge-role">${ch.role}</span>
+                        </div>
+                        <h4 style="font-weight:800; font-size:15px; margin-bottom:2px;">${ch.name}</h4>
+                        <p style="font-size:11px; color: var(--accent-violet); font-weight:700;">Voice: ${ch.voiceTone}</p>
+                    </div>
+                    <div style="background:#F8FAFC; border:1px solid var(--border); padding:8px 10px; border-radius:10px; font-size:11px; color:var(--text-dark);">
+                        <em>"${ch.catchphrase}"</em>
+                    </div>
+                    <button class="btn-primary btn-amber" style="font-size:11px; padding:6px 12px; width:100%; justify-content:center;" onclick="event.stopPropagation(); playCharacterCatchphrase('${ch.id}')">
+                        🔊 Listen Catchphrase
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function playCharacterCatchphrase(id) {
+            const ch = AppState.characters.find(c => c.id === id);
+            if (ch) {
+                speakText(ch.catchphrase, ch.voiceTone);
+            }
+        }
+
+        function openCharacterPreview(id) {
+            const ch = AppState.characters.find(c => c.id === id);
+            if (!ch) return;
+
+            document.getElementById('preview-character-name').innerText = `${ch.emoji} ${ch.name}`;
+            const body = document.getElementById('preview-character-body');
+
+            body.innerHTML = `
+                <div style="text-align:center; margin-bottom:16px;">
+                    <div style="font-size:54px; margin-bottom:6px;">${ch.emoji}</div>
+                    <span class="badge badge-role">${ch.role}</span>
+                    <p style="font-size:12px; color:var(--accent-violet); font-weight:700; margin-top:4px;">Voice Profile: ${ch.voiceTone}</p>
+                </div>
+
+                <div style="background:#EEF2FF; border:1px solid #C7D2FE; padding:14px; border-radius:14px; margin-bottom:16px;">
+                    <h5 style="font-size:11px; font-weight:800; color:var(--primary); margin-bottom:4px;">SIGNATURE CATCHPHRASE</h5>
+                    <p style="font-size:13px; font-weight:700; color:var(--text-dark);">"${ch.catchphrase}"</p>
+                </div>
+
+                <button class="btn-primary btn-amber" style="width:100%; justify-content:center; padding:12px;" onclick="playCharacterCatchphrase('${ch.id}')">
+                    🔊 Play Catchphrase Audio
+                </button>
+            `;
+            document.getElementById('preview-character-modal').classList.add('show');
+        }
+
+        function closeCharacterPreviewModal() {
+            document.getElementById('preview-character-modal').classList.remove('show');
+        }
+
+        // Teaching Scripts Handlers
+        function populateScriptCharacterDropdowns() {
+            const sel1 = document.getElementById('input-script-char1');
+            const sel2 = document.getElementById('input-script-char2');
+            if (!sel1 || !sel2) return;
+
+            const opts = AppState.characters.map(c => `<option value="${c.name}">${c.emoji} ${c.name} (${c.role})</option>`).join('');
+            sel1.innerHTML = opts;
+            sel2.innerHTML = opts;
+            if (AppState.characters.length > 1) {
+                sel2.selectedIndex = 1;
+            }
+        }
+
+        function addScriptLineInput() {
+            const container = document.getElementById('script-lines-container');
+            const lineNum = container.children.length + 1;
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.style.marginBottom = '8px';
+            div.innerHTML = `<input type="text" class="form-input line-input-text" placeholder="Line ${lineNum}: Dialogue text..." required>`;
+            container.appendChild(div);
+        }
+
+        function handleScriptFormSubmit(event) {
+            event.preventDefault();
+            const title = document.getElementById('input-script-title').value;
+            const level = document.getElementById('input-script-level').value;
+            const topic = document.getElementById('input-script-topic').value;
+            const char1Name = document.getElementById('input-script-char1').value;
+            const char2Name = document.getElementById('input-script-char2').value;
+
+            const char1Obj = AppState.characters.find(c => c.name === char1Name) || AppState.characters[0];
+            const char2Obj = AppState.characters.find(c => c.name === char2Name) || AppState.characters[1] || AppState.characters[0];
+
+            const textInputs = document.querySelectorAll('.line-input-text');
+            const lines = [];
+
+            textInputs.forEach((inp, idx) => {
+                const isOdd = idx % 2 === 0;
+                const spk = isOdd ? char1Obj : char2Obj;
+                if (inp.value.trim()) {
+                    lines.push({
+                        speaker: spk.name,
+                        emoji: spk.emoji,
+                        text: inp.value.trim()
+                    });
+                }
+            });
+
+            const newScript = {
+                id: 'sc_' + Date.now(),
+                title: title,
+                topic: topic,
+                level: level,
+                char1: char1Obj.name,
+                char1Emoji: char1Obj.emoji,
+                char2: char2Obj.name,
+                char2Emoji: char2Obj.emoji,
+                lines: lines
+            };
+
+            AppState.scripts.unshift(newScript);
+            renderScripts();
+            updateDashboardCounts();
+            closeAddScriptModal();
+            alert(`Script "${title}" added to library!`);
+        }
+
+        function renderScripts() {
+            const container = document.getElementById('scripts-list');
+            if (!container) return;
+
+            const searchVal = (document.getElementById('script-search-input')?.value || '').toLowerCase();
+            const filtered = AppState.scripts.filter(sc =>
+                sc.title.toLowerCase().includes(searchVal) ||
+                sc.topic.toLowerCase().includes(searchVal)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--text-muted);">No teaching scripts found</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(sc => `
+                <div class="studio-card" onclick="openScriptPreview('${sc.id}')">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="font-size: 24px;">🎙️</span>
+                                <span class="badge badge-level-${sc.level.toLowerCase()}">${sc.level}</span>
+                            </div>
+                            <span class="badge" style="background:#F1F5F9; color:#0F172A;">${sc.lines?.length || 4} Lines</span>
+                        </div>
+                        <h4 style="font-weight:800; font-size:15px; margin-bottom:4px;">${sc.title}</h4>
+                        <p style="font-size:12px; color:var(--primary); font-weight:700;">Topic: ${sc.topic}</p>
+                        <div style="display:flex; gap:10px; margin-top:6px; font-size:12px; color:var(--text-muted);">
+                            <span>${sc.char1Emoji} ${sc.char1}</span>
+                            <span>⚡</span>
+                            <span>${sc.char2Emoji} ${sc.char2}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px;">
+                        <span style="font-size:11px; color:var(--emerald); font-weight:700;">▶️ Play Interactive Dialogue Reader</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openScriptPreview(id) {
+            const sc = AppState.scripts.find(s => s.id === id);
+            if (!sc) return;
+
+            AppState.activeScriptForPreview = sc;
+            document.getElementById('preview-script-title').innerText = sc.title;
+            document.getElementById('preview-script-subtitle').innerText = `Topic: ${sc.topic} • ${sc.char1Emoji} ${sc.char1} & ${sc.char2Emoji} ${sc.char2}`;
+
+            const container = document.getElementById('preview-script-lines');
+            container.innerHTML = sc.lines.map((ln, idx) => `
+                <div id="script-line-box-${idx}" class="speech-bubble-card">
+                    <div class="speaker-avatar">${ln.emoji}</div>
+                    <div style="flex:1;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <span style="font-size:12px; font-weight:800; color:var(--primary);">${ln.speaker}</span>
+                            <button class="btn-primary" style="font-size:10px; padding:4px 8px; background:#64748B;" onclick="speakLineText('${ln.text.replace(/'/g, "\\'")}', ${idx})">
+                                🔊 Read Line
+                            </button>
+                        </div>
+                        <p style="font-size:13px; color:var(--text-dark); line-height:1.4;">${ln.text}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('preview-script-modal').classList.add('show');
+        }
+
+        function speakLineText(text, lineIdx) {
+            document.querySelectorAll('.speech-bubble-card').forEach(el => el.classList.remove('active-speaking'));
+            const targetLine = document.getElementById(`script-line-box-${lineIdx}`);
+            if (targetLine) targetLine.classList.add('active-speaking');
+
+            speakText(text);
+        }
+
+        function autoPlayScript() {
+            const sc = AppState.activeScriptForPreview;
+            if (!sc || !sc.lines || sc.lines.length === 0) return;
+
+            let idx = 0;
+            AppState.isPlayingAudio = true;
+
+            function speakNext() {
+                if (idx >= sc.lines.length || !AppState.isPlayingAudio) {
+                    AppState.isPlayingAudio = false;
+                    document.querySelectorAll('.speech-bubble-card').forEach(el => el.classList.remove('active-speaking'));
+                    return;
+                }
+
+                const line = sc.lines[idx];
+                document.querySelectorAll('.speech-bubble-card').forEach(el => el.classList.remove('active-speaking'));
+                const lineCard = document.getElementById(`script-line-box-${idx}`);
+                if (lineCard) lineCard.classList.add('active-speaking');
+
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(line.text);
+                    utterance.rate = 0.95;
+                    utterance.onend = () => {
+                        idx++;
+                        setTimeout(speakNext, 500);
+                    };
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    idx++;
+                    setTimeout(speakNext, 2000);
+                }
+            }
+
+            window.speechSynthesis.cancel();
+            speakNext();
+        }
+
+        function closeScriptPreviewModal() {
+            stopScriptAudio();
+            document.getElementById('preview-script-modal').classList.remove('show');
+        }
+
+        // AI Script Generator
+        function generateAiScript() {
+            const topic = document.getElementById('ai-script-topic').value || 'Ordering Snack at Cafe';
+            const level = document.getElementById('ai-script-level').value;
+
+            document.getElementById('ai-script-form-view').style.display = 'none';
+            document.getElementById('ai-script-loading-view').style.display = 'block';
+
+            setTimeout(() => {
+                const char1 = AppState.characters[0];
+                const char2 = AppState.characters[1];
+
+                const generated = {
+                    id: 'sc_' + Date.now(),
+                    title: `AI Script: ${topic}`,
+                    topic: topic,
+                    level: level,
+                    char1: char1.name,
+                    char1Emoji: char1.emoji,
+                    char2: char2.name,
+                    char2Emoji: char2.emoji,
+                    lines: [
+                        { speaker: char1.name, emoji: char1.emoji, text: `Hello ${char2.name}! Are you ready to practice ${topic}?` },
+                        { speaker: char2.name, emoji: char2.emoji, text: `Yes ${char1.name}! I am excited to learn new English expressions!` },
+                        { speaker: char1.name, emoji: char1.emoji, text: `Great! Remember to speak clearly and use polite phrases.` },
+                        { speaker: char2.name, emoji: char2.emoji, text: `Thank you! Let's practice right now!` }
+                    ]
+                };
+
+                AppState.generatedAiScript = generated;
+                renderAiScriptResult(generated);
+            }, 1200);
+        }
+
+        function renderAiScriptResult(script) {
+            document.getElementById('ai-script-loading-view').style.display = 'none';
+            const view = document.getElementById('ai-script-result-view');
+            view.style.display = 'block';
+
+            view.innerHTML = `
+                <div style="margin-bottom:12px;">
+                    <span class="badge badge-ai-generated">✨ AI GENERATED SCRIPT</span>
+                    <h3 style="font-size:16px; font-weight:800;">${script.title}</h3>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    ${script.lines.map(ln => `
+                        <div class="phase-card">
+                            <div style="font-size:12px; font-weight:800; color:var(--primary);">${ln.emoji} ${ln.speaker}</div>
+                            <div style="font-size:13px; color:var(--text-dark); margin-top:2px;">"${ln.text}"</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <button class="btn-primary btn-ai" style="width:100%; justify-content:center; padding:12px;" onclick="saveGeneratedAiScript()">
+                    💾 Save Script to Library
+                </button>
+            `;
+        }
+
+        function saveGeneratedAiScript() {
+            if (AppState.generatedAiScript) {
+                AppState.scripts.unshift(AppState.generatedAiScript);
+                renderScripts();
+                updateDashboardCounts();
+                closeAiScriptModal();
+                alert(`Saved "${AppState.generatedAiScript.title}" to Teaching Scripts!`);
+                AppState.generatedAiScript = null;
+            }
+        }
+
+        // Video Projects Handlers
+        function populateVideoScriptDropdown() {
+            const sel = document.getElementById('input-video-script');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Select Linked Script --</option>' +
+                AppState.scripts.map(s => `<option value="${s.title}">${s.title}</option>`).join('');
+        }
+
+        function handleVideoFormSubmit(event) {
+            event.preventDefault();
+            const title = document.getElementById('input-video-title').value;
+            const level = document.getElementById('input-video-level').value;
+            const scriptTitle = document.getElementById('input-video-script').value || 'Custom Dialogue';
+
+            const newVid = {
+                id: 'vid_' + Date.now(),
+                title: title,
+                level: level,
+                status: 'Script Ready',
+                duration: '120s',
+                scriptTitle: scriptTitle,
+                subtitles: [
+                    { time: '00:01 - 00:05', text: `Welcome to ${title} video lesson!` },
+                    { time: '00:06 - 00:10', text: 'Listen carefully to the cartoon characters and repeat after them.' }
+                ]
+            };
+
+            AppState.videoProjects.unshift(newVid);
+            renderVideos();
+            updateDashboardCounts();
+            closeAddVideoModal();
+            alert(`Video Project "${title}" created!`);
+        }
+
+        function renderVideos() {
+            const container = document.getElementById('videos-grid');
+            if (!container) return;
+
+            const searchVal = (document.getElementById('video-search-input')?.value || '').toLowerCase();
+            const filtered = AppState.videoProjects.filter(v =>
+                v.title.toLowerCase().includes(searchVal) ||
+                v.scriptTitle.toLowerCase().includes(searchVal)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--text-muted);">No video projects found</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(v => `
+                <div class="studio-card" onclick="openVideoStudioModal('${v.id}')">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span style="font-size:26px;">🎬</span>
+                            <div>
+                                <span class="badge badge-level-${v.level.toLowerCase()}">${v.level}</span>
+                                <span class="badge" style="background:#F1F5F9; color:#0F172A;">${v.status}</span>
+                            </div>
+                        </div>
+                        <h4 style="font-weight:800; font-size:15px; margin-bottom:4px;">${v.title}</h4>
+                        <p style="font-size:12px; color:var(--primary); font-weight:700;">Script: ${v.scriptTitle}</p>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; font-size:11px; color:var(--text-muted);">
+                        <span>⏱️ ${v.duration}</span>
+                        <span style="color:var(--accent-violet); font-weight:700;">Open Studio & Subtitles →</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Subtitle & Video Studio Controls
+        function openVideoStudioModal(id) {
+            const vid = AppState.videoProjects.find(v => v.id === id);
+            if (!vid) return;
+
+            AppState.activeVideoProject = vid;
+            document.getElementById('video-studio-title').innerText = `🎬 ${vid.title}`;
+            document.getElementById('video-studio-subtitle').innerText = `Linked Script: ${vid.scriptTitle} • Status: ${vid.status}`;
+
+            renderSubtitleEditorList();
+            document.getElementById('preview-video-modal')?.classList.add('show');
+        }
+
+        function closeVideoStudioModal() {
+            pauseVideoPlayback();
+            document.getElementById('preview-video-modal')?.classList.remove('show');
+        }
+
+        function setSubtitleStyle(styleClass) {
+            AppState.currentSubtitleStyle = styleClass;
+            const subBanner = document.getElementById('live-subtitle-banner');
+            if (subBanner) {
+                subBanner.className = `video-subtitle-overlay ${styleClass}`;
+            }
+        }
+
+        function toggleVideoPlayback() {
+            if (AppState.isPlayingVideo) {
+                pauseVideoPlayback();
+            } else {
+                startVideoPlayback();
+            }
+        }
+
+        function startVideoPlayback() {
+            AppState.isPlayingVideo = true;
+            document.getElementById('btn-play-video').innerText = '⏸';
+
+            const vid = AppState.activeVideoProject;
+            const subtitles = vid?.subtitles || [
+                { time: '00:01 - 00:05', text: 'Welcome to Sunshine Cafe!' }
+            ];
+
+            if (AppState.videoTimerInterval) clearInterval(AppState.videoTimerInterval);
+
+            AppState.videoTimerInterval = setInterval(() => {
+                AppState.videoCurrentSecond++;
+                if (AppState.videoCurrentSecond > 120) AppState.videoCurrentSecond = 0;
+
+                const scrubber = document.getElementById('video-scrubber-input');
+                if (scrubber) scrubber.value = Math.floor((AppState.videoCurrentSecond / 120) * 100);
+
+                const min = String(Math.floor(AppState.videoCurrentSecond / 60)).padStart(2, '0');
+                const sec = String(AppState.videoCurrentSecond % 60).padStart(2, '0');
+                document.getElementById('video-timer-display').innerText = `${min}:${sec} / 02:00`;
+
+                // Update Live Subtitle Banner according to playback second
+                const activeSub = subtitles[AppState.videoCurrentSecond % subtitles.length];
+                if (activeSub) {
+                    document.getElementById('live-subtitle-banner').innerText = `"${activeSub.text}"`;
+                }
+            }, 1000);
+        }
+
+        function pauseVideoPlayback() {
+            AppState.isPlayingVideo = false;
+            document.getElementById('btn-play-video').innerText = '▶';
+            if (AppState.videoTimerInterval) {
+                clearInterval(AppState.videoTimerInterval);
+                AppState.videoTimerInterval = null;
+            }
+        }
+
+        function seekVideoPlayback(val) {
+            AppState.videoCurrentSecond = Math.floor((val / 100) * 120);
+            const min = String(Math.floor(AppState.videoCurrentSecond / 60)).padStart(2, '0');
+            const sec = String(AppState.videoCurrentSecond % 60).padStart(2, '0');
+            document.getElementById('video-timer-display').innerText = `${min}:${sec} / 02:00`;
+        }
+
+        function renderSubtitleEditorList() {
+            const container = document.getElementById('subtitle-editor-list');
+            if (!container) return;
+
+            const vid = AppState.activeVideoProject;
+            const subs = vid?.subtitles || [];
+
+            container.innerHTML = subs.map((sub, idx) => `
+                <div class="subtitle-line-row">
+                    <span class="time-badge">⏱️ ${sub.time}</span>
+                    <input type="text" class="form-input" value="${sub.text}" style="padding:6px 10px; font-size:12px;" onchange="updateSubtitleText(${idx}, this.value)">
+                </div>
+            `).join('');
+        }
+
+        function updateSubtitleText(idx, newText) {
+            if (AppState.activeVideoProject && AppState.activeVideoProject.subtitles[idx]) {
+                AppState.activeVideoProject.subtitles[idx].text = newText;
+            }
+        }
+
+        function addNewSubtitleLine() {
+            if (!AppState.activeVideoProject) return;
+            const count = AppState.activeVideoProject.subtitles.length + 1;
+            AppState.activeVideoProject.subtitles.push({
+                time: `00:${String(count * 5).padStart(2, '0')} - 00:${String(count * 5 + 4).padStart(2, '0')}`,
+                text: 'New subtitle caption line...'
+            });
+            renderSubtitleEditorList();
+        }
+
+        function startMp4Rendering() {
+            const progressBox = document.getElementById('render-progress-box');
+            const fill = document.getElementById('render-bar-fill');
+            progressBox.style.display = 'block';
+
+            let pct = 0;
+            const interval = setInterval(() => {
+                pct += 25;
+                fill.style.width = pct + '%';
+                if (pct >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        progressBox.style.display = 'none';
+                        fill.style.width = '0%';
+                        if (AppState.activeVideoProject) {
+                            AppState.activeVideoProject.status = 'Finished MP4';
+                            renderVideos();
+                        }
+                        alert('✨ Rendering finished successfully! MP4 video with embedded subtitles saved to your Studio library.');
+                    }, 400);
+                }
+            }, 400);
+        }
+
+        // AI Lesson Plan Handlers
         function generateAiLessonPlan() {
             const topic = document.getElementById('ai-input-topic').value;
             const level = document.getElementById('ai-input-level').value;
@@ -1501,6 +2724,9 @@
             const elScripts = document.getElementById('dash-count-scripts');
             if (elScripts) elScripts.innerText = AppState.scripts.length;
 
+            const elCharacters = document.getElementById('dash-count-characters');
+            if (elCharacters) elCharacters.innerText = AppState.characters.length;
+
             const elVideos = document.getElementById('dash-count-videos');
             if (elVideos) elVideos.innerText = AppState.videoProjects.length;
         }
@@ -1510,6 +2736,10 @@
             document.getElementById('btn-open-worksheet-modal')?.addEventListener('click', openWorksheetUploadModal);
             document.getElementById('btn-open-student-modal')?.addEventListener('click', openAddStudentModal);
             document.getElementById('btn-open-ai-lesson-modal')?.addEventListener('click', openAiLessonPlanModal);
+            document.getElementById('btn-open-character-modal')?.addEventListener('click', openAddCharacterModal);
+            document.getElementById('btn-open-script-modal')?.addEventListener('click', openAddScriptModal);
+            document.getElementById('btn-open-ai-script-modal')?.addEventListener('click', openAiScriptModal);
+            document.getElementById('btn-open-video-modal')?.addEventListener('click', openAddVideoModal);
 
             // Overlay click to close modals
             document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -1523,6 +2753,9 @@
             renderStudents();
             renderWorksheets();
             renderLessons();
+            renderCharacters();
+            renderScripts();
+            renderVideos();
             updateDashboardCounts();
         });
 
@@ -1530,6 +2763,9 @@
         renderStudents();
         renderWorksheets();
         renderLessons();
+        renderCharacters();
+        renderScripts();
+        renderVideos();
         updateDashboardCounts();
     </script>
 </body>
