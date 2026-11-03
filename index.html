@@ -246,6 +246,8 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
+            position: relative;
+            z-index: 10;
         }
 
         .page-title h2 {
@@ -273,6 +275,10 @@
             gap: 8px;
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
             transition: all 0.2s;
+            position: relative;
+            z-index: 20;
+            pointer-events: auto !important;
+            user-select: none;
         }
 
         .btn-primary:hover {
@@ -281,14 +287,18 @@
         }
 
         .btn-emerald {
-            background: var(--emerald);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+            background: var(--emerald) !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+        }
+
+        .btn-emerald:hover {
+            background: #059669 !important;
         }
 
         .btn-ai {
-            background: linear-gradient(135deg, #8B5CF6, #EC4899);
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            background: linear-gradient(135deg, #8B5CF6, #EC4899) !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3) !important;
         }
 
         /* Cards & Grid */
@@ -365,24 +375,60 @@
             border-color: var(--primary);
         }
 
-        /* Modals */
+        /* Upload Area Boxes */
+        .upload-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .upload-box {
+            border: 2px dashed var(--primary);
+            background: rgba(79, 70, 229, 0.04);
+            padding: 16px;
+            border-radius: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-box:hover {
+            background: rgba(79, 70, 229, 0.08);
+        }
+
+        .upload-box-photo {
+            border-color: var(--emerald);
+            background: rgba(16, 185, 129, 0.04);
+        }
+
+        .upload-box-photo:hover {
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        /* MODAL OVERLAY FIX (Strict Z-Index & Display Control) */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.65);
             backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 9999 !important;
             padding: 16px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
         }
 
         .modal-overlay.show {
-            display: flex;
+            display: flex !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
         .modal-content {
@@ -393,8 +439,10 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
             animation: modalPop 0.2s ease;
+            position: relative;
+            z-index: 10000;
         }
 
         @keyframes modalPop {
@@ -412,9 +460,16 @@
         .close-btn {
             background: none;
             border: none;
-            font-size: 22px;
+            font-size: 24px;
             cursor: pointer;
             color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .close-btn:hover {
+            background: var(--surface-variant);
+            color: var(--text-dark);
         }
 
         /* Search input bar */
@@ -492,6 +547,27 @@
             border-radius: 10px;
             padding: 12px;
             margin-bottom: 8px;
+        }
+
+        /* Emoji Selector Row */
+        .emoji-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .emoji-option {
+            font-size: 24px;
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .emoji-option.selected {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
         }
 
         /* Responsive */
@@ -627,7 +703,7 @@
                         <h2>My Students</h2>
                         <p>Manage student profiles, English levels, attendance, and assigned worksheets</p>
                     </div>
-                    <button class="btn-primary btn-emerald" onclick="openAddStudentModal()">
+                    <button id="btn-open-student-modal" class="btn-primary btn-emerald" onclick="openAddStudentModal()">
                         <span>➕</span> Add New Student
                     </button>
                 </div>
@@ -649,7 +725,7 @@
                         <h2>Worksheets Library</h2>
                         <p>Store, organize and preview PDF worksheets and photos</p>
                     </div>
-                    <button class="btn-primary" onclick="openWorksheetUploadModal()">
+                    <button id="btn-open-worksheet-modal" class="btn-primary" onclick="openWorksheetUploadModal()">
                         <span>☁️</span> Upload & Add Worksheet
                     </button>
                 </div>
@@ -664,14 +740,14 @@
                 </div>
             </section>
 
-            <!-- 4. MY LESSONS SECTION (With AI Lesson Plan Generator) -->
+            <!-- 4. MY LESSONS SECTION -->
             <section id="section-lessons" class="section-view">
                 <div class="page-header">
                     <div class="page-title">
                         <h2>My Lessons</h2>
                         <p>Organize English lessons or generate structured plans with AI</p>
                     </div>
-                    <button class="btn-primary btn-ai" onclick="openAiLessonPlanModal()">
+                    <button id="btn-open-ai-lesson-modal" class="btn-primary btn-ai" onclick="openAiLessonPlanModal()">
                         <span>✨</span> Generate Lesson Plan with AI
                     </button>
                 </div>
@@ -682,7 +758,7 @@
                 </div>
 
                 <div id="lessons-list" class="grid-cards" style="grid-template-columns: 1fr;">
-                    <!-- Dynamic Lessons Rendered Here -->
+                    <!-- Dynamic Lessons -->
                 </div>
             </section>
 
@@ -728,7 +804,156 @@
         </main>
     </div>
 
-    <!-- AI LESSON PLAN GENERATOR MODAL -->
+    <!-- MODAL 1: ADD STUDENT FORM MODAL -->
+    <div id="add-student-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Student Profile</h3>
+                <button class="close-btn" onclick="closeAddStudentModal()">&times;</button>
+            </div>
+
+            <form id="student-form" onsubmit="handleStudentFormSubmit(event)">
+                <div class="form-group">
+                    <label>Choose Avatar Emoji *</label>
+                    <div class="emoji-selector">
+                        <div class="emoji-option selected" onclick="selectStudentEmoji(this, '👦')">👦</div>
+                        <div class="emoji-option" onclick="selectStudentEmoji(this, '👧')">👧</div>
+                        <div class="emoji-option" onclick="selectStudentEmoji(this, '🧑')">🧑</div>
+                        <div class="emoji-option" onclick="selectStudentEmoji(this, '🎓')">🎓</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-student-name">Student Full Name *</label>
+                    <input type="text" id="input-student-name" class="form-input" placeholder="e.g. Leo Smith" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-student-level">School Level *</label>
+                    <select id="input-student-level" class="form-select" required>
+                        <option value="PRIMARY">Primary (K-5)</option>
+                        <option value="MIDDLE" selected>Middle School (6-8)</option>
+                        <option value="HIGH">High School (9-12)</option>
+                        <option value="ADULT">Adult & Business</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-student-grade">Grade / Class *</label>
+                    <input type="text" id="input-student-grade" class="form-input" placeholder="e.g. 7th Grade, Class 3B" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-english-level">English CEFR Level *</label>
+                    <select id="input-english-level" class="form-select" required>
+                        <option value="Beginner A1">Beginner A1</option>
+                        <option value="Elementary A2" selected>Elementary A2</option>
+                        <option value="Intermediate B1">Intermediate B1</option>
+                        <option value="Upper-Int B2">Upper-Intermediate B2</option>
+                        <option value="Advanced C1">Advanced C1</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-attendance">Attendance Rate (%)</label>
+                    <input type="number" id="input-attendance" class="form-input" value="95" min="0" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="input-student-notes">Teacher Notes & Learning Goals</label>
+                    <textarea id="input-student-notes" class="form-textarea" placeholder="e.g. Needs practice with Present Perfect tense timelines. Enthusiastic during roleplay!"></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary btn-emerald" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">
+                    💾 Save Student Profile
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: STUDENT PROFILE PREVIEW MODAL -->
+    <div id="preview-student-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="preview-student-name">Student Profile</h3>
+                <button class="close-btn" onclick="closeStudentPreviewModal()">&times;</button>
+            </div>
+            <div id="preview-student-body">
+                <!-- Dynamic Student Content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: WORKSHEET UPLOAD FORM MODAL -->
+    <div id="upload-worksheet-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Worksheet to Library</h3>
+                <button class="close-btn" onclick="closeWorksheetUploadModal()">&times;</button>
+            </div>
+
+            <form id="worksheet-form" onsubmit="handleWorksheetFormSubmit(event)">
+                <div class="form-group">
+                    <label>1. Upload Worksheet File or Photo *</label>
+                    <div class="upload-options">
+                        <div class="upload-box" onclick="document.getElementById('pdf-file-input').click()">
+                            <span style="font-size: 24px;">📄</span>
+                            <div style="font-weight: 700; color: var(--primary); font-size: 13px;">Upload PDF</div>
+                            <input type="file" id="pdf-file-input" accept=".pdf" style="display:none;" onchange="handleFileSelection(event, 'PDF')">
+                        </div>
+                        <div class="upload-box upload-box-photo" onclick="document.getElementById('photo-file-input').click()">
+                            <span style="font-size: 24px;">📷</span>
+                            <div style="font-weight: 700; color: var(--emerald); font-size: 13px;">Upload Photo</div>
+                            <input type="file" id="photo-file-input" accept="image/*" style="display:none;" onchange="handleFileSelection(event, 'PHOTO')">
+                        </div>
+                    </div>
+
+                    <div id="file-attachment-status" style="display:none; padding: 10px; background: #F1F5F9; border-radius: 10px; font-size: 12px; font-weight: 600;">
+                        <span id="attached-file-name">Attached: document.pdf</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-lesson-title">2. Lesson Title *</label>
+                    <input type="text" id="input-lesson-title" class="form-input" placeholder="e.g. Present Perfect vs Past Simple Challenge" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-school-level">3. Select School Level *</label>
+                    <select id="input-school-level" class="form-select" required>
+                        <option value="PRIMARY">Primary (K-5)</option>
+                        <option value="MIDDLE" selected>Middle School (6-8)</option>
+                        <option value="HIGH">High School (9-12)</option>
+                        <option value="ADULT">Adult & Business</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-lesson-topic">4. Enter Lesson Topic *</label>
+                    <input type="text" id="input-lesson-topic" class="form-input" placeholder="e.g. Grammar, Food & Dining, Irregular Verbs, Phonics" required>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">
+                    💾 Save Worksheet to Personal Library
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: WORKSHEET DETAIL PREVIEW MODAL -->
+    <div id="preview-worksheet-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="preview-title">Worksheet Detail</h3>
+                <button class="close-btn" onclick="closeWorksheetPreviewModal()">&times;</button>
+            </div>
+            <div id="preview-body">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: AI LESSON PLAN GENERATOR MODAL -->
     <div id="ai-lesson-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -736,7 +961,6 @@
                 <button class="close-btn" onclick="closeAiLessonPlanModal()">&times;</button>
             </div>
 
-            <!-- Input Form View -->
             <div id="ai-form-view">
                 <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
                     Enter lesson topic & school level to generate a complete 5-phase teaching plan with learning objectives & timing.
@@ -744,12 +968,12 @@
 
                 <div class="form-group">
                     <label for="ai-input-topic">1. Lesson Topic / Focus *</label>
-                    <input type="text" id="ai-input-topic" class="form-input" placeholder="e.g. Past Simple vs Present Perfect, Ordering Food at Cafe, Phonics Magic Silent E" required>
+                    <input type="text" id="ai-input-topic" class="form-input" placeholder="e.g. Past Simple vs Present Perfect, Ordering Food at Cafe, Phonics Magic Silent E">
                 </div>
 
                 <div class="form-group">
                     <label for="ai-input-level">2. Select School Level *</label>
-                    <select id="ai-input-level" class="form-select" required>
+                    <select id="ai-input-level" class="form-select">
                         <option value="PRIMARY">Primary (K-5)</option>
                         <option value="MIDDLE" selected>Middle School (6-8)</option>
                         <option value="HIGH">High School (9-12)</option>
@@ -776,7 +1000,6 @@
                 </button>
             </div>
 
-            <!-- AI Loading Indicator View -->
             <div id="ai-loading-view" style="display: none;">
                 <div class="ai-loading-box">
                     <div class="ai-spinner"></div>
@@ -787,14 +1010,13 @@
                 </div>
             </div>
 
-            <!-- AI Result Output View -->
             <div id="ai-result-view" style="display: none;">
-                <!-- Generated Result Injected Here -->
+                <!-- Generated Result -->
             </div>
         </div>
     </div>
 
-    <!-- LESSON DETAIL MODAL -->
+    <!-- MODAL 6: LESSON DETAIL MODAL -->
     <div id="preview-lesson-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -814,6 +1036,10 @@
             activeSection: 'dashboard',
             selectedEmoji: '👦',
             generatedAiLesson: null,
+            selectedFile: null,
+            fileType: 'PDF',
+            fileName: '',
+            fileDataUrl: null,
             students: [
                 { id: 'st_1', name: 'Leo Smith', emoji: '👦', level: 'PRIMARY', grade: '4th Grade', englishLevel: 'Elementary A2', attendance: 96, notes: 'Eager student! Loves Magic E phonics chants.', assignedWorksheetCount: 3 },
                 { id: 'st_2', name: 'Maya Lin', emoji: '👧', level: 'MIDDLE', grade: '7th Grade', englishLevel: 'Intermediate B1', attendance: 98, notes: 'Analytical grammar learner. Focus on Present Perfect vs Past Simple timelines.', assignedWorksheetCount: 4 }
@@ -838,23 +1064,6 @@
                         { phase: 'Practice (15 mins)', desc: 'Students fill out food order worksheet cards in pairs.' },
                         { phase: 'Production (10 mins)', desc: 'Perform mini cafe roleplays using character cards.' },
                         { phase: 'Wrap-up (5 mins)', desc: 'Quick vocabulary speed drill & praise points.' }
-                    ]
-                },
-                {
-                    id: 'les_2',
-                    title: 'Mastering Present Perfect vs. Past Simple',
-                    level: 'MIDDLE',
-                    topic: 'Grammar & Timeline',
-                    duration: 60,
-                    isAiGenerated: true,
-                    targetGrammar: 'Present Perfect Simple vs Past Simple',
-                    objectives: ['Distinguish finished past time markers vs unspecified life experience', 'Form positive/negative Have/Has + V3 structures', 'Complete timeline gap-fill exercises'],
-                    steps: [
-                        { phase: 'Warm-up (10 mins)', desc: 'Board timeline puzzle: Finished Past vs Life Experience.' },
-                        { phase: 'Presentation (15 mins)', desc: 'Explain rule contrast using teaching script dialogue.' },
-                        { phase: 'Practice (20 mins)', desc: 'Worksheet timeline exercise sets A & B.' },
-                        { phase: 'Production (10 mins)', desc: 'Pair interview: "Have you ever...?" survey cards.' },
-                        { phase: 'Wrap-up (5 mins)', desc: 'Summary exit ticket questions.' }
                     ]
                 }
             ],
@@ -888,230 +1097,75 @@
             document.getElementById('left-dashboard').classList.toggle('collapsed');
         });
 
-        // AI Lesson Plan Modal Handlers
+        // Modal Controls (EXPLICIT GLOBAL SCOPE)
+        function openWorksheetUploadModal() {
+            const modal = document.getElementById('upload-worksheet-modal');
+            if (modal) modal.classList.add('show');
+        }
+
+        function closeWorksheetUploadModal() {
+            const modal = document.getElementById('upload-worksheet-modal');
+            if (modal) modal.classList.remove('show');
+        }
+
+        function openAddStudentModal() {
+            const modal = document.getElementById('add-student-modal');
+            if (modal) modal.classList.add('show');
+        }
+
+        function closeAddStudentModal() {
+            const modal = document.getElementById('add-student-modal');
+            if (modal) modal.classList.remove('show');
+        }
+
         function openAiLessonPlanModal() {
             document.getElementById('ai-form-view').style.display = 'block';
             document.getElementById('ai-loading-view').style.display = 'none';
             document.getElementById('ai-result-view').style.display = 'none';
-            document.getElementById('ai-lesson-modal').classList.add('show');
+            const modal = document.getElementById('ai-lesson-modal');
+            if (modal) modal.classList.add('show');
         }
 
         function closeAiLessonPlanModal() {
-            document.getElementById('ai-lesson-modal').classList.remove('show');
+            const modal = document.getElementById('ai-lesson-modal');
+            if (modal) modal.classList.remove('show');
         }
 
-        // AI Lesson Plan Generation Engine
-        function generateAiLessonPlan() {
-            const topic = document.getElementById('ai-input-topic').value;
-            const level = document.getElementById('ai-input-level').value;
-            const duration = parseInt(document.getElementById('ai-input-duration').value) || 45;
-            const goal = document.getElementById('ai-input-goal').value;
-
-            if (!topic.trim()) {
-                alert('Please enter a lesson topic for the AI generator.');
-                return;
-            }
-
-            // Switch to AI loading view
-            document.getElementById('ai-form-view').style.display = 'none';
-            document.getElementById('ai-loading-view').style.display = 'block';
-
-            const statusEl = document.getElementById('ai-loading-status');
-            statusEl.innerText = `Analyzing ${level} level & generating structured ${duration}-minute lesson plan...`;
-
-            setTimeout(() => {
-                statusEl.innerText = 'Formulating 3 core learning objectives & target grammar focus...';
-            }, 800);
-
-            setTimeout(() => {
-                statusEl.innerText = 'Building 5-phase execution breakdown (Warm-up, Presentation, Practice, Production, Wrap-up)...';
-            }, 1600);
-
-            // Construct structured AI Lesson Object
-            setTimeout(() => {
-                const isGrammar = topic.toLowerCase().includes('grammar') || topic.toLowerCase().includes('tense') || topic.toLowerCase().includes('verb');
-                const isPhonics = topic.toLowerCase().includes('phonic') || topic.toLowerCase().includes('vowel') || topic.toLowerCase().includes('letter');
-
-                const generatedPlan = {
-                    id: 'les_' + Date.now(),
-                    title: `AI Plan: ${topic}`,
-                    topic: topic,
-                    level: level,
-                    duration: duration,
-                    isAiGenerated: true,
-                    targetGrammar: isGrammar ? `${topic} formula & timeline contrast` : isPhonics ? `Phonics sound rules for ${topic}` : `Key conversational vocabulary & expressions for ${topic}`,
-                    objectives: [
-                        `Understand and accurately apply core structures of ${topic}.`,
-                        `Demonstrate correct pronunciation and usage in guided exercises.`,
-                        `Engage in interactive student pair roleplays and free production activities.`
-                    ],
-                    steps: [
-                        { phase: `Warm-up (${Math.round(duration * 0.15)} mins)`, desc: `Engaging hook activity: Show visual flashcards/board game related to ${topic}. Elicit student background knowledge.` },
-                        { phase: `Presentation (${Math.round(duration * 0.25)} mins)`, desc: `Teacher introduces target formulas and key vocabulary for ${topic}. Model example sentences with Teacher Emma cartoon card.` },
-                        { phase: `Practice (${Math.round(duration * 0.30)} mins)`, desc: `Students complete guided gap-fill worksheet & pair practice. Teacher circulates to offer pronunciation feedback.` },
-                        { phase: `Production (${Math.round(duration * 0.20)} mins)`, desc: `Students engage in pair roleplay or group interview using target expressions from ${topic}. ${goal ? `Special focus: ${goal}` : ''}` },
-                        { phase: `Wrap-up (${Math.round(duration * 0.10)} mins)`, desc: `Summary quiz, individual exit tickets, and positive reinforcement.` }
-                    ]
-                };
-
-                AppState.generatedAiLesson = generatedPlan;
-                renderAiResultView(generatedPlan);
-            }, 2400);
+        // Student Handlers
+        function selectStudentEmoji(el, emoji) {
+            document.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            AppState.selectedEmoji = emoji;
         }
 
-        // Render AI Result Preview Screen
-        function renderAiResultView(plan) {
-            document.getElementById('ai-loading-view').style.display = 'none';
-            const resultView = document.getElementById('ai-result-view');
-            resultView.style.display = 'block';
+        function handleStudentFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('input-student-name').value;
+            const level = document.getElementById('input-student-level').value;
+            const grade = document.getElementById('input-student-grade').value;
+            const englishLevel = document.getElementById('input-english-level').value;
+            const attendance = document.getElementById('input-attendance').value || 95;
+            const notes = document.getElementById('input-student-notes').value || 'New student profile created.';
 
-            resultView.innerHTML = `
-                <div style="margin-bottom:12px;">
-                    <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
-                        <span class="badge badge-ai-generated">✨ AI GENERATED PLAN</span>
-                        <span class="badge badge-level-${plan.level.toLowerCase()}">${plan.level}</span>
-                        <span class="badge" style="background:#F1F5F9; color:#0F172A;">⏱️ ${plan.duration} mins</span>
-                    </div>
-                    <h3 style="font-size:18px; font-weight:800; color:var(--text-dark);">${plan.title}</h3>
-                </div>
+            const newStudent = {
+                id: 'st_' + Date.now(),
+                name: name,
+                emoji: AppState.selectedEmoji || '👦',
+                level: level,
+                grade: grade,
+                englishLevel: englishLevel,
+                attendance: parseInt(attendance),
+                notes: notes,
+                assignedWorksheetCount: 1
+            };
 
-                <div style="background:#F3E8FF; border:1px solid #D8B4FE; border-radius:12px; padding:12px; margin-bottom:14px;">
-                    <h5 style="font-size:12px; font-weight:800; color:#7E22CE; margin-bottom:2px;">🎯 TARGET FOCUS</h5>
-                    <p style="font-size:13px; font-weight:600; color:#581C87;">${plan.targetGrammar}</p>
-                </div>
-
-                <div style="margin-bottom:14px;">
-                    <h5 style="font-size:12px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">LEARNING OBJECTIVES:</h5>
-                    <ul style="padding-left:18px; font-size:12px; color:var(--text-dark); line-height:1.5;">
-                        ${plan.objectives.map(o => `<li style="margin-bottom:4px;">${o}</li>`).join('')}
-                    </ul>
-                </div>
-
-                <div style="margin-bottom:16px;">
-                    <h5 style="font-size:12px; font-weight:800; color:var(--text-dark); margin-bottom:8px;">5-PHASE EXECUTION STEPS:</h5>
-                    ${plan.steps.map((s, idx) => `
-                        <div class="phase-card">
-                            <div style="font-size:11px; font-weight:800; color:var(--emerald);">${idx + 1}. ${s.phase}</div>
-                            <div style="font-size:12px; color:var(--text-dark); margin-top:2px;">${s.desc}</div>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <button class="btn-primary btn-ai" style="width:100%; justify-content:center; padding:12px;" onclick="saveGeneratedAiLesson()">
-                    💾 Save AI Lesson Plan to My Lessons
-                </button>
-            `;
+            AppState.students.unshift(newStudent);
+            renderStudents();
+            updateDashboardCounts();
+            closeAddStudentModal();
+            alert(`Student "${name}" added to your roster!`);
         }
 
-        // Save AI Lesson to AppState
-        function saveGeneratedAiLesson() {
-            if (AppState.generatedAiLesson) {
-                AppState.lessons.unshift(AppState.generatedAiLesson);
-                renderLessons();
-                updateDashboardCounts();
-                closeAiLessonPlanModal();
-                alert(`Saved! "${AppState.generatedAiLesson.title}" has been added to My Lessons.`);
-                AppState.generatedAiLesson = null;
-            }
-        }
-
-        // Render My Lessons List
-        function renderLessons() {
-            const container = document.getElementById('lessons-list');
-            if (!container) return;
-
-            const searchVal = (document.getElementById('lesson-search-input')?.value || '').toLowerCase();
-            const filtered = AppState.lessons.filter(l =>
-                l.title.toLowerCase().includes(searchVal) ||
-                l.topic.toLowerCase().includes(searchVal) ||
-                (l.targetGrammar && l.targetGrammar.toLowerCase().includes(searchVal))
-            );
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--text-muted);">No lesson plans found</div>`;
-                return;
-            }
-
-            container.innerHTML = filtered.map(les => `
-                <div class="studio-card" onclick="openLessonPreview('${les.id}')">
-                    <div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <div style="display:flex; gap:6px; align-items:center;">
-                                <span style="font-size:22px;">📚</span>
-                                ${les.isAiGenerated ? '<span class="badge badge-ai-generated">✨ AI PLAN</span>' : ''}
-                            </div>
-                            <div>
-                                <span class="badge badge-level-${les.level.toLowerCase()}">${les.level}</span>
-                                <span class="badge" style="background:#F1F5F9; color:#0F172A;">⏱️ ${les.duration}m</span>
-                            </div>
-                        </div>
-                        <h4 style="font-weight:800; font-size:15px; margin-bottom:4px;">${les.title}</h4>
-                        <p style="font-size:12px; color:var(--primary); font-weight:700;">Topic: ${les.topic}</p>
-                    </div>
-
-                    ${les.targetGrammar ? `
-                        <div style="background:rgba(79,70,229,0.06); padding:8px 10px; border-radius:8px; font-size:11px; color:var(--primary); font-weight:600; margin-top:6px;">
-                            🎯 Focus: ${les.targetGrammar}
-                        </div>
-                    ` : ''}
-
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-muted); border-top:1px solid var(--border); padding-top:8px; margin-top:8px;">
-                        <span>📋 ${les.steps ? les.steps.length : 5} Phase Steps</span>
-                        <span style="color:var(--primary); font-weight:700;">View Outline →</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Lesson Detail Modal Handler
-        function openLessonPreview(id) {
-            const les = AppState.lessons.find(l => l.id === id);
-            if (!les) return;
-
-            document.getElementById('preview-lesson-title').innerText = les.title;
-            const body = document.getElementById('preview-lesson-body');
-
-            body.innerHTML = `
-                <div style="display:flex; gap:8px; margin-bottom:12px;">
-                    ${les.isAiGenerated ? '<span class="badge badge-ai-generated">✨ AI GENERATED</span>' : ''}
-                    <span class="badge badge-level-${les.level.toLowerCase()}">${les.level}</span>
-                    <span class="badge" style="background:#F1F5F9; color:#0F172A;">⏱️ ${les.duration} mins</span>
-                </div>
-
-                ${les.targetGrammar ? `
-                    <div style="background:#E0E7FF; padding:10px; border-radius:10px; font-size:12px; color:#3730A3; font-weight:700; margin-bottom:12px;">
-                        🎯 Target Focus: ${les.targetGrammar}
-                    </div>
-                ` : ''}
-
-                <div style="margin-bottom:14px;">
-                    <h5 style="font-size:12px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">LEARNING OBJECTIVES:</h5>
-                    <ul style="padding-left:18px; font-size:12px; color:var(--text-dark); line-height:1.5;">
-                        ${(les.objectives || ['Master target vocabulary and grammar']).map(o => `<li style="margin-bottom:4px;">${o}</li>`).join('')}
-                    </ul>
-                </div>
-
-                <div style="margin-bottom:16px;">
-                    <h5 style="font-size:12px; font-weight:800; color:var(--text-dark); margin-bottom:8px;">LESSON EXECUTION STEPS:</h5>
-                    ${(les.steps || []).map((s, idx) => `
-                        <div class="phase-card">
-                            <div style="font-size:11px; font-weight:800; color:var(--emerald);">${idx + 1}. ${s.phase}</div>
-                            <div style="font-size:12px; color:var(--text-dark); margin-top:2px;">${s.desc}</div>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <button class="btn-primary" style="width:100%; justify-content:center;" onclick="alert('Exported lesson plan outline to PDF/Print!')">🖨️ Print Lesson Plan Outline</button>
-            `;
-
-            document.getElementById('preview-lesson-modal').classList.add('show');
-        }
-
-        function closeLessonPreviewModal() {
-            document.getElementById('preview-lesson-modal').classList.remove('show');
-        }
-
-        // Render Students Grid
         function renderStudents() {
             const container = document.getElementById('students-grid');
             if (!container) return;
@@ -1153,13 +1207,77 @@
             `).join('');
         }
 
-        // Modal Open/Close
-        function openWorksheetUploadModal() {
-            document.getElementById('upload-worksheet-modal').classList.add('show');
+        function openStudentPreview(id) {
+            const st = AppState.students.find(s => s.id === id);
+            if (!st) return;
+
+            document.getElementById('preview-student-name').innerText = `${st.emoji} ${st.name}`;
+            const body = document.getElementById('preview-student-body');
+
+            body.innerHTML = `
+                <div style="display:flex; gap:8px; margin-bottom:12px;">
+                    <span class="badge badge-level-${st.level.toLowerCase()}">${st.level}</span>
+                    <span class="badge" style="background:#D1FAE5; color:#065F46;">${st.englishLevel}</span>
+                    <span class="badge" style="background:#FEF3C7; color:#92400E;">${st.attendance}% Attendance</span>
+                </div>
+                <p style="font-size:13px; font-weight:700; color:var(--text-dark); margin-bottom:4px;">Grade & Class: ${st.grade}</p>
+                <div style="background:#F8FAFC; border:1px solid var(--border); padding:14px; border-radius:12px; margin-bottom:16px;">
+                    <h5 style="font-size:12px; font-weight:700; color:var(--primary); margin-bottom:4px;">TEACHER NOTES & GOALS</h5>
+                    <p style="font-size:12px; color:var(--text-dark);">${st.notes}</p>
+                </div>
+                <button class="btn-primary btn-emerald" style="width:100%; justify-content:center;" onclick="alert('Assigned new worksheet to ${st.name}!')">➕ Assign Worksheet to ${st.name}</button>
+            `;
+
+            document.getElementById('preview-student-modal').classList.add('show');
         }
 
-        function closeWorksheetUploadModal() {
-            document.getElementById('upload-worksheet-modal').classList.remove('show');
+        function closeStudentPreviewModal() {
+            document.getElementById('preview-student-modal').classList.remove('show');
+        }
+
+        // Worksheet File Handler & Submit
+        function handleFileSelection(event, type) {
+            const file = event.target.files[0];
+            if (file) {
+                AppState.selectedFile = file;
+                AppState.fileType = type;
+                AppState.fileName = file.name;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    AppState.fileDataUrl = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                const statusBox = document.getElementById('file-attachment-status');
+                statusBox.style.display = 'block';
+                document.getElementById('attached-file-name').innerText = `Attached ${type}: ${file.name}`;
+            }
+        }
+
+        function handleWorksheetFormSubmit(event) {
+            event.preventDefault();
+            const title = document.getElementById('input-lesson-title').value;
+            const level = document.getElementById('input-school-level').value;
+            const topic = document.getElementById('input-lesson-topic').value;
+
+            const newWorksheet = {
+                id: 'ws_' + Date.now(),
+                title: title,
+                topic: topic,
+                level: level,
+                fileType: AppState.fileType || 'PDF',
+                isUserUploaded: true,
+                dateAdded: 'Just now',
+                fileName: AppState.fileName || (title.toLowerCase().replace(/\s+/g, '_') + (AppState.fileType === 'PDF' ? '.pdf' : '.jpg')),
+                fileDataUrl: AppState.fileDataUrl
+            };
+
+            AppState.worksheets.unshift(newWorksheet);
+            renderWorksheets();
+            updateDashboardCounts();
+            closeWorksheetUploadModal();
+            alert(`Success! "${title}" saved to your personal library.`);
         }
 
         function renderWorksheets() {
@@ -1197,6 +1315,179 @@
             `).join('');
         }
 
+        function openWorksheetPreview(id) {
+            const ws = AppState.worksheets.find(w => w.id === id);
+            if (!ws) return;
+
+            document.getElementById('preview-title').innerText = ws.title;
+            const body = document.getElementById('preview-body');
+
+            body.innerHTML = `
+                <div style="display:flex; gap:8px; margin-bottom:12px;">
+                    <span class="badge badge-level-${ws.level.toLowerCase()}">${ws.level}</span>
+                    <span class="badge" style="background:#F1F5F9; color:#0F172A;">${ws.fileType} Format</span>
+                </div>
+                <p style="font-size:13px; color:var(--primary); font-weight:700; margin-bottom:12px;">Lesson Topic: ${ws.topic}</p>
+                
+                <div style="background:#F8FAFC; border:1px solid var(--border); padding:16px; border-radius:12px; margin-bottom:16px; text-align:center;">
+                    ${ws.fileDataUrl && ws.fileType === 'PHOTO' ? `<img src="${ws.fileDataUrl}" class="file-preview-thumbnail" />` : `<div style="font-size:36px; margin-bottom:8px;">📄</div><p style="font-size:12px; font-weight:700;">${ws.fileName}</p><p style="font-size:11px; color:var(--text-muted);">PDF Document Ready for Class Printing</p>`}
+                </div>
+
+                <div style="display:flex; justify-content:space-between; gap:10px;">
+                    <button class="btn-primary" style="background:#0D9488;" onclick="alert('Sending worksheet to printer...')">🖨️ Print Worksheet</button>
+                    <button class="btn-primary" onclick="alert('Downloaded to device storage')">⬇️ Download</button>
+                </div>
+            `;
+            document.getElementById('preview-worksheet-modal').classList.add('show');
+        }
+
+        function closeWorksheetPreviewModal() {
+            document.getElementById('preview-worksheet-modal').classList.remove('show');
+        }
+
+        // AI Generator
+        function generateAiLessonPlan() {
+            const topic = document.getElementById('ai-input-topic').value;
+            const level = document.getElementById('ai-input-level').value;
+            const duration = parseInt(document.getElementById('ai-input-duration').value) || 45;
+            const goal = document.getElementById('ai-input-goal').value;
+
+            if (!topic.trim()) {
+                alert('Please enter a lesson topic for the AI generator.');
+                return;
+            }
+
+            document.getElementById('ai-form-view').style.display = 'none';
+            document.getElementById('ai-loading-view').style.display = 'block';
+
+            setTimeout(() => {
+                const generatedPlan = {
+                    id: 'les_' + Date.now(),
+                    title: `AI Plan: ${topic}`,
+                    topic: topic,
+                    level: level,
+                    duration: duration,
+                    isAiGenerated: true,
+                    targetGrammar: `Grammar & Vocabulary for ${topic}`,
+                    objectives: [
+                        `Understand core structures of ${topic}.`,
+                        `Practice target vocabulary in guided exercises.`,
+                        `Engage in pair roleplay activities.`
+                    ],
+                    steps: [
+                        { phase: `Warm-up (5 mins)`, desc: `Show flashcards and elicit background knowledge for ${topic}.` },
+                        { phase: `Presentation (15 mins)`, desc: `Explain grammar rule & model sentences.` },
+                        { phase: `Practice (15 mins)`, desc: `Guided worksheet exercise in pairs.` },
+                        { phase: `Production (10 mins)`, desc: `Roleplay activity. ${goal ? 'Goal: ' + goal : ''}` }
+                    ]
+                };
+
+                AppState.generatedAiLesson = generatedPlan;
+                renderAiResultView(generatedPlan);
+            }, 1200);
+        }
+
+        function renderAiResultView(plan) {
+            document.getElementById('ai-loading-view').style.display = 'none';
+            const resultView = document.getElementById('ai-result-view');
+            resultView.style.display = 'block';
+
+            resultView.innerHTML = `
+                <div style="margin-bottom:12px;">
+                    <span class="badge badge-ai-generated">✨ AI GENERATED PLAN</span>
+                    <h3 style="font-size:18px; font-weight:800;">${plan.title}</h3>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    ${plan.steps.map((s, idx) => `
+                        <div class="phase-card">
+                            <div style="font-size:11px; font-weight:800; color:var(--emerald);">${idx + 1}. ${s.phase}</div>
+                            <div style="font-size:12px; color:var(--text-dark); margin-top:2px;">${s.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <button class="btn-primary btn-ai" style="width:100%; justify-content:center; padding:12px;" onclick="saveGeneratedAiLesson()">
+                    💾 Save AI Lesson Plan to My Lessons
+                </button>
+            `;
+        }
+
+        function saveGeneratedAiLesson() {
+            if (AppState.generatedAiLesson) {
+                AppState.lessons.unshift(AppState.generatedAiLesson);
+                renderLessons();
+                updateDashboardCounts();
+                closeAiLessonPlanModal();
+                alert(`Saved! "${AppState.generatedAiLesson.title}" has been added to My Lessons.`);
+                AppState.generatedAiLesson = null;
+            }
+        }
+
+        function renderLessons() {
+            const container = document.getElementById('lessons-list');
+            if (!container) return;
+
+            const searchVal = (document.getElementById('lesson-search-input')?.value || '').toLowerCase();
+            const filtered = AppState.lessons.filter(l =>
+                l.title.toLowerCase().includes(searchVal) ||
+                l.topic.toLowerCase().includes(searchVal)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--text-muted);">No lesson plans found</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(les => `
+                <div class="studio-card" onclick="openLessonPreview('${les.id}')">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <span style="font-size:22px;">📚</span>
+                                ${les.isAiGenerated ? '<span class="badge badge-ai-generated">✨ AI PLAN</span>' : ''}
+                            </div>
+                            <div>
+                                <span class="badge badge-level-${les.level.toLowerCase()}">${les.level}</span>
+                                <span class="badge" style="background:#F1F5F9; color:#0F172A;">⏱️ ${les.duration}m</span>
+                            </div>
+                        </div>
+                        <h4 style="font-weight:800; font-size:15px; margin-bottom:4px;">${les.title}</h4>
+                        <p style="font-size:12px; color:var(--primary); font-weight:700;">Topic: ${les.topic}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openLessonPreview(id) {
+            const les = AppState.lessons.find(l => l.id === id);
+            if (!les) return;
+
+            document.getElementById('preview-lesson-title').innerText = les.title;
+            const body = document.getElementById('preview-lesson-body');
+
+            body.innerHTML = `
+                <div style="display:flex; gap:8px; margin-bottom:12px;">
+                    ${les.isAiGenerated ? '<span class="badge badge-ai-generated">✨ AI GENERATED</span>' : ''}
+                    <span class="badge badge-level-${les.level.toLowerCase()}">${les.level}</span>
+                </div>
+                <div style="margin-bottom:16px;">
+                    ${(les.steps || []).map((s, idx) => `
+                        <div class="phase-card">
+                            <div style="font-size:11px; font-weight:800; color:var(--emerald);">${idx + 1}. ${s.phase}</div>
+                            <div style="font-size:12px; color:var(--text-dark); margin-top:2px;">${s.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('preview-lesson-modal').classList.add('show');
+        }
+
+        function closeLessonPreviewModal() {
+            document.getElementById('preview-lesson-modal').classList.remove('show');
+        }
+
         function updateDashboardCounts() {
             const elStudents = document.getElementById('dash-count-students');
             if (elStudents) elStudents.innerText = AppState.students.length;
@@ -1214,7 +1505,28 @@
             if (elVideos) elVideos.innerText = AppState.videoProjects.length;
         }
 
-        // Initialize
+        // Direct Event Listener Bindings for 100% Reliability
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('btn-open-worksheet-modal')?.addEventListener('click', openWorksheetUploadModal);
+            document.getElementById('btn-open-student-modal')?.addEventListener('click', openAddStudentModal);
+            document.getElementById('btn-open-ai-lesson-modal')?.addEventListener('click', openAiLessonPlanModal);
+
+            // Overlay click to close modals
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('show');
+                    }
+                });
+            });
+
+            renderStudents();
+            renderWorksheets();
+            renderLessons();
+            updateDashboardCounts();
+        });
+
+        // Initialize immediately as fallback
         renderStudents();
         renderWorksheets();
         renderLessons();
