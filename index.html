@@ -24,6 +24,70 @@
             --sidebar-width-collapsed: 72px;
         }
 
+        /* Dark Theme Color Overrides for Low-Light Visibility */
+        body.dark-theme {
+            --bg-light: #0B0F19;
+            --surface: #1E293B;
+            --surface-variant: #334155;
+            --border: #334155;
+            --text-dark: #F8FAFC;
+            --text-muted: #94A3B8;
+        }
+
+        body.dark-theme .studio-card {
+            background: #1E293B;
+            border-color: #334155;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        body.dark-theme .modal-content {
+            background: #1E293B;
+            color: #F8FAFC;
+            border: 1px solid #334155;
+        }
+
+        body.dark-theme .form-input, 
+        body.dark-theme .form-select, 
+        body.dark-theme .form-textarea {
+            background: #0F172A;
+            color: #F8FAFC;
+            border-color: #334155;
+        }
+
+        body.dark-theme .form-input::placeholder,
+        body.dark-theme .form-textarea::placeholder {
+            color: #64748B;
+        }
+
+        body.dark-theme .speech-bubble-card,
+        body.dark-theme .phase-card,
+        body.dark-theme .subtitle-line-row {
+            background: #0F172A;
+            border-color: #334155;
+            color: #F8FAFC;
+        }
+
+        body.dark-theme .speech-bubble-card.active-speaking {
+            background: #1E1B4B;
+            border-color: #6366F1;
+        }
+
+        body.dark-theme .speaker-avatar {
+            background: #1E293B;
+            border-color: #334155;
+            color: #F8FAFC;
+        }
+
+        body.dark-theme #file-attachment-status {
+            background: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        body.dark-theme .time-badge {
+            background: #334155;
+            color: #F8FAFC;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -38,6 +102,7 @@
             height: 100vh;
             overflow: hidden;
             display: flex;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
 
         /* App Layout Container */
@@ -383,6 +448,8 @@
             width: 100%;
             outline: none;
             transition: border-color 0.2s;
+            background: var(--surface);
+            color: var(--text-dark);
         }
 
         .form-textarea {
@@ -829,6 +896,12 @@
                     <span class="nav-icon">🎬</span>
                     <span class="nav-text">Video Projects</span>
                 </a>
+
+                <!-- Dark Mode Theme Toggle Item -->
+                <a class="nav-item" id="nav-toggle-theme" onclick="toggleDarkMode()">
+                    <span class="nav-icon" id="theme-icon">🌙</span>
+                    <span class="nav-text" id="theme-text">Dark Mode</span>
+                </a>
             </div>
 
             <div class="user-profile-bar">
@@ -932,11 +1005,16 @@
                 <div class="page-header">
                     <div class="page-title">
                         <h2>Worksheets Library</h2>
-                        <p>Store, organize and preview PDF worksheets and photos</p>
+                        <p>Create, generate with AI, upload, and organize printable worksheets</p>
                     </div>
-                    <button id="btn-open-worksheet-modal" class="btn-primary" onclick="openWorksheetUploadModal()">
-                        <span>☁️</span> Upload & Add Worksheet
-                    </button>
+                    <div class="header-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button id="btn-open-ai-worksheet-modal" class="btn-primary btn-ai" onclick="openAiWorksheetModal()">
+                            <span>✨</span> AI Worksheet Generator
+                        </button>
+                        <button id="btn-open-worksheet-modal" class="btn-primary" onclick="openWorksheetUploadModal()">
+                            <span>☁️</span> Upload & Add Worksheet
+                        </button>
+                    </div>
                 </div>
 
                 <div class="search-bar">
@@ -1025,11 +1103,16 @@
                 <div class="page-header">
                     <div class="page-title">
                         <h2>Video Projects & Subtitle Studio</h2>
-                        <p>Manage video scripts, voiceovers, subtitles & MP4 video lessons</p>
+                        <p>Generate with AI, manage video scripts, voiceovers, subtitles & MP4 video lessons</p>
                     </div>
-                    <button id="btn-open-video-modal" class="btn-primary btn-violet" onclick="openAddVideoModal()">
-                        <span>🎬</span> New Video Project
-                    </button>
+                    <div class="header-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button id="btn-open-ai-video-modal" class="btn-primary btn-ai" onclick="openAiVideoModal()">
+                            <span>✨</span> AI Video Generator
+                        </button>
+                        <button id="btn-open-video-modal" class="btn-primary btn-violet" onclick="openAddVideoModal()">
+                            <span>🎬</span> New Video Project
+                        </button>
+                    </div>
                 </div>
 
                 <div class="search-bar">
@@ -1178,6 +1261,70 @@
                     💾 Save Worksheet to Personal Library
                 </button>
             </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3.5: AI WORKSHEET GENERATOR MODAL -->
+    <div id="ai-worksheet-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 620px;">
+            <div class="modal-header">
+                <h3>✨ AI Worksheet Generator</h3>
+                <button class="close-btn" onclick="closeAiWorksheetModal()">&times;</button>
+            </div>
+
+            <div id="ai-ws-form-view">
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+                    Generate customized, printable English practice sheets with exercises, questions, and an auto-generated teacher answer key.
+                </p>
+
+                <div class="form-group">
+                    <label for="ai-ws-input-topic">1. Worksheet Topic / Focus *</label>
+                    <input type="text" id="ai-ws-input-topic" class="form-input" placeholder="e.g. Present Continuous Tense, Zoo Animals Vocabulary, Phonics Silent E, Irregular Verbs">
+                </div>
+
+                <div class="form-group">
+                    <label for="ai-ws-input-level">2. Select School Level *</label>
+                    <select id="ai-ws-input-level" class="form-select">
+                        <option value="PRIMARY">Primary (K-5)</option>
+                        <option value="MIDDLE" selected>Middle School (6-8)</option>
+                        <option value="HIGH">High School (9-12)</option>
+                        <option value="ADULT">Adult & Business</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ai-ws-input-type">3. Worksheet Type *</label>
+                    <select id="ai-ws-input-type" class="form-select">
+                        <option value="Grammar & Fill-in-Blanks">Grammar & Fill-in-the-Blanks</option>
+                        <option value="Vocabulary Match & Quiz">Vocabulary Match & Quiz</option>
+                        <option value="Reading Comprehension + Q&A">Reading Comprehension + Short Answers</option>
+                        <option value="Speaking & Dialogue Sheet">Speaking & Dialogue Practice Sheet</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ai-ws-input-questions">4. Number of Questions *</label>
+                    <select id="ai-ws-input-questions" class="form-select">
+                        <option value="5">5 Questions (Quick Practice)</option>
+                        <option value="8" selected>8 Questions (Standard Worksheet)</option>
+                        <option value="12">12 Questions (In-Depth Challenge)</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary btn-ai" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;" onclick="generateAiWorksheet()">
+                    ✨ Generate Printable Worksheet
+                </button>
+            </div>
+
+            <div id="ai-ws-loading-view" style="display: none; text-align: center; padding: 30px 20px;">
+                <div class="loading-spinner" style="margin: 0 auto 16px auto;"></div>
+                <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Crafting Your AI Worksheet...</h4>
+                <p style="font-size: 13px; color: var(--text-muted);">Generating exercises, formatting layout, and creating teacher answer key...</p>
+            </div>
+
+            <div id="ai-ws-result-view" style="display: none;">
+                <!-- Generated Worksheet Result Content -->
+            </div>
         </div>
     </div>
 
@@ -1474,6 +1621,65 @@
         </div>
     </div>
 
+    <!-- MODAL 11.5: AI VIDEO GENERATOR MODAL -->
+    <div id="ai-video-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 620px;">
+            <div class="modal-header">
+                <h3>✨ AI Video Lesson Generator</h3>
+                <button class="close-btn" onclick="closeAiVideoModal()">&times;</button>
+            </div>
+
+            <div id="ai-vid-form-view">
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+                    Create an animated cartoon video lesson complete with voiceover audio, character dialogue, and timed subtitles.
+                </p>
+
+                <div class="form-group">
+                    <label for="ai-vid-input-topic">1. Video Lesson Topic *</label>
+                    <input type="text" id="ai-vid-input-topic" class="form-input" placeholder="e.g. Ordering at Sunshine Cafe, Phonics Vowels, Zoo Animals, Travel & Airport">
+                </div>
+
+                <div class="form-group">
+                    <label for="ai-vid-input-cast">2. Cartoon Character Cast *</label>
+                    <select id="ai-vid-input-cast" class="form-select">
+                        <option value="Teacher Emma & Leo the Lion">👩‍🏫 Teacher Emma & 🦁 Leo the Lion</option>
+                        <option value="Maya the Owl & Barnaby Bear">🦉 Maya the Owl & 🐻 Barnaby Bear</option>
+                        <option value="Benny Bunny & Penny Penguin">🐰 Benny Bunny & 🐧 Penny Penguin</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ai-vid-input-level">3. Select School Level *</label>
+                    <select id="ai-vid-input-level" class="form-select">
+                        <option value="PRIMARY">Primary (K-5)</option>
+                        <option value="MIDDLE" selected>Middle School (6-8)</option>
+                        <option value="HIGH">High School (9-12)</option>
+                        <option value="ADULT">Adult & Business</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ai-vid-input-duration">4. Target Video Length *</label>
+                    <select id="ai-vid-input-duration" class="form-select">
+                        <option value="60s">60 Seconds (Short Clip)</option>
+                        <option value="120s" selected>120 Seconds (Full Dialogue Video)</option>
+                        <option value="180s">180 Seconds (Extended Lesson)</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary btn-ai" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;" onclick="generateAiVideoProject()">
+                    ✨ Generate Cartoon Video Project
+                </button>
+            </div>
+
+            <div id="ai-vid-loading-view" style="display: none; text-align: center; padding: 30px 20px;">
+                <div class="loading-spinner" style="margin: 0 auto 16px auto;"></div>
+                <h4 style="font-size: 16px; font-weight: 800; color: var(--accent-violet); margin-bottom: 6px;">Building AI Video Lesson...</h4>
+                <p style="font-size: 13px; color: var(--text-muted);">Configuring cartoon scene stage, voiceover audio tracks, and timing subtitle captions...</p>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL 12: ADD VIDEO PROJECT MODAL -->
     <div id="add-video-modal" class="modal-overlay">
         <div class="modal-content">
@@ -1588,6 +1794,7 @@
         // App State Store
         const AppState = {
             activeSection: 'dashboard',
+            isDarkMode: false,
             selectedStudentEmoji: '👦',
             selectedCharacterEmoji: '👩‍🏫',
             generatedAiLesson: null,
@@ -1608,8 +1815,106 @@
                 { id: 'st_2', name: 'Maya Lin', emoji: '👧', level: 'MIDDLE', grade: '7th Grade', englishLevel: 'Intermediate B1', attendance: 98, notes: 'Analytical grammar learner. Focus on Present Perfect vs Past Simple timelines.', assignedWorksheetCount: 4 }
             ],
             worksheets: [
-                { id: 'ws_1', title: 'Present Perfect vs. Past Simple Challenge', topic: 'Grammar & Tenses', level: 'MIDDLE', fileType: 'PDF', isUserUploaded: true, dateAdded: 'Today', fileName: 'present_perfect_grammar.pdf' },
-                { id: 'ws_2', title: 'Food & Restaurant Dialogue Cards', topic: 'Food & Speaking', level: 'PRIMARY', fileType: 'PHOTO', isUserUploaded: true, dateAdded: 'Yesterday', fileName: 'restaurant_dialogue_cards.jpg' }
+                { 
+                    id: 'ws_1', 
+                    title: 'Present Perfect vs. Past Simple Challenge', 
+                    topic: 'Grammar & Tenses', 
+                    level: 'MIDDLE', 
+                    fileType: 'PDF', 
+                    isUserUploaded: false, 
+                    dateAdded: 'Today', 
+                    fileName: 'present_perfect_grammar.pdf',
+                    instructions: 'Fill in the blanks with the correct verb form (Present Perfect or Past Simple).',
+                    questions: [
+                        { q: '1. I __________ (visit) Paris three times in my life.', answer: 'have visited' },
+                        { q: '2. She __________ (lose) her keys yesterday morning.', answer: 'lost' },
+                        { q: '3. We __________ (not see) Tom since last Monday.', answer: 'have not seen' },
+                        { q: '4. They __________ (finish) their project two hours ago.', answer: 'finished' },
+                        { q: '5. __________ you ever __________ (eat) sushi before?', answer: 'Have / eaten' }
+                    ]
+                },
+                { 
+                    id: 'ws_2', 
+                    title: 'Food & Restaurant Ordering Practice Sheet', 
+                    topic: 'Food & Speaking', 
+                    level: 'PRIMARY', 
+                    fileType: 'PDF', 
+                    isUserUploaded: false, 
+                    dateAdded: 'Yesterday', 
+                    fileName: 'restaurant_dialogue_cards.pdf',
+                    instructions: 'Match the polite ordering phrases with the correct waiter response.',
+                    questions: [
+                        { q: '1. "Could I please see the dessert menu?" -> __________', answer: 'Waiter: "Certainly! Here is our dessert selection."' },
+                        { q: '2. "What do you recommend for lunch today?" -> __________', answer: 'Waiter: "Our grilled pasta special is delicious today."' },
+                        { q: '3. "May we have the check, please?" -> __________', answer: 'Waiter: "Right away, sir. I will bring it over."' }
+                    ]
+                },
+                { 
+                    id: 'ws_3', 
+                    title: 'Animals & Comparative Adjectives Worksheet', 
+                    topic: 'Vocabulary & Grammar', 
+                    level: 'PRIMARY', 
+                    fileType: 'PDF', 
+                    isUserUploaded: false, 
+                    dateAdded: '3 days ago', 
+                    fileName: 'animal_comparatives_worksheet.pdf',
+                    instructions: 'Complete sentences comparing animals using adjectives in brackets.',
+                    questions: [
+                        { q: '1. A cheetah is __________ (fast) than a lion.', answer: 'faster' },
+                        { q: '2. An elephant is __________ (heavy) than a tiger.', answer: 'heavier' },
+                        { q: '3. Monkeys are __________ (playful) than owls.', answer: 'more playful' },
+                        { q: '4. Blue whales are the __________ (large) animals on Earth.', answer: 'largest' }
+                    ]
+                },
+                { 
+                    id: 'ws_4', 
+                    title: 'Business English Email Writing & Phrases', 
+                    topic: 'Business & Writing', 
+                    level: 'HIGH', 
+                    fileType: 'PDF', 
+                    isUserUploaded: false, 
+                    dateAdded: '5 days ago', 
+                    fileName: 'business_email_phrases.pdf',
+                    instructions: 'Choose professional opening and closing phrases for formal email communication.',
+                    questions: [
+                        { q: '1. Formal opening for an unknown recipient: __________', answer: 'To Whom It May Concern / Dear Sir or Madam' },
+                        { q: '2. Expressing gratitude for a quick reply: __________', answer: 'Thank you for your prompt response.' },
+                        { q: '3. Professional closing before signature: __________', answer: 'Sincerely / Kind regards' }
+                    ]
+                },
+                { 
+                    id: 'ws_5', 
+                    title: 'Phonics Magic E & Short Vowel Story Sheet', 
+                    topic: 'Phonics & Reading', 
+                    level: 'PRIMARY', 
+                    fileType: 'PDF', 
+                    isUserUploaded: false, 
+                    dateAdded: '1 week ago', 
+                    fileName: 'phonics_magic_e_sheet.pdf',
+                    instructions: 'Read the short vowel word and convert it to a long vowel word using Silent E.',
+                    questions: [
+                        { q: '1. Mat + Silent E -> __________', answer: 'Mate' },
+                        { q: '2. Hop + Silent E -> __________', answer: 'Hope' },
+                        { q: '3. Kit + Silent E -> __________', answer: 'Kite' },
+                        { q: '4. Tub + Silent E -> __________', answer: 'Tube' }
+                    ]
+                },
+                { 
+                    id: 'ws_6', 
+                    title: 'Travel & Airport Conversation Activity Sheet', 
+                    topic: 'Speaking & Listening', 
+                    level: 'MIDDLE', 
+                    fileType: 'PDF', 
+                    isUserUploaded: false, 
+                    dateAdded: '1 week ago', 
+                    fileName: 'airport_travel_conversation.pdf',
+                    instructions: 'Complete the airport check-in dialogue with suitable travel vocabulary.',
+                    questions: [
+                        { q: '1. "May I see your __________ and boarding pass, please?"', answer: 'passport' },
+                        { q: '2. "Do you have any __________ to check in?"', answer: 'luggage / bags' },
+                        { q: '3. "Would you prefer a window seat or an __________ seat?"', answer: 'aisle' }
+                    ]
+                }
             ],
             lessons: [
                 {
@@ -1719,13 +2024,79 @@
             ]
         };
 
-        // Speech Audio Synthesizer Handler (Web SpeechSynthesis with Fallback)
+        // Dark Mode Toggle & Preference Application
+        function toggleDarkMode() {
+            AppState.isDarkMode = !AppState.isDarkMode;
+            applyTheme();
+            try {
+                localStorage.setItem('studio_theme', AppState.isDarkMode ? 'dark' : 'light');
+            } catch (e) {}
+        }
+
+        function applyTheme() {
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (AppState.isDarkMode) {
+                document.body.classList.add('dark-theme');
+                if (icon) icon.innerText = '☀️';
+                if (text) text.innerText = 'Light Mode';
+            } else {
+                document.body.classList.remove('dark-theme');
+                if (icon) icon.innerText = '🌙';
+                if (text) text.innerText = 'Dark Mode';
+            }
+        }
+
+        // Speech Audio Synthesizer Handler (Native English Web SpeechSynthesis)
+        let nativeEnglishVoices = [];
+
+        function loadNativeVoices() {
+            if ('speechSynthesis' in window) {
+                const voices = window.speechSynthesis.getVoices();
+                nativeEnglishVoices = voices.filter(v => v.lang && (v.lang.startsWith('en') || v.lang.includes('US') || v.lang.includes('GB') || v.lang.includes('UK')));
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = loadNativeVoices;
+            loadNativeVoices();
+        }
+
+        function getNativeVoice(voiceTone = 'Gentle') {
+            if (!nativeEnglishVoices.length) loadNativeVoices();
+            if (!nativeEnglishVoices.length && 'speechSynthesis' in window) {
+                const allVoices = window.speechSynthesis.getVoices();
+                nativeEnglishVoices = allVoices.filter(v => v.lang && v.lang.startsWith('en'));
+            }
+            if (!nativeEnglishVoices.length) return null;
+
+            // Prioritize high-quality native English voices (Google, Apple Samantha/Alex/Daniel, Microsoft Zira/David)
+            if (voiceTone.includes('Female') || voiceTone.includes('Gentle')) {
+                const femaleVoice = nativeEnglishVoices.find(v => /female|samantha|zira|karen|victoria|google us/i.test(v.name));
+                if (femaleVoice) return femaleVoice;
+            } else if (voiceTone.includes('Male') || voiceTone.includes('Energetic')) {
+                const maleVoice = nativeEnglishVoices.find(v => /male|david|daniel|alex|george|google uk/i.test(v.name));
+                if (maleVoice) return maleVoice;
+            }
+
+            const priorityVoice = nativeEnglishVoices.find(v => /google|natural|samantha|zira|daniel|alex|karen|en-us|en-gb/i.test(v.name));
+            return priorityVoice || nativeEnglishVoices[0] || null;
+        }
+
         function speakText(text, voiceTone = 'Gentle') {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 0.95;
-                utterance.pitch = voiceTone.includes('High') ? 1.3 : voiceTone.includes('Playful') ? 1.2 : 1.0;
+                utterance.lang = 'en-US';
+                
+                const selectedVoice = getNativeVoice(voiceTone);
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                }
+
+                utterance.rate = 0.92;
+                utterance.pitch = voiceTone.includes('High') ? 1.3 : voiceTone.includes('Playful') ? 1.25 : 1.0;
                 window.speechSynthesis.speak(utterance);
             }
         }
@@ -1750,7 +2121,9 @@
         }
 
         document.querySelectorAll('.nav-item').forEach(el => {
-            el.addEventListener('click', () => switchSection(el.getAttribute('data-section')));
+            if (el.id !== 'nav-toggle-theme') {
+                el.addEventListener('click', () => switchSection(el.getAttribute('data-section')));
+            }
         });
 
         document.getElementById('toggle-sidebar-btn').addEventListener('click', () => {
@@ -1973,6 +2346,109 @@
             `).join('');
         }
 
+        function openAiWorksheetModal() {
+            document.getElementById('ai-ws-form-view').style.display = 'block';
+            document.getElementById('ai-ws-loading-view').style.display = 'none';
+            document.getElementById('ai-ws-result-view').style.display = 'none';
+            document.getElementById('ai-worksheet-modal')?.classList.add('show');
+        }
+
+        function closeAiWorksheetModal() {
+            document.getElementById('ai-worksheet-modal')?.classList.remove('show');
+        }
+
+        function generateAiWorksheet() {
+            const topic = document.getElementById('ai-ws-input-topic').value || 'Grammar & Vocabulary';
+            const level = document.getElementById('ai-ws-input-level').value;
+            const type = document.getElementById('ai-ws-input-type').value;
+            const count = parseInt(document.getElementById('ai-ws-input-questions').value) || 8;
+
+            document.getElementById('ai-ws-form-view').style.display = 'none';
+            document.getElementById('ai-ws-loading-view').style.display = 'block';
+
+            setTimeout(() => {
+                const sampleQuestions = [];
+                for (let i = 1; i <= count; i++) {
+                    if (type.includes('Grammar')) {
+                        sampleQuestions.push({
+                            q: `${i}. Complete sentence: "The students __________ (study) ${topic} key concepts."`,
+                            answer: `are studying / studied (${topic})`
+                        });
+                    } else if (type.includes('Vocabulary')) {
+                        sampleQuestions.push({
+                            q: `${i}. Vocabulary Challenge: Write a complete sentence using "${topic} Key Word #${i}".`,
+                            answer: `Sample usage sentence for ${topic} word #${i}`
+                        });
+                    } else if (type.includes('Reading')) {
+                        sampleQuestions.push({
+                            q: `${i}. Reading Question: What is the main idea of paragraph ${i} regarding ${topic}?`,
+                            answer: `Key supporting detail for ${topic}`
+                        });
+                    } else {
+                        sampleQuestions.push({
+                            q: `${i}. Roleplay Prompt: Practice expression #${i} with your speaking partner.`,
+                            answer: `Sample dialogue phrase: "I would like to practice ${topic}."`
+                        });
+                    }
+                }
+
+                const newWs = {
+                    id: 'ws_' + Date.now(),
+                    title: `AI Sheet: ${topic}`,
+                    topic: topic,
+                    level: level,
+                    fileType: 'PDF',
+                    isUserUploaded: false,
+                    isAiGenerated: true,
+                    dateAdded: 'Just now',
+                    fileName: `ai_${topic.toLowerCase().replace(/\s+/g, '_')}_worksheet.pdf`,
+                    instructions: `Complete all ${count} exercises carefully. Write your answers clearly in the spaces provided below.`,
+                    questions: sampleQuestions
+                };
+
+                AppState.worksheets.unshift(newWs);
+                renderWorksheets();
+                updateDashboardCounts();
+
+                document.getElementById('ai-ws-loading-view').style.display = 'none';
+                const resultView = document.getElementById('ai-ws-result-view');
+                resultView.style.display = 'block';
+
+                resultView.innerHTML = `
+                    <div style="background:#F8FAFC; border:1px solid var(--border); padding:16px; border-radius:12px; margin-bottom:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span class="badge badge-level-${level.toLowerCase()}">${level}</span>
+                            <span class="badge" style="background:#EEF2FF; color:var(--primary); font-weight:700;">✨ AI GENERATED WORKSHEET</span>
+                        </div>
+                        <h4 style="font-size:16px; font-weight:800; margin-bottom:4px; color:var(--text-dark);">${newWs.title}</h4>
+                        <p style="font-size:12px; color:var(--primary); font-weight:600; margin-bottom:12px;">Type: ${type} • ${count} Questions</p>
+                        
+                        <div style="background:#FFFFFF; border:1px dashed var(--border); padding:12px; border-radius:10px; font-size:12px; margin-bottom:12px;">
+                            <strong>Teacher Instructions:</strong> ${newWs.instructions}
+                        </div>
+
+                        <div style="max-height:220px; overflow-y:auto; padding-right:4px;">
+                            ${sampleQuestions.map((q, idx) => `
+                                <div style="margin-bottom:8px; font-size:12px; background:#FFFFFF; padding:8px 10px; border-radius:8px; border:1px solid var(--border);">
+                                    <div style="font-weight:700; color:#0F172A;">${q.q}</div>
+                                    <div style="font-size:11px; color:var(--emerald); font-weight:700; margin-top:2px;">✔ Answer Key: ${q.answer}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn-primary btn-emerald" style="flex:1; justify-content:center; padding:10px;" onclick="closeAiWorksheetModal(); openWorksheetPreview('${newWs.id}')">
+                            🖨️ Open Printable View
+                        </button>
+                        <button class="btn-primary" style="flex:1; justify-content:center; padding:10px; background:var(--surface-variant); color:var(--text-dark);" onclick="openAiWorksheetModal()">
+                            🔄 Generate Another
+                        </button>
+                    </div>
+                `;
+            }, 1200);
+        }
+
         function openWorksheetPreview(id) {
             const ws = AppState.worksheets.find(w => w.id === id);
             if (!ws) return;
@@ -1980,20 +2456,83 @@
             document.getElementById('preview-title').innerText = ws.title;
             const body = document.getElementById('preview-body');
 
+            const studentOptions = AppState.students.map(s => `<option value="${s.id}">${s.emoji} ${s.name} (${s.level})</option>`).join('');
+
             body.innerHTML = `
-                <div style="display:flex; gap:8px; margin-bottom:12px;">
-                    <span class="badge badge-level-${ws.level.toLowerCase()}">${ws.level}</span>
-                    <span class="badge" style="background:#F1F5F9; color:#0F172A;">${ws.fileType} Format</span>
-                </div>
-                <p style="font-size:13px; color:var(--primary); font-weight:700; margin-bottom:12px;">Lesson Topic: ${ws.topic}</p>
-                
-                <div style="background:#F8FAFC; border:1px solid var(--border); padding:16px; border-radius:12px; margin-bottom:16px; text-align:center;">
-                    ${ws.fileDataUrl && ws.fileType === 'PHOTO' ? `<img src="${ws.fileDataUrl}" style="max-width:100%; max-height:220px; border-radius:10px;" />` : `<div style="font-size:36px; margin-bottom:8px;">📄</div><p style="font-size:12px; font-weight:700;">${ws.fileName}</p><p style="font-size:11px; color:var(--text-muted);">PDF Document Ready for Class Printing</p>`}
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                    <div style="display:flex; gap:8px;">
+                        <span class="badge badge-level-${ws.level.toLowerCase()}">${ws.level}</span>
+                        <span class="badge" style="background:var(--surface-variant); color:var(--text-dark);">${ws.fileType} Format</span>
+                        ${ws.isAiGenerated ? '<span class="badge" style="background:#EEF2FF; color:var(--primary); font-weight:700;">✨ AI CREATED</span>' : ''}
+                    </div>
+                    <span style="font-size:11px; color:var(--text-muted);">${ws.dateAdded}</span>
                 </div>
 
-                <div style="display:flex; justify-content:space-between; gap:10px;">
-                    <button class="btn-primary" style="background:#0D9488;" onclick="alert('Sending worksheet to printer...')">🖨️ Print Worksheet</button>
-                    <button class="btn-primary" onclick="alert('Downloaded to device storage')">⬇️ Download</button>
+                <!-- Formatted Printable Worksheet Container -->
+                <div id="printable-worksheet-doc" style="background:var(--surface); border:2px solid var(--border); padding:20px; border-radius:14px; margin-bottom:16px;">
+                    <div style="border-bottom:2px solid var(--border); padding-bottom:12px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <h3 style="font-size:16px; font-weight:800; color:var(--text-dark); margin-bottom:2px;">ENGLISH STUDIO WORKSHEET</h3>
+                            <h4 style="font-size:14px; font-weight:700; color:var(--primary);">${ws.title}</h4>
+                            <p style="font-size:11px; color:var(--text-muted);">Topic: ${ws.topic} • Level: ${ws.level}</p>
+                        </div>
+                        <div style="text-align:right; font-size:11px; color:var(--text-dark); background:var(--surface-variant); padding:8px 12px; border-radius:8px;">
+                            <div>Student: ____________________</div>
+                            <div style="margin-top:4px;">Date: ____________ Score: _____</div>
+                        </div>
+                    </div>
+
+                    ${ws.instructions ? `
+                        <div style="background:var(--surface-variant); padding:10px 12px; border-radius:8px; font-size:12px; font-weight:600; margin-bottom:14px; color:var(--text-dark);">
+                            📝 <strong>Instructions:</strong> ${ws.instructions}
+                        </div>
+                    ` : ''}
+
+                    <!-- Worksheet Questions -->
+                    <div style="margin-bottom:16px;">
+                        ${ws.questions && ws.questions.length > 0 ? ws.questions.map((q, idx) => `
+                            <div style="margin-bottom:12px; padding-bottom:8px; border-bottom:1px dashed var(--border); font-size:13px; color:var(--text-dark);">
+                                <div style="font-weight:700; margin-bottom:4px;">${q.q}</div>
+                                <div style="height:20px; border-bottom:1px solid #CBD5E1; margin-top:4px; opacity:0.6;"></div>
+                                <div id="ans-key-${ws.id}-${idx}" class="answer-key-box" style="display:none; margin-top:6px; font-size:11px; color:var(--emerald); font-weight:700; background:#ECFDF5; padding:4px 8px; border-radius:6px;">
+                                    ✔ Teacher Answer: ${q.answer}
+                                </div>
+                            </div>
+                        `).join('') : `
+                            <div style="text-align:center; padding:20px;">
+                                ${ws.fileDataUrl && ws.fileType === 'PHOTO' ? `<img src="${ws.fileDataUrl}" style="max-width:100%; max-height:220px; border-radius:10px;" />` : `<div style="font-size:36px; margin-bottom:8px;">📄</div><p style="font-size:12px; font-weight:700;">${ws.fileName}</p><p style="font-size:11px; color:var(--text-muted);">PDF Document File Attached Ready for Class Printing</p>`}
+                            </div>
+                        `}
+                    </div>
+
+                    ${ws.questions && ws.questions.length > 0 ? `
+                        <button class="btn-primary btn-amber" style="font-size:11px; padding:6px 12px;" onclick="toggleAnswerKey('${ws.id}')">
+                            🔑 Toggle Teacher Answer Key
+                        </button>
+                    ` : ''}
+                </div>
+
+                <!-- Assign to Student Box -->
+                <div style="background:var(--surface-variant); border:1px solid var(--border); padding:12px; border-radius:12px; margin-bottom:16px;">
+                    <label style="font-size:12px; font-weight:700; display:block; margin-bottom:6px; color:var(--text-dark);">👤 Assign Worksheet to Student:</label>
+                    <div style="display:flex; gap:8px;">
+                        <select id="assign-student-select-${ws.id}" class="form-select" style="padding:6px 10px; font-size:12px;">
+                            ${studentOptions || '<option value="">No students in roster</option>'}
+                        </select>
+                        <button class="btn-primary btn-emerald" style="font-size:12px; padding:6px 12px; white-space:nowrap;" onclick="assignWorksheetToStudent('${ws.id}')">
+                            Assign
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+                    <button class="btn-primary" style="background:#0D9488; flex:1; justify-content:center;" onclick="printWorksheetDocument('${ws.id}')">
+                        🖨️ Print Worksheet
+                    </button>
+                    <button class="btn-primary" style="flex:1; justify-content:center;" onclick="alert('Worksheet PDF downloaded to your device!')">
+                        ⬇️ Download PDF
+                    </button>
                 </div>
             `;
             document.getElementById('preview-worksheet-modal').classList.add('show');
@@ -2001,6 +2540,32 @@
 
         function closeWorksheetPreviewModal() {
             document.getElementById('preview-worksheet-modal').classList.remove('show');
+        }
+
+        function toggleAnswerKey(wsId) {
+            const keys = document.querySelectorAll('.answer-key-box');
+            keys.forEach(k => {
+                k.style.display = (k.style.display === 'none' || !k.style.display) ? 'block' : 'none';
+            });
+        }
+
+        function printWorksheetDocument(wsId) {
+            window.print();
+        }
+
+        function assignWorksheetToStudent(wsId) {
+            const select = document.getElementById(`assign-student-select-${wsId}`);
+            if (!select || !select.value) {
+                alert('Please select a student from your roster first.');
+                return;
+            }
+            const student = AppState.students.find(s => s.id === select.value);
+            const ws = AppState.worksheets.find(w => w.id === wsId);
+            if (student && ws) {
+                student.assignedWorksheetCount = (student.assignedWorksheetCount || 0) + 1;
+                renderStudents();
+                alert(`Successfully assigned "${ws.title}" to ${student.name}!`);
+            }
         }
 
         // Cartoon Characters Handlers
@@ -2271,7 +2836,11 @@
 
                 if ('speechSynthesis' in window) {
                     const utterance = new SpeechSynthesisUtterance(line.text);
-                    utterance.rate = 0.95;
+                    utterance.lang = 'en-US';
+                    const voice = getNativeVoice(line.speaker);
+                    if (voice) utterance.voice = voice;
+                    utterance.rate = 0.92;
+                    utterance.pitch = (line.speaker && line.speaker.toLowerCase().includes('leo')) ? 1.25 : 1.0;
                     utterance.onend = () => {
                         idx++;
                         setTimeout(speakNext, 500);
@@ -2364,6 +2933,65 @@
         }
 
         // Video Projects Handlers
+        function openAiVideoModal() {
+            document.getElementById('ai-vid-form-view').style.display = 'block';
+            document.getElementById('ai-vid-loading-view').style.display = 'none';
+            document.getElementById('ai-video-modal')?.classList.add('show');
+        }
+
+        function closeAiVideoModal() {
+            document.getElementById('ai-video-modal')?.classList.remove('show');
+        }
+
+        function generateAiVideoProject() {
+            const topic = document.getElementById('ai-vid-input-topic').value || 'Daily English Conversation';
+            const cast = document.getElementById('ai-vid-input-cast').value;
+            const level = document.getElementById('ai-vid-input-level').value;
+            const duration = document.getElementById('ai-vid-input-duration').value || '120s';
+
+            document.getElementById('ai-vid-form-view').style.display = 'none';
+            document.getElementById('ai-vid-loading-view').style.display = 'block';
+
+            setTimeout(() => {
+                const char1Emoji = cast.includes('Teacher') ? '👩‍🏫' : cast.includes('Maya') ? '🦉' : '🐰';
+                const char2Emoji = cast.includes('Lion') ? '🦁' : cast.includes('Bear') ? '🐻' : '🐧';
+
+                const newVid = {
+                    id: 'vid_' + Date.now(),
+                    title: `AI Video: ${topic}`,
+                    level: level,
+                    status: 'In Subtitle Studio',
+                    duration: duration,
+                    scriptTitle: `${topic} (${cast})`,
+                    char1Emoji: char1Emoji,
+                    char2Emoji: char2Emoji,
+                    subtitles: [
+                        { time: '00:01 - 00:05', text: `Welcome to our video lesson on ${topic}!` },
+                        { time: '00:06 - 00:10', text: `Watch our cartoon characters practice key ${topic} phrases.` },
+                        { time: '00:11 - 00:15', text: `Listen carefully and repeat out loud after each sentence!` },
+                        { time: '00:16 - 00:20', text: `Great effort! Practice speaking daily with your studio characters!` }
+                    ]
+                };
+
+                AppState.videoProjects.unshift(newVid);
+                renderVideos();
+                updateDashboardCounts();
+
+                closeAiVideoModal();
+                openVideoStudioModal(newVid.id);
+                alert(`✨ AI Video Project "${newVid.title}" created! Video player ready in Studio.`);
+            }, 1200);
+        }
+
+        function openAddVideoModal() {
+            populateVideoScriptDropdown();
+            document.getElementById('add-video-modal')?.classList.add('show');
+        }
+
+        function closeAddVideoModal() {
+            document.getElementById('add-video-modal')?.classList.remove('show');
+        }
+
         function populateVideoScriptDropdown() {
             const sel = document.getElementById('input-video-script');
             if (!sel) return;
@@ -2384,6 +3012,8 @@
                 status: 'Script Ready',
                 duration: '120s',
                 scriptTitle: scriptTitle,
+                char1Emoji: '👩‍🏫',
+                char2Emoji: '🦁',
                 subtitles: [
                     { time: '00:01 - 00:05', text: `Welcome to ${title} video lesson!` },
                     { time: '00:06 - 00:10', text: 'Listen carefully to the cartoon characters and repeat after them.' }
@@ -2442,6 +3072,12 @@
             document.getElementById('video-studio-title').innerText = `🎬 ${vid.title}`;
             document.getElementById('video-studio-subtitle').innerText = `Linked Script: ${vid.scriptTitle} • Status: ${vid.status}`;
 
+            // Update stage cartoon avatars
+            const av1 = document.getElementById('stage-avatar-1');
+            const av2 = document.getElementById('stage-avatar-2');
+            if (av1) av1.innerText = vid.char1Emoji || '👩‍🏫';
+            if (av2) av2.innerText = vid.char2Emoji || '🦁';
+
             renderSubtitleEditorList();
             document.getElementById('preview-video-modal')?.classList.add('show');
         }
@@ -2467,6 +3103,8 @@
             }
         }
 
+        let lastSpokenSubtitleIndex = -1;
+
         function startVideoPlayback() {
             AppState.isPlayingVideo = true;
             document.getElementById('btn-play-video').innerText = '⏸';
@@ -2478,6 +3116,7 @@
 
             if (AppState.videoTimerInterval) clearInterval(AppState.videoTimerInterval);
 
+            lastSpokenSubtitleIndex = -1;
             AppState.videoTimerInterval = setInterval(() => {
                 AppState.videoCurrentSecond++;
                 if (AppState.videoCurrentSecond > 120) AppState.videoCurrentSecond = 0;
@@ -2489,10 +3128,17 @@
                 const sec = String(AppState.videoCurrentSecond % 60).padStart(2, '0');
                 document.getElementById('video-timer-display').innerText = `${min}:${sec} / 02:00`;
 
-                // Update Live Subtitle Banner according to playback second
-                const activeSub = subtitles[AppState.videoCurrentSecond % subtitles.length];
+                // Update Live Subtitle Banner & Voiceover
+                const subIdx = Math.floor(AppState.videoCurrentSecond / 4) % subtitles.length;
+                const activeSub = subtitles[subIdx];
                 if (activeSub) {
-                    document.getElementById('live-subtitle-banner').innerText = `"${activeSub.text}"`;
+                    const banner = document.getElementById('live-subtitle-banner');
+                    if (banner) banner.innerText = `"${activeSub.text}"`;
+
+                    if (subIdx !== lastSpokenSubtitleIndex) {
+                        lastSpokenSubtitleIndex = subIdx;
+                        speakText(activeSub.text);
+                    }
                 }
             }, 1000);
         }
@@ -2733,6 +3379,14 @@
 
         // Direct Event Listener Bindings for 100% Reliability
         document.addEventListener('DOMContentLoaded', () => {
+            // Restore dark theme preference
+            try {
+                if (localStorage.getItem('studio_theme') === 'dark') {
+                    AppState.isDarkMode = true;
+                }
+            } catch (e) {}
+            applyTheme();
+
             document.getElementById('btn-open-worksheet-modal')?.addEventListener('click', openWorksheetUploadModal);
             document.getElementById('btn-open-student-modal')?.addEventListener('click', openAddStudentModal);
             document.getElementById('btn-open-ai-lesson-modal')?.addEventListener('click', openAiLessonPlanModal);
@@ -2760,6 +3414,7 @@
         });
 
         // Initialize immediately as fallback
+        applyTheme();
         renderStudents();
         renderWorksheets();
         renderLessons();
