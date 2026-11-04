@@ -629,8 +629,8 @@
         .video-player-screen {
             background: #0F172A;
             border-radius: 16px;
-            aspect-ratio: 16 / 9;
             width: 100%;
+            height: 340px;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -639,6 +639,23 @@
             overflow: hidden;
             box-shadow: 0 8px 24px rgba(0,0,0,0.3);
             border: 2px solid #334155;
+        }
+
+        .video-producer-watermark {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            z-index: 8;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #F59E0B;
+            color: #F8FAFC;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            letter-spacing: 0.3px;
         }
 
         .video-scene-backdrop {
@@ -1659,11 +1676,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="ai-vid-input-duration">4. Target Video Length *</label>
+                    <label for="ai-vid-input-producer">4. Produced By (Teacher Name) *</label>
+                    <input type="text" id="ai-vid-input-producer" class="form-input" value="Mr. Zaafouri Abdelmalek" placeholder="e.g. Mr. Zaafouri Abdelmalek">
+                </div>
+
+                <div class="form-group">
+                    <label for="ai-vid-input-duration">5. Target Video Length *</label>
                     <select id="ai-vid-input-duration" class="form-select">
-                        <option value="60s">60 Seconds (Short Clip)</option>
-                        <option value="120s" selected>120 Seconds (Full Dialogue Video)</option>
-                        <option value="180s">180 Seconds (Extended Lesson)</option>
+                        <option value="6 Minutes (360s)" selected>⏱️ 6 Minutes (360s - Full Lesson Video)</option>
+                        <option value="3 Minutes (180s)">⏱️ 3 Minutes (180s - Medium Clip)</option>
+                        <option value="1 Minute (60s)">⏱️ 1 Minute (60s - Short Intro)</option>
                     </select>
                 </div>
 
@@ -1720,10 +1742,10 @@
 
     <!-- MODAL 13: SUBTITLE & VIDEO STUDIO MODAL -->
     <div id="preview-video-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 640px;">
+        <div class="modal-content" style="max-width: 900px; width: 94vw;">
             <div class="modal-header">
                 <div>
-                    <h3 id="video-studio-title">Subtitle & Video Studio</h3>
+                    <h3 id="video-studio-title">Subtitle & Video Studio (6 Minutes)</h3>
                     <p id="video-studio-subtitle" style="font-size:12px; color:var(--text-muted);"></p>
                 </div>
                 <button class="close-btn" onclick="closeVideoStudioModal()">&times;</button>
@@ -1731,21 +1753,27 @@
 
             <!-- Animated Interactive Video Player Screen -->
             <div class="video-player-screen">
+                <!-- Producer Watermark Overlay -->
+                <div class="video-producer-watermark">
+                    👨‍🏫 Produced by: <span id="stage-producer-name">Mr. Zaafouri Abdelmalek</span>
+                </div>
+
                 <div class="video-scene-backdrop">
                     <div class="video-characters-stage">
-                        <div id="stage-avatar-1" class="stage-avatar">👩‍🏫</div>
-                        <div id="stage-avatar-2" class="stage-avatar">🦁</div>
+                        <div id="stage-avatar-1" class="stage-avatar" style="font-size:68px;">👩‍🏫</div>
+                        <div id="stage-avatar-2" class="stage-avatar" style="font-size:68px;">🦁</div>
                     </div>
                 </div>
 
                 <div id="live-subtitle-banner" class="video-subtitle-overlay sub-style-yellow">
-                    "Hello students! Welcome to Sunshine Cafe!"
+                    "Welcome to our 6-Minute Animated English Video Lesson! Produced by Mr. Zaafouri Abdelmalek."
                 </div>
 
                 <div class="video-controls-bar">
-                    <button id="btn-play-video" class="video-play-btn" onclick="toggleVideoPlayback()">▶</button>
-                    <input type="range" id="video-scrubber-input" class="video-scrubber" value="0" min="0" max="100" oninput="seekVideoPlayback(this.value)">
-                    <span id="video-timer-display" class="video-time-code">00:00 / 02:05</span>
+                    <button id="btn-play-video" class="video-play-btn" onclick="toggleVideoPlayback()" title="Play / Pause Video">▶</button>
+                    <button class="btn-primary" style="font-size:11px; padding:4px 10px; background:#10B981; border:none;" onclick="testVideoVoiceover()" title="Test Native Audio Voiceover">🔊 Voiceover</button>
+                    <input type="range" id="video-scrubber-input" class="video-scrubber" value="0" min="0" max="360" oninput="seekVideoPlayback(this.value)">
+                    <span id="video-timer-display" class="video-time-code">00:00 / 06:00</span>
                 </div>
             </div>
 
@@ -1807,9 +1835,10 @@
             isPlayingVideo: false,
             videoTimerInterval: null,
             videoCurrentSecond: 0,
-            videoTotalDuration: 125,
+            videoTotalDuration: 360,
             currentSubtitleStyle: 'sub-style-yellow',
             activeVideoProject: null,
+            producerName: 'Mr. Zaafouri Abdelmalek',
             students: [
                 { id: 'st_1', name: 'Leo Smith', emoji: '👦', level: 'PRIMARY', grade: '4th Grade', englishLevel: 'Elementary A2', attendance: 96, notes: 'Eager student! Loves Magic E phonics chants and animal roleplays.', assignedWorksheetCount: 3 },
                 { id: 'st_2', name: 'Maya Lin', emoji: '👧', level: 'MIDDLE', grade: '7th Grade', englishLevel: 'Intermediate B1', attendance: 98, notes: 'Analytical grammar learner. Focus on Present Perfect vs Past Simple timelines.', assignedWorksheetCount: 4 }
@@ -1999,26 +2028,37 @@
                     id: 'vid_1',
                     title: 'Daily English: Cafe Order Cartoon',
                     level: 'PRIMARY',
-                    status: 'Finished MP4',
-                    duration: '125s',
+                    status: 'Finished 6m MP4',
+                    duration: '6 Minutes (360s)',
+                    producer: 'Mr. Zaafouri Abdelmalek',
                     scriptTitle: 'Ordering Food at a Cafe Dialogue',
+                    char1Emoji: '👩‍🏫',
+                    char2Emoji: '🦁',
                     subtitles: [
-                        { time: '00:01 - 00:04', text: 'Hello Leo! Welcome to Sunshine Cafe.' },
-                        { time: '00:05 - 00:09', text: 'I would like a chocolate muffin and orange juice, please.' },
-                        { time: '00:10 - 00:14', text: 'Certainly! Would you like small or large?' },
-                        { time: '00:15 - 00:18', text: 'A large juice, please. How much is that?' }
+                        { time: '00:05 - 00:45', text: 'Welcome to our 6-Minute Animated English Video Lesson! Produced by Mr. Zaafouri Abdelmalek.' },
+                        { time: '00:50 - 01:30', text: 'Hello Leo! Welcome to Sunshine Cafe today.' },
+                        { time: '01:35 - 02:30', text: 'I would like a fresh chocolate muffin and orange juice, please!' },
+                        { time: '02:35 - 03:45', text: 'Certainly! Would you like a small or large glass of juice?' },
+                        { time: '03:50 - 04:45', text: 'A large juice, please. How much is that altogether?' },
+                        { time: '04:50 - 05:45', text: 'That will be 4 dollars. Thank you for practicing with Mr. Zaafouri Abdelmalek!' }
                     ]
                 },
                 {
                     id: 'vid_2',
-                    title: 'Grammar Animation: Present Tense',
+                    title: 'Grammar Animation: Present Tense & Weekend Trip',
                     level: 'MIDDLE',
-                    status: 'In Subtitle Studio',
-                    duration: '180s',
+                    status: 'In Subtitle Studio (6m)',
+                    duration: '6 Minutes (360s)',
+                    producer: 'Mr. Zaafouri Abdelmalek',
                     scriptTitle: 'Planning a Weekend Trip',
+                    char1Emoji: '👩‍🏫',
+                    char2Emoji: '🦉',
                     subtitles: [
-                        { time: '00:01 - 00:04', text: 'Where are you going to visit this weekend?' },
-                        { time: '00:05 - 00:08', text: 'I am going to visit the Science Museum!' }
+                        { time: '00:05 - 01:00', text: 'Welcome to our 6-Minute Grammar Video Lesson! Produced by Mr. Zaafouri Abdelmalek.' },
+                        { time: '01:05 - 02:15', text: 'Where are you going to visit this coming weekend, Maya?' },
+                        { time: '02:20 - 03:30', text: 'I am going to visit the Science Museum with my family on Saturday!' },
+                        { time: '03:35 - 04:45', text: 'That sounds exciting! We will explore space and robotics exhibits.' },
+                        { time: '04:50 - 05:55', text: 'Great job! Practice speaking daily with Mr. Zaafouri Abdelmalek\'s studio!' }
                     ]
                 }
             ]
@@ -2947,7 +2987,8 @@
             const topic = document.getElementById('ai-vid-input-topic').value || 'Daily English Conversation';
             const cast = document.getElementById('ai-vid-input-cast').value;
             const level = document.getElementById('ai-vid-input-level').value;
-            const duration = document.getElementById('ai-vid-input-duration').value || '120s';
+            const producer = document.getElementById('ai-vid-input-producer')?.value || 'Mr. Zaafouri Abdelmalek';
+            const duration = document.getElementById('ai-vid-input-duration').value || '6 Minutes (360s)';
 
             document.getElementById('ai-vid-form-view').style.display = 'none';
             document.getElementById('ai-vid-loading-view').style.display = 'block';
@@ -2960,16 +3001,18 @@
                     id: 'vid_' + Date.now(),
                     title: `AI Video: ${topic}`,
                     level: level,
-                    status: 'In Subtitle Studio',
-                    duration: duration,
+                    status: 'In Subtitle Studio (6m)',
+                    duration: '6 Minutes (360s)',
+                    producer: producer,
                     scriptTitle: `${topic} (${cast})`,
                     char1Emoji: char1Emoji,
                     char2Emoji: char2Emoji,
                     subtitles: [
-                        { time: '00:01 - 00:05', text: `Welcome to our video lesson on ${topic}!` },
-                        { time: '00:06 - 00:10', text: `Watch our cartoon characters practice key ${topic} phrases.` },
-                        { time: '00:11 - 00:15', text: `Listen carefully and repeat out loud after each sentence!` },
-                        { time: '00:16 - 00:20', text: `Great effort! Practice speaking daily with your studio characters!` }
+                        { time: '00:05 - 00:45', text: `Welcome to our 6-Minute Animated Video Lesson on ${topic}! Produced by ${producer}.` },
+                        { time: '00:50 - 01:30', text: `Watch our cartoon characters practice key ${topic} phrases in English.` },
+                        { time: '01:35 - 02:45', text: `Listen carefully to the native voiceover and repeat out loud!` },
+                        { time: '02:50 - 04:00', text: `Practice speaking daily to build your confidence and fluency.` },
+                        { time: '04:05 - 05:45', text: `Great effort! Complete your worksheet exercises in your student studio.` }
                     ]
                 };
 
@@ -2979,7 +3022,7 @@
 
                 closeAiVideoModal();
                 openVideoStudioModal(newVid.id);
-                alert(`✨ AI Video Project "${newVid.title}" created! Video player ready in Studio.`);
+                alert(`✨ 6-Minute AI Video Project "${newVid.title}" created by Producer ${producer}! Video player ready in Studio.`);
             }, 1200);
         }
 
@@ -3004,19 +3047,22 @@
             const title = document.getElementById('input-video-title').value;
             const level = document.getElementById('input-video-level').value;
             const scriptTitle = document.getElementById('input-video-script').value || 'Custom Dialogue';
+            const producer = 'Mr. Zaafouri Abdelmalek';
 
             const newVid = {
                 id: 'vid_' + Date.now(),
                 title: title,
                 level: level,
-                status: 'Script Ready',
-                duration: '120s',
+                status: 'Script Ready (6m)',
+                duration: '6 Minutes (360s)',
+                producer: producer,
                 scriptTitle: scriptTitle,
                 char1Emoji: '👩‍🏫',
                 char2Emoji: '🦁',
                 subtitles: [
-                    { time: '00:01 - 00:05', text: `Welcome to ${title} video lesson!` },
-                    { time: '00:06 - 00:10', text: 'Listen carefully to the cartoon characters and repeat after them.' }
+                    { time: '00:05 - 01:00', text: `Welcome to ${title} 6-Minute Video Lesson! Produced by ${producer}.` },
+                    { time: '01:05 - 03:00', text: 'Listen carefully to the cartoon characters and repeat after them out loud.' },
+                    { time: '03:05 - 05:55', text: 'Great job practicing English today with your studio characters!' }
                 ]
             };
 
@@ -3024,7 +3070,7 @@
             renderVideos();
             updateDashboardCounts();
             closeAddVideoModal();
-            alert(`Video Project "${title}" created!`);
+            alert(`6-Minute Video Project "${title}" created by Producer ${producer}!`);
         }
 
         function renderVideos() {
@@ -3034,7 +3080,8 @@
             const searchVal = (document.getElementById('video-search-input')?.value || '').toLowerCase();
             const filtered = AppState.videoProjects.filter(v =>
                 v.title.toLowerCase().includes(searchVal) ||
-                v.scriptTitle.toLowerCase().includes(searchVal)
+                v.scriptTitle.toLowerCase().includes(searchVal) ||
+                (v.producer || '').toLowerCase().includes(searchVal)
             );
 
             if (filtered.length === 0) {
@@ -3052,11 +3099,12 @@
                                 <span class="badge" style="background:#F1F5F9; color:#0F172A;">${v.status}</span>
                             </div>
                         </div>
-                        <h4 style="font-weight:800; font-size:15px; margin-bottom:4px;">${v.title}</h4>
+                        <h4 style="font-weight:800; font-size:15px; margin-bottom:2px;">${v.title}</h4>
+                        <div style="font-size:11px; color:var(--accent-amber); font-weight:700; margin-bottom:4px;">👨‍🏫 Producer: ${v.producer || 'Mr. Zaafouri Abdelmalek'}</div>
                         <p style="font-size:12px; color:var(--primary); font-weight:700;">Script: ${v.scriptTitle}</p>
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; font-size:11px; color:var(--text-muted);">
-                        <span>⏱️ ${v.duration}</span>
+                        <span>⏱️ ${v.duration || '6 Minutes (360s)'}</span>
                         <span style="color:var(--accent-violet); font-weight:700;">Open Studio & Subtitles →</span>
                     </div>
                 </div>
@@ -3069,14 +3117,24 @@
             if (!vid) return;
 
             AppState.activeVideoProject = vid;
-            document.getElementById('video-studio-title').innerText = `🎬 ${vid.title}`;
-            document.getElementById('video-studio-subtitle').innerText = `Linked Script: ${vid.scriptTitle} • Status: ${vid.status}`;
+            document.getElementById('video-studio-title').innerText = `🎬 ${vid.title} (6 Minutes)`;
+            document.getElementById('video-studio-subtitle').innerText = `Linked Script: ${vid.scriptTitle} • Producer: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`;
+
+            const stageProdName = document.getElementById('stage-producer-name');
+            if (stageProdName) stageProdName.innerText = vid.producer || 'Mr. Zaafouri Abdelmalek';
 
             // Update stage cartoon avatars
             const av1 = document.getElementById('stage-avatar-1');
             const av2 = document.getElementById('stage-avatar-2');
             if (av1) av1.innerText = vid.char1Emoji || '👩‍🏫';
             if (av2) av2.innerText = vid.char2Emoji || '🦁';
+
+            // Reset video timer
+            AppState.videoCurrentSecond = 0;
+            AppState.videoTotalDuration = 360;
+            const scrubber = document.getElementById('video-scrubber-input');
+            if (scrubber) scrubber.value = 0;
+            document.getElementById('video-timer-display').innerText = `00:00 / 06:00`;
 
             renderSubtitleEditorList();
             document.getElementById('preview-video-modal')?.classList.add('show');
@@ -3103,15 +3161,28 @@
             }
         }
 
+        function testVideoVoiceover() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.resume();
+            }
+            const banner = document.getElementById('live-subtitle-banner');
+            const rawText = banner ? banner.innerText.replace(/"/g, '') : 'Welcome to Sunshine Cafe video lesson!';
+            speakText(rawText, 'Gentle');
+        }
+
         let lastSpokenSubtitleIndex = -1;
 
         function startVideoPlayback() {
             AppState.isPlayingVideo = true;
             document.getElementById('btn-play-video').innerText = '⏸';
 
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.resume();
+            }
+
             const vid = AppState.activeVideoProject;
             const subtitles = vid?.subtitles || [
-                { time: '00:01 - 00:05', text: 'Welcome to Sunshine Cafe!' }
+                { time: '00:05 - 01:00', text: 'Welcome to our 6-Minute Animated English Video Lesson! Produced by Mr. Zaafouri Abdelmalek.' }
             ];
 
             if (AppState.videoTimerInterval) clearInterval(AppState.videoTimerInterval);
@@ -3119,17 +3190,18 @@
             lastSpokenSubtitleIndex = -1;
             AppState.videoTimerInterval = setInterval(() => {
                 AppState.videoCurrentSecond++;
-                if (AppState.videoCurrentSecond > 120) AppState.videoCurrentSecond = 0;
+                if (AppState.videoCurrentSecond > 360) AppState.videoCurrentSecond = 0;
 
                 const scrubber = document.getElementById('video-scrubber-input');
-                if (scrubber) scrubber.value = Math.floor((AppState.videoCurrentSecond / 120) * 100);
+                if (scrubber) scrubber.value = AppState.videoCurrentSecond;
 
                 const min = String(Math.floor(AppState.videoCurrentSecond / 60)).padStart(2, '0');
                 const sec = String(AppState.videoCurrentSecond % 60).padStart(2, '0');
-                document.getElementById('video-timer-display').innerText = `${min}:${sec} / 02:00`;
+                document.getElementById('video-timer-display').innerText = `${min}:${sec} / 06:00`;
 
                 // Update Live Subtitle Banner & Voiceover
-                const subIdx = Math.floor(AppState.videoCurrentSecond / 4) % subtitles.length;
+                const subProgressRatio = AppState.videoCurrentSecond / 360;
+                const subIdx = Math.min(Math.floor(subProgressRatio * subtitles.length), subtitles.length - 1);
                 const activeSub = subtitles[subIdx];
                 if (activeSub) {
                     const banner = document.getElementById('live-subtitle-banner');
@@ -3137,7 +3209,7 @@
 
                     if (subIdx !== lastSpokenSubtitleIndex) {
                         lastSpokenSubtitleIndex = subIdx;
-                        speakText(activeSub.text);
+                        speakText(activeSub.text, 'Gentle');
                     }
                 }
             }, 1000);
@@ -3150,13 +3222,16 @@
                 clearInterval(AppState.videoTimerInterval);
                 AppState.videoTimerInterval = null;
             }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
         }
 
         function seekVideoPlayback(val) {
-            AppState.videoCurrentSecond = Math.floor((val / 100) * 120);
+            AppState.videoCurrentSecond = parseInt(val, 10) || 0;
             const min = String(Math.floor(AppState.videoCurrentSecond / 60)).padStart(2, '0');
             const sec = String(AppState.videoCurrentSecond % 60).padStart(2, '0');
-            document.getElementById('video-timer-display').innerText = `${min}:${sec} / 02:00`;
+            document.getElementById('video-timer-display').innerText = `${min}:${sec} / 06:00`;
         }
 
         function renderSubtitleEditorList() {
