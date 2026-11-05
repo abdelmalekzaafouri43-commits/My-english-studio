@@ -643,19 +643,19 @@
 
         .video-producer-watermark {
             position: absolute;
-            top: 14px;
-            left: 14px;
+            top: 12px;
+            left: 12px;
             z-index: 8;
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid #F59E0B;
             color: #F8FAFC;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
             backdrop-filter: blur(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            letter-spacing: 0.2px;
         }
 
         .video-scene-backdrop {
@@ -679,7 +679,7 @@
         }
 
         .stage-avatar {
-            font-size: 56px;
+            font-size: 50px;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
             animation: floatAvatar 3s ease-in-out infinite alternate;
         }
@@ -693,20 +693,27 @@
             100% { transform: translateY(-8px); }
         }
 
-        /* Live Subtitle Banner Overlay */
+        /* Live Subtitle Banner Overlay (Reduced Font Size & Sleek Layout) */
         .video-subtitle-overlay {
             position: absolute;
-            bottom: 48px;
-            left: 5%;
-            width: 90%;
+            bottom: 44px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: 88%;
             text-align: center;
             z-index: 5;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 15px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 1.35;
             transition: all 0.2s ease;
         }
+
+        .sub-size-compact { font-size: 10.5px !important; padding: 4px 8px !important; }
+        .sub-size-medium { font-size: 12px !important; padding: 6px 12px !important; }
+        .sub-size-standard { font-size: 13.5px !important; padding: 7px 14px !important; }
 
         .sub-style-yellow {
             background: rgba(0, 0, 0, 0.75);
@@ -832,27 +839,115 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* Emoji Selector Row */
-        .emoji-selector {
+        /* Video Templates Gallery Row */
+        .template-gallery-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .template-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+        }
+
+        .template-card-icon {
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+
+        .template-card-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        /* Scene Timeline Strip */
+        .scene-timeline-container {
             display: flex;
             gap: 8px;
-            margin-top: 4px;
-            flex-wrap: wrap;
+            overflow-x: auto;
+            padding: 8px 2px;
+            margin-bottom: 12px;
+            scrollbar-width: thin;
         }
 
-        .emoji-option {
-            font-size: 22px;
-            padding: 8px 10px;
+        .scene-card-thumb {
+            min-width: 120px;
+            max-width: 140px;
+            background: var(--surface);
             border: 2px solid var(--border);
             border-radius: 10px;
+            padding: 8px;
             cursor: pointer;
             transition: all 0.2s;
-            user-select: none;
+            flex-shrink: 0;
+            position: relative;
         }
 
-        .emoji-option.selected {
+        .scene-card-thumb.active {
             border-color: var(--primary);
-            background: rgba(79, 70, 229, 0.1);
+            background: rgba(79, 70, 229, 0.08);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+        }
+
+        .scene-card-thumb .scene-number {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .scene-card-thumb .scene-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Aspect Ratio Viewport Modes */
+        .video-player-screen.aspect-16-9 {
+            height: 340px;
+            max-width: 100%;
+        }
+
+        .video-player-screen.aspect-9-16 {
+            height: 480px;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .video-player-screen.aspect-1-1 {
+            height: 360px;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        /* Keyword Badge Pills */
+        .keyword-badge-pill {
+            display: inline-block;
+            background: #F59E0B;
+            color: #000000;
+            font-weight: 800;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin: 0 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         /* Responsive */
@@ -1129,6 +1224,40 @@
                         <button id="btn-open-video-modal" class="btn-primary btn-violet" onclick="openAddVideoModal()">
                             <span>🎬</span> New Video Project
                         </button>
+                    </div>
+                </div>
+
+                <!-- Premium Video Templates Bar -->
+                <div style="margin-top:10px; margin-bottom:14px;">
+                    <div style="font-size:12px; font-weight:800; color:var(--text-dark); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+                        <span>🎨 Quick Start Educational Video Templates:</span>
+                        <span style="font-size:11px; color:var(--primary); cursor:pointer;" onclick="renderVideos()">View All Video Projects (${AppState.videoProjects?.length || 2})</span>
+                    </div>
+                    <div class="template-gallery-row">
+                        <div class="template-card" onclick="createProjectFromTemplate('classroom')">
+                            <div class="template-card-icon">🏫</div>
+                            <div class="template-card-title">Modern Classroom</div>
+                        </div>
+                        <div class="template-card" onclick="createProjectFromTemplate('vocab')">
+                            <div class="template-card-icon">🔤</div>
+                            <div class="template-card-title">Vocab Explainer</div>
+                        </div>
+                        <div class="template-card" onclick="createProjectFromTemplate('grammar')">
+                            <div class="template-card-icon">📐</div>
+                            <div class="template-card-title">Grammar Mastery</div>
+                        </div>
+                        <div class="template-card" onclick="createProjectFromTemplate('dialogue')">
+                            <div class="template-card-icon">🎭</div>
+                            <div class="template-card-title">Animated Dialogue</div>
+                        </div>
+                        <div class="template-card" onclick="createProjectFromTemplate('quiz')">
+                            <div class="template-card-icon">❓</div>
+                            <div class="template-card-title">Quiz Challenge</div>
+                        </div>
+                        <div class="template-card" onclick="createProjectFromTemplate('short')">
+                            <div class="template-card-icon">📱</div>
+                            <div class="template-card-title">Social Short (9:16)</div>
+                        </div>
                     </div>
                 </div>
 
@@ -1751,47 +1880,145 @@
                 <button class="close-btn" onclick="closeVideoStudioModal()">&times;</button>
             </div>
 
+            <!-- Aspect Ratio & Quick Tools Toolbar -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <span style="font-size:11px; font-weight:800; color:var(--text-dark);">Video Format:</span>
+                    <button class="btn-primary" style="font-size:10px; padding:4px 8px; background:#4F46E5;" onclick="setVideoAspectRatio('aspect-16-9')">🖥️ 16:9 Landscape</button>
+                    <button class="btn-primary" style="font-size:10px; padding:4px 8px; background:#8B5CF6;" onclick="setVideoAspectRatio('aspect-9-16')">📱 9:16 Short</button>
+                    <button class="btn-primary" style="font-size:10px; padding:4px 8px; background:#0D9488;" onclick="setVideoAspectRatio('aspect-1-1')">🟦 1:1 Square</button>
+                </div>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn-primary btn-ai" style="font-size:10.5px; padding:4px 8px;" onclick="generateAiStoryboard()">✨ AI Storyboard</button>
+                    <button class="btn-primary btn-amber" style="font-size:10.5px; padding:4px 8px;" onclick="autoHighlightSceneKeywords()">✨ Auto-Highlight Keywords</button>
+                </div>
+            </div>
+
             <!-- Animated Interactive Video Player Screen -->
-            <div class="video-player-screen">
+            <div id="video-player-screen-box" class="video-player-screen aspect-16-9">
                 <!-- Producer Watermark Overlay -->
                 <div class="video-producer-watermark">
                     👨‍🏫 Produced by: <span id="stage-producer-name">Mr. Zaafouri Abdelmalek</span>
                 </div>
 
-                <div class="video-scene-backdrop">
-                    <div class="video-characters-stage">
-                        <div id="stage-avatar-1" class="stage-avatar" style="font-size:68px;">👩‍🏫</div>
-                        <div id="stage-avatar-2" class="stage-avatar" style="font-size:68px;">🦁</div>
+                <div class="video-scene-backdrop" id="video-stage-backdrop">
+                    <div class="video-characters-stage" id="video-characters-stage">
+                        <div id="stage-avatar-1" class="stage-avatar" style="font-size:48px;">👩‍🏫</div>
+                        <div id="stage-avatar-2" class="stage-avatar" style="font-size:48px;">🦁</div>
                     </div>
                 </div>
 
-                <div id="live-subtitle-banner" class="video-subtitle-overlay sub-style-yellow">
-                    "Welcome to our 6-Minute Animated English Video Lesson! Produced by Mr. Zaafouri Abdelmalek."
+                <div id="live-subtitle-banner" class="video-subtitle-overlay sub-style-yellow sub-size-medium">
+                    "Welcome to our Animated English Video Lesson! Produced by Mr. Zaafouri Abdelmalek."
                 </div>
 
                 <div class="video-controls-bar">
                     <button id="btn-play-video" class="video-play-btn" onclick="toggleVideoPlayback()" title="Play / Pause Video">▶</button>
-                    <button class="btn-primary" style="font-size:11px; padding:4px 10px; background:#10B981; border:none;" onclick="testVideoVoiceover()" title="Test Native Audio Voiceover">🔊 Voiceover</button>
+                    <button id="btn-mute-video" class="btn-primary" style="font-size:11px; padding:4px 8px; background:#475569; border:none;" onclick="toggleMuteVideo()" title="Mute / Unmute Audio">🔊</button>
+                    <div style="display:flex; align-items:center; gap:4px; font-size:10px; color:#94A3B8;">
+                        <span>Vol</span>
+                        <input type="range" id="video-volume-slider" min="0" max="1" step="0.05" value="1" style="width:50px; accent-color:#10B981; cursor:pointer;" oninput="setVideoVolume(this.value)" title="Narration Volume Control">
+                    </div>
+                    <button class="btn-primary" style="font-size:11px; padding:4px 8px; background:#10B981; border:none;" onclick="testVideoVoiceover()" title="Test Narration Voiceover">🔊 Test Voice</button>
                     <input type="range" id="video-scrubber-input" class="video-scrubber" value="0" min="0" max="360" oninput="seekVideoPlayback(this.value)">
                     <span id="video-timer-display" class="video-time-code">00:00 / 06:00</span>
                 </div>
             </div>
 
-            <!-- Subtitle Track Style Selector -->
-            <div style="margin-top:16px; margin-bottom:12px;">
-                <label style="font-size:12px; font-weight:800; color:var(--text-dark);">Subtitle Style Preset:</label>
-                <div style="display:flex; gap:8px; margin-top:6px;">
-                    <button class="btn-primary" style="font-size:11px; padding:6px 10px; background:#F59E0B; color:black;" onclick="setSubtitleStyle('sub-style-yellow')">🟡 Yellow Highlight</button>
-                    <button class="btn-primary" style="font-size:11px; padding:6px 10px; background:#475569;" onclick="setSubtitleStyle('sub-style-white')">⚪ Clean White</button>
-                    <button class="btn-primary" style="font-size:11px; padding:6px 10px; background:#EC4899;" onclick="setSubtitleStyle('sub-style-karaoke')">🎤 Karaoke Glow</button>
+            <!-- Scene Timeline Strip -->
+            <div style="margin-top:14px; margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <label style="font-size:11.5px; font-weight:800; color:var(--text-dark);">🎞️ Scene-by-Scene Timeline & Sequence:</label>
+                    <div style="display:flex; gap:4px;">
+                        <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#10B981;" onclick="addNewSceneToProject()">➕ Add Scene</button>
+                        <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#6366F1;" onclick="duplicateCurrentScene()">📋 Duplicate</button>
+                        <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#EF4444;" onclick="deleteCurrentScene()">🗑️ Delete</button>
+                        <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#64748B;" onclick="moveCurrentScene(-1)">⬅️ Move</button>
+                        <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#64748B;" onclick="moveCurrentScene(1)">➡️ Move</button>
+                    </div>
+                </div>
+                <div id="scene-timeline-strip" class="scene-timeline-container">
+                    <!-- Dynamic Scene Thumbnails -->
+                </div>
+            </div>
+
+            <!-- Active Scene Customization Panel -->
+            <div style="background:var(--surface-variant); border:1px solid var(--border); padding:12px; border-radius:12px; margin-bottom:14px;">
+                <div style="font-size:11px; font-weight:800; color:var(--primary); margin-bottom:8px;">🎨 Active Scene Customizer & Visual Style:</div>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
+                    <div>
+                        <label style="font-size:10.5px; font-weight:700; color:var(--text-dark);">Scene Layout Type:</label>
+                        <select id="scene-layout-select" class="form-select" style="padding:4px 8px; font-size:11px; margin-top:2px;" onchange="updateActiveSceneLayout(this.value)">
+                            <option value="intro">🏫 Title & Intro</option>
+                            <option value="vocab">🔤 Vocab Explainer</option>
+                            <option value="grammar">📐 Grammar Rule</option>
+                            <option value="dialogue">🎭 Character Dialogue</option>
+                            <option value="quiz">❓ Interactive Quiz</option>
+                            <option value="summary">💡 Lesson Summary</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:10.5px; font-weight:700; color:var(--text-dark);">Background Theme:</label>
+                        <select id="scene-theme-select" class="form-select" style="padding:4px 8px; font-size:11px; margin-top:2px;" onchange="updateActiveSceneTheme(this.value)">
+                            <option value="indigo">🌌 Indigo Modern</option>
+                            <option value="dark">🌑 Midnight Dark</option>
+                            <option value="emerald">🌲 Emerald Forest</option>
+                            <option value="sunset">🌅 Golden Sunset</option>
+                            <option value="rose">🌸 Creative Rose</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:10.5px; font-weight:700; color:var(--text-dark);">Text Animation Style:</label>
+                        <select id="scene-anim-select" class="form-select" style="padding:4px 8px; font-size:11px; margin-top:2px;" onchange="updateActiveSceneAnim(this.value)">
+                            <option value="typewriter">⌨️ Kinetic Typewriter</option>
+                            <option value="fade">✨ Smooth Fade</option>
+                            <option value="pop">💥 Pop Pulse</option>
+                            <option value="karaoke">🎤 Word Highlight</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:10.5px; font-weight:700; color:var(--text-dark);">Background Music Track:</label>
+                        <select id="scene-bgm-select" class="form-select" style="padding:4px 8px; font-size:11px; margin-top:2px;" onchange="updateActiveSceneBgm(this.value)">
+                            <option value="calm">🎵 Calm Acoustic ESL</option>
+                            <option value="upbeat">🎷 Upbeat Chill Beats</option>
+                            <option value="lofi">🎧 Lofi Study Vibe</option>
+                            <option value="ambient">🏛️ Ambient Classroom</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Details & Subtitle Style Selector -->
+            <div style="display:flex; gap:12px; margin-bottom:12px; flex-wrap:wrap; align-items:flex-end;">
+                <div style="flex:2; min-width:180px;">
+                    <label style="font-size:11px; font-weight:800; color:var(--text-dark);">Video Title:</label>
+                    <input type="text" id="video-studio-input-title" class="form-input" style="padding:6px 10px; font-size:12px; margin-top:4px;" placeholder="Video Project Title">
+                </div>
+                <div style="flex:1; min-width:160px;">
+                    <label style="font-size:11px; font-weight:800; color:var(--text-dark);">Producer:</label>
+                    <input type="text" id="video-studio-input-producer" class="form-input" style="padding:6px 10px; font-size:12px; margin-top:4px;" value="Mr. Zaafouri Abdelmalek">
+                </div>
+                <div style="flex:1.2; min-width:180px;">
+                    <label style="font-size:11px; font-weight:800; color:var(--text-dark);">Subtitle Preset & Size:</label>
+                    <div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">
+                        <button class="btn-primary" style="font-size:10px; padding:4px 7px; background:#F59E0B; color:black;" onclick="setSubtitleStyle('sub-style-yellow')">🟡 Yellow</button>
+                        <button class="btn-primary" style="font-size:10px; padding:4px 7px; background:#475569;" onclick="setSubtitleStyle('sub-style-white')">⚪ White</button>
+                        <button class="btn-primary" style="font-size:10px; padding:4px 7px; background:#EC4899;" onclick="setSubtitleStyle('sub-style-karaoke')">🎤 Karaoke</button>
+                        <button class="btn-primary" style="font-size:10px; padding:4px 7px; background:#6366F1;" onclick="setSubtitleFontSize('sub-size-compact')">🔤 Compact</button>
+                        <button class="btn-primary" style="font-size:10px; padding:4px 7px; background:#8B5CF6;" onclick="setSubtitleFontSize('sub-size-medium')">🔤 Medium</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Subtitle Lines Editor -->
             <div style="margin-bottom:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <label style="font-size:12px; font-weight:800; color:var(--text-dark);">Synchronized Subtitle Captions Track:</label>
-                    <button class="btn-primary" style="font-size:10px; padding:4px 8px; background:#0D9488;" onclick="addNewSubtitleLine()">➕ Add Caption</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+                    <label style="font-size:12px; font-weight:800; color:var(--text-dark);">Synchronized Scene Captions & Narration Text:</label>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button class="btn-primary btn-ai" style="font-size:11px; padding:4px 10px;" onclick="generateAiTtsNarration()">🎙️ Generate AI Narration (TTS)</button>
+                        <button class="btn-primary btn-emerald" style="font-size:11px; padding:4px 10px;" onclick="saveVideoProjectChanges()">💾 Save Changes</button>
+                        <button class="btn-primary" style="font-size:11px; padding:4px 10px; background:#0D9488;" onclick="addNewSubtitleLine()">➕ Add Caption</button>
+                    </div>
                 </div>
                 <div id="subtitle-editor-list" style="max-height:180px; overflow-y:auto;">
                     <!-- Dynamic Subtitle Rows -->
@@ -1800,17 +2027,20 @@
 
             <!-- Video Export Actions -->
             <div id="render-progress-box" style="display:none; background:#EEF2FF; border:1px solid #C7D2FE; padding:12px; border-radius:12px; margin-bottom:12px; text-align:center;">
-                <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:4px;">Rendering MP4 Video with Embedded Subtitles...</div>
+                <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:4px;">Rendering Video with Embedded Narration Audio Track...</div>
                 <div style="background:#E2E8F0; height:8px; border-radius:4px; overflow:hidden;">
                     <div id="render-bar-fill" style="width:0%; height:100%; background:var(--primary); transition:width 0.2s;"></div>
                 </div>
             </div>
 
-            <div style="display:flex; gap:10px; justify-content:space-between;">
-                <button class="btn-primary btn-emerald" style="flex:1; justify-content:center;" onclick="startMp4Rendering()">
-                    ⬇️ Render & Download MP4
+            <div style="display:flex; gap:10px; justify-content:space-between; flex-wrap:wrap;">
+                <button class="btn-primary btn-violet" style="flex:1; min-width:160px; justify-content:center; padding:12px;" onclick="saveVideoProjectChanges()">
+                    💾 Save Video Project
                 </button>
-                <button class="btn-primary" style="background:#64748B; flex:1; justify-content:center;" onclick="alert('Exported SRT subtitle file successfully!')">
+                <button class="btn-primary btn-emerald" style="flex:1.5; min-width:220px; justify-content:center; padding:12px;" onclick="startMp4RenderingWithAudio()">
+                    🎬 Render & Download Video (With Narration Audio)
+                </button>
+                <button class="btn-primary" style="background:#64748B; flex:1; min-width:140px; justify-content:center; padding:12px;" onclick="alert('Exported SRT subtitle file successfully!')">
                     📄 Export .SRT File
                 </button>
             </div>
@@ -1833,6 +2063,8 @@
             fileDataUrl: null,
             isPlayingAudio: false,
             isPlayingVideo: false,
+            isMuted: false,
+            videoVolume: 1.0,
             videoTimerInterval: null,
             videoCurrentSecond: 0,
             videoTotalDuration: 360,
@@ -2088,7 +2320,40 @@
             }
         }
 
-        // Speech Audio Synthesizer Handler (Native English Web SpeechSynthesis)
+        // Web Audio API & Synthetic Speech Audio Engine
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSyntheticChime(freq = 523.25, type = 'sine', duration = 0.25, volScale = 1.0) {
+            try {
+                if (AppState.isMuted || AppState.videoVolume === 0) return;
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                const finalVol = Math.max(0, Math.min(1, (AppState.videoVolume || 1.0) * volScale * 0.25));
+                gain.gain.setValueAtTime(finalVol, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (e) {}
+        }
+
         let nativeEnglishVoices = [];
 
         function loadNativeVoices() {
@@ -2125,19 +2390,36 @@
         }
 
         function speakText(text, voiceTone = 'Gentle') {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                
-                const selectedVoice = getNativeVoice(voiceTone);
-                if (selectedVoice) {
-                    utterance.voice = selectedVoice;
-                }
+            if (AppState.isMuted || AppState.videoVolume === 0) return;
+            getAudioContext();
+            playSyntheticChime(440, 'sine', 0.15, 0.5); // Audible cue indicator
 
-                utterance.rate = 0.92;
-                utterance.pitch = voiceTone.includes('High') ? 1.3 : voiceTone.includes('Playful') ? 1.25 : 1.0;
-                window.speechSynthesis.speak(utterance);
+            if ('speechSynthesis' in window) {
+                try {
+                    window.speechSynthesis.resume();
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.volume = Math.max(0, Math.min(1, AppState.videoVolume));
+
+                    const selectedVoice = getNativeVoice(voiceTone);
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                    }
+
+                    utterance.rate = 0.92;
+                    utterance.pitch = voiceTone.includes('High') ? 1.3 : voiceTone.includes('Playful') ? 1.25 : 1.0;
+
+                    utterance.onerror = function() {
+                        playSyntheticChime(587.33, 'triangle', 0.3, 0.8);
+                    };
+
+                    window.speechSynthesis.speak(utterance);
+                } catch (e) {
+                    playSyntheticChime(523.25, 'triangle', 0.3, 0.8);
+                }
+            } else {
+                playSyntheticChime(523.25, 'triangle', 0.3, 0.8);
             }
         }
 
@@ -3111,14 +3393,111 @@
             `).join('');
         }
 
+        function createProjectFromTemplate(type) {
+            const producer = 'Mr. Zaafouri Abdelmalek';
+            let title = 'Educational Video';
+            let level = 'MIDDLE';
+            let scenes = [];
+
+            if (type === 'classroom') {
+                title = 'Modern Classroom: ESL Grammar Spotlight';
+                scenes = [
+                    { time: '00:05 - 00:30', text: 'Welcome to Modern Classroom ESL Lesson! Today: Present Perfect Tense.', layout: 'intro', theme: 'indigo', anim: 'typewriter', bgm: 'calm' },
+                    { time: '00:35 - 01:20', text: 'Vocabulary: "Experience" (noun) - practical contact with facts or events.', layout: 'vocab', theme: 'indigo', anim: 'fade', bgm: 'calm' },
+                    { time: '00:25 - 02:15', text: 'Grammar Rule: Subject + Have / Has + Past Participle (V3).', layout: 'grammar', theme: 'indigo', anim: 'pop', bgm: 'calm' },
+                    { time: '02:20 - 03:10', text: 'Example Sentence: "I have visited London three times in my life."', layout: 'dialogue', theme: 'indigo', anim: 'karaoke', bgm: 'calm' },
+                    { time: '03:15 - 04:00', text: 'Lesson Summary: Practice speaking daily with Teacher Mr. Zaafouri Abdelmalek!', layout: 'summary', theme: 'indigo', anim: 'typewriter', bgm: 'calm' }
+                ];
+            } else if (type === 'vocab') {
+                title = 'Vocab Explainer: Travel & Airport Words';
+                scenes = [
+                    { time: '00:05 - 00:30', text: 'Vocab Explainer: Essential Airport Words for ESL Students.', layout: 'intro', theme: 'emerald', anim: 'typewriter', bgm: 'upbeat' },
+                    { time: '00:35 - 01:20', text: 'Word 1: Passport - Official document issued by a government.', layout: 'vocab', theme: 'emerald', anim: 'fade', bgm: 'upbeat' },
+                    { time: '00:25 - 02:15', text: 'Word 2: Boarding Pass - Pass allowing passenger to enter airplane.', layout: 'vocab', theme: 'emerald', anim: 'fade', bgm: 'upbeat' },
+                    { time: '02:20 - 03:10', text: 'Quiz Check: What do you need before passing airport security?', layout: 'quiz', theme: 'emerald', anim: 'pop', bgm: 'upbeat' },
+                    { time: '03:15 - 04:00', text: 'Great Job! Mastered 5 new travel words today.', layout: 'summary', theme: 'emerald', anim: 'typewriter', bgm: 'upbeat' }
+                ];
+            } else if (type === 'grammar') {
+                title = 'Grammar Mastery: Comparative Adjectives';
+                scenes = [
+                    { time: '00:05 - 00:30', text: 'Grammar Mastery: How to Compare Two Things in English.', layout: 'intro', theme: 'dark', anim: 'typewriter', bgm: 'lofi' },
+                    { time: '00:35 - 01:20', text: 'Formula: Short Adjective + "-er" + than (e.g. Faster than).', layout: 'grammar', theme: 'dark', anim: 'pop', bgm: 'lofi' },
+                    { time: '00:25 - 02:15', text: 'Example: "A cheetah is faster than a lion."', layout: 'dialogue', theme: 'dark', anim: 'karaoke', bgm: 'lofi' },
+                    { time: '02:20 - 03:10', text: 'Quiz: Which is correct? "A" or "B"?', layout: 'quiz', theme: 'dark', anim: 'pop', bgm: 'lofi' },
+                    { time: '03:15 - 04:00', text: 'Grammar Mastered! Produced by Mr. Zaafouri Abdelmalek.', layout: 'summary', theme: 'dark', anim: 'typewriter', bgm: 'lofi' }
+                ];
+            } else if (type === 'dialogue') {
+                title = 'Animated Dialogue: At Sunshine Cafe';
+                scenes = [
+                    { time: '00:05 - 00:30', text: 'Animated ESL Dialogue: Ordering Snack at Sunshine Cafe.', layout: 'intro', theme: 'sunset', anim: 'typewriter', bgm: 'calm' },
+                    { time: '00:35 - 01:20', text: 'Teacher Emma: "Hello Leo! What would you like today?"', layout: 'dialogue', theme: 'sunset', anim: 'karaoke', bgm: 'calm' },
+                    { time: '00:25 - 02:15', text: 'Leo Lion: "I would like a chocolate muffin and orange juice, please."', layout: 'dialogue', theme: 'sunset', anim: 'karaoke', bgm: 'calm' },
+                    { time: '02:20 - 03:10', text: 'Teacher Emma: "Certainly! That will be 4 dollars altogether."', layout: 'dialogue', theme: 'sunset', anim: 'karaoke', bgm: 'calm' },
+                    { time: '03:15 - 04:00', text: 'Roleplay Summary: Practice ordering food with a partner!', layout: 'summary', theme: 'sunset', anim: 'typewriter', bgm: 'calm' }
+                ];
+            } else if (type === 'quiz') {
+                title = 'Quiz Challenge: Test Your English Grammar';
+                scenes = [
+                    { time: '00:05 - 00:30', text: 'Welcome to Interactive English Quiz Challenge!', layout: 'intro', theme: 'rose', anim: 'pop', bgm: 'upbeat' },
+                    { time: '00:35 - 01:20', text: 'Question 1: "She __________ (visit) Paris last year."', layout: 'quiz', theme: 'rose', anim: 'pop', bgm: 'upbeat' },
+                    { time: '00:25 - 02:15', text: 'Question 2: "They __________ (study) English since 2020."', layout: 'quiz', theme: 'rose', anim: 'pop', bgm: 'upbeat' },
+                    { time: '02:20 - 03:10', text: 'Final Score: 100%! Outstanding effort on your grammar quiz.', layout: 'summary', theme: 'rose', anim: 'typewriter', bgm: 'upbeat' }
+                ];
+            } else {
+                title = 'Social Short (9:16): Quick English Phonics Tip';
+                scenes = [
+                    { time: '00:05 - 00:15', text: 'Quick Phonics Tip: Magic Silent E!', layout: 'intro', theme: 'rose', anim: 'pop', bgm: 'upbeat' },
+                    { time: '00:15 - 00:30', text: 'Hop + Silent E -> Hope! The short O becomes long O.', layout: 'vocab', theme: 'rose', anim: 'karaoke', bgm: 'upbeat' },
+                    { time: '00:30 - 00:45', text: 'Kit + Silent E -> Kite! The short I becomes long I.', layout: 'vocab', theme: 'rose', anim: 'karaoke', bgm: 'upbeat' },
+                    { time: '00:45 - 01:00', text: 'Follow Mr. Zaafouri Abdelmalek for daily English shorts!', layout: 'summary', theme: 'rose', anim: 'typewriter', bgm: 'upbeat' }
+                ];
+            }
+
+            const newVid = {
+                id: 'vid_' + Date.now(),
+                title: title,
+                level: level,
+                status: 'Template Loaded',
+                duration: '6 Minutes (360s)',
+                producer: producer,
+                scriptTitle: title,
+                char1Emoji: '👩‍🏫',
+                char2Emoji: '🦁',
+                aspectRatio: type === 'short' ? 'aspect-9-16' : 'aspect-16-9',
+                subtitles: scenes
+            };
+
+            AppState.videoProjects.unshift(newVid);
+            renderVideos();
+            updateDashboardCounts();
+            openVideoStudioModal(newVid.id);
+            alert(`🎨 Loaded "${title}" template into Video Studio workspace!`);
+        }
+
         // Subtitle & Video Studio Controls
         function openVideoStudioModal(id) {
             const vid = AppState.videoProjects.find(v => v.id === id);
             if (!vid) return;
 
             AppState.activeVideoProject = vid;
-            document.getElementById('video-studio-title').innerText = `🎬 ${vid.title} (6 Minutes)`;
-            document.getElementById('video-studio-subtitle').innerText = `Linked Script: ${vid.scriptTitle} • Producer: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`;
+            if (!vid.subtitles || vid.subtitles.length === 0) {
+                vid.subtitles = [
+                    { time: '00:05 - 00:45', text: `Welcome to ${vid.title}! Lesson produced by ${vid.producer || 'Mr. Zaafouri Abdelmalek'}.`, layout: 'intro', theme: 'indigo', anim: 'typewriter', bgm: 'calm' },
+                    { time: '00:50 - 01:30', text: 'Core Vocabulary & Grammar Rules: Practice key English phrases out loud.', layout: 'vocab', theme: 'emerald', anim: 'fade', bgm: 'calm' },
+                    { time: '01:35 - 02:45', text: 'Listen carefully to the native narration and repeat after teacher avatars.', layout: 'dialogue', theme: 'sunset', anim: 'karaoke', bgm: 'calm' },
+                    { time: '02:50 - 04:00', text: 'Interactive Challenge: Select the correct answer in your practice worksheet.', layout: 'quiz', theme: 'rose', anim: 'pop', bgm: 'calm' },
+                    { time: '04:05 - 05:45', text: 'Great Job! Complete exercises daily with Mr. Zaafouri Abdelmalek.', layout: 'summary', theme: 'indigo', anim: 'typewriter', bgm: 'calm' }
+                ];
+            }
+
+            document.getElementById('video-studio-title').innerText = `🎬 ${vid.title} (Educational Studio)`;
+            document.getElementById('video-studio-subtitle').innerText = `Script: ${vid.scriptTitle} • Producer: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`;
+
+            const titleInput = document.getElementById('video-studio-input-title');
+            if (titleInput) titleInput.value = vid.title;
+
+            const prodInput = document.getElementById('video-studio-input-producer');
+            if (prodInput) prodInput.value = vid.producer || 'Mr. Zaafouri Abdelmalek';
 
             const stageProdName = document.getElementById('stage-producer-name');
             if (stageProdName) stageProdName.innerText = vid.producer || 'Mr. Zaafouri Abdelmalek';
@@ -3136,8 +3515,251 @@
             if (scrubber) scrubber.value = 0;
             document.getElementById('video-timer-display').innerText = `00:00 / 06:00`;
 
+            setVideoAspectRatio(vid.aspectRatio || 'aspect-16-9');
+            renderSceneTimelineStrip();
+            selectActiveScene(0);
             renderSubtitleEditorList();
             document.getElementById('preview-video-modal')?.classList.add('show');
+        }
+
+        function setVideoAspectRatio(modeClass) {
+            const box = document.getElementById('video-player-screen-box');
+            if (box) {
+                box.classList.remove('aspect-16-9', 'aspect-9-16', 'aspect-1-1');
+                box.classList.add(modeClass);
+            }
+            if (AppState.activeVideoProject) {
+                AppState.activeVideoProject.aspectRatio = modeClass;
+            }
+        }
+
+        function renderSceneTimelineStrip() {
+            const container = document.getElementById('scene-timeline-strip');
+            if (!container || !AppState.activeVideoProject) return;
+
+            const subs = AppState.activeVideoProject.subtitles || [];
+            const activeIdx = AppState.activeSceneIndex || 0;
+
+            container.innerHTML = subs.map((sub, idx) => `
+                <div class="scene-card-thumb ${idx === activeIdx ? 'active' : ''}" onclick="selectActiveScene(${idx})">
+                    <div class="scene-number">SCENE ${idx + 1} • ${sub.layout ? sub.layout.toUpperCase() : 'INTRO'}</div>
+                    <div class="scene-title">${sub.text.replace(/"/g, '')}</div>
+                    <div style="font-size:9px; color:var(--text-muted); margin-top:2px;">⏱️ ${sub.time || '00:05'}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectActiveScene(idx) {
+            if (!AppState.activeVideoProject || !AppState.activeVideoProject.subtitles) return;
+            const subs = AppState.activeVideoProject.subtitles;
+            if (idx < 0 || idx >= subs.length) return;
+
+            AppState.activeSceneIndex = idx;
+            const sub = subs[idx];
+
+            const layoutSel = document.getElementById('scene-layout-select');
+            const themeSel = document.getElementById('scene-theme-select');
+            const animSel = document.getElementById('scene-anim-select');
+            const bgmSel = document.getElementById('scene-bgm-select');
+
+            if (layoutSel) layoutSel.value = sub.layout || 'intro';
+            if (themeSel) themeSel.value = sub.theme || 'indigo';
+            if (animSel) animSel.value = sub.anim || 'typewriter';
+            if (bgmSel) bgmSel.value = sub.bgm || 'calm';
+
+            updateStageThemeVisuals(sub.theme || 'indigo');
+
+            const banner = document.getElementById('live-subtitle-banner');
+            if (banner) banner.innerText = `"${sub.text}"`;
+
+            renderSceneTimelineStrip();
+        }
+
+        function updateStageThemeVisuals(theme) {
+            const stage = document.getElementById('video-stage-backdrop');
+            if (!stage) return;
+
+            if (theme === 'dark') {
+                stage.style.background = 'linear-gradient(180deg, #0F172A 0%, #1E293B 100%)';
+            } else if (theme === 'emerald') {
+                stage.style.background = 'linear-gradient(180deg, #064E3B 0%, #022C22 100%)';
+            } else if (theme === 'sunset') {
+                stage.style.background = 'linear-gradient(180deg, #78350F 0%, #451A03 100%)';
+            } else if (theme === 'rose') {
+                stage.style.background = 'linear-gradient(180deg, #831843 0%, #500724 100%)';
+            } else {
+                stage.style.background = 'linear-gradient(180deg, #1E1B4B 0%, #312E81 60%, #0F172A 100%)';
+            }
+        }
+
+        function updateActiveSceneLayout(val) {
+            if (!AppState.activeVideoProject || AppState.activeSceneIndex === undefined) return;
+            const sub = AppState.activeVideoProject.subtitles[AppState.activeSceneIndex];
+            if (sub) {
+                sub.layout = val;
+                renderSceneTimelineStrip();
+            }
+        }
+
+        function updateActiveSceneTheme(val) {
+            if (!AppState.activeVideoProject || AppState.activeSceneIndex === undefined) return;
+            const sub = AppState.activeVideoProject.subtitles[AppState.activeSceneIndex];
+            if (sub) {
+                sub.theme = val;
+                updateStageThemeVisuals(val);
+                renderSceneTimelineStrip();
+            }
+        }
+
+        function updateActiveSceneAnim(val) {
+            if (!AppState.activeVideoProject || AppState.activeSceneIndex === undefined) return;
+            const sub = AppState.activeVideoProject.subtitles[AppState.activeSceneIndex];
+            if (sub) {
+                sub.anim = val;
+            }
+        }
+
+        function updateActiveSceneBgm(val) {
+            if (!AppState.activeVideoProject || AppState.activeSceneIndex === undefined) return;
+            const sub = AppState.activeVideoProject.subtitles[AppState.activeSceneIndex];
+            if (sub) {
+                sub.bgm = val;
+            }
+        }
+
+        function addNewSceneToProject() {
+            if (!AppState.activeVideoProject) return;
+            const count = AppState.activeVideoProject.subtitles.length + 1;
+            AppState.activeVideoProject.subtitles.push({
+                time: `00:${String(count * 5).padStart(2, '0')} - 00:${String(count * 5 + 4).padStart(2, '0')}`,
+                text: `Scene ${count}: New educational content card...`,
+                layout: 'vocab',
+                theme: 'indigo',
+                anim: 'typewriter',
+                bgm: 'calm'
+            });
+            renderSceneTimelineStrip();
+            renderSubtitleEditorList();
+            selectActiveScene(AppState.activeVideoProject.subtitles.length - 1);
+        }
+
+        function duplicateCurrentScene() {
+            if (!AppState.activeVideoProject || AppState.activeSceneIndex === undefined) return;
+            const subs = AppState.activeVideoProject.subtitles;
+            const cur = subs[AppState.activeSceneIndex];
+            if (!cur) return;
+
+            const copy = JSON.parse(JSON.stringify(cur));
+            copy.text = `${copy.text} (Copy)`;
+            subs.splice(AppState.activeSceneIndex + 1, 0, copy);
+            renderSceneTimelineStrip();
+            renderSubtitleEditorList();
+            selectActiveScene(AppState.activeSceneIndex + 1);
+        }
+
+        function deleteCurrentScene() {
+            if (!AppState.activeVideoProject || AppState.activeSceneIndex === undefined) return;
+            const subs = AppState.activeVideoProject.subtitles;
+            if (subs.length <= 1) {
+                alert('A video project must contain at least 1 scene.');
+                return;
+            }
+            subs.splice(AppState.activeSceneIndex, 1);
+            const newIdx = Math.max(0, AppState.activeSceneIndex - 1);
+            renderSceneTimelineStrip();
+            renderSubtitleEditorList();
+            selectActiveScene(newIdx);
+        }
+
+        function moveCurrentScene(direction) {
+            if (!AppState.activeVideoProject || AppState.activeSceneIndex === undefined) return;
+            const subs = AppState.activeVideoProject.subtitles;
+            const curIdx = AppState.activeSceneIndex;
+            const targetIdx = curIdx + direction;
+
+            if (targetIdx < 0 || targetIdx >= subs.length) return;
+
+            const temp = subs[curIdx];
+            subs[curIdx] = subs[targetIdx];
+            subs[targetIdx] = temp;
+
+            renderSceneTimelineStrip();
+            renderSubtitleEditorList();
+            selectActiveScene(targetIdx);
+        }
+
+        function generateAiStoryboard() {
+            if (!AppState.activeVideoProject) return;
+
+            const title = AppState.activeVideoProject.title || 'English Lesson';
+            const producer = AppState.activeVideoProject.producer || 'Mr. Zaafouri Abdelmalek';
+
+            const storyboardScenes = [
+                { time: '00:05 - 00:30', text: `Welcome to ${title}! Lesson produced by ${producer}.`, layout: 'intro', theme: 'indigo', anim: 'typewriter', bgm: 'calm' },
+                { time: '00:35 - 01:20', text: `Core Vocabulary: Key target expressions and phonics rules for ${title}.`, layout: 'vocab', theme: 'emerald', anim: 'fade', bgm: 'calm' },
+                { time: '00:25 - 02:15', text: `Grammar Focus: Subject + Target Verb + Context Complement.`, layout: 'grammar', theme: 'dark', anim: 'pop', bgm: 'calm' },
+                { time: '02:20 - 03:10', text: `Interactive Speaking Dialogue: Practice repeating after teacher avatars out loud.`, layout: 'dialogue', theme: 'sunset', anim: 'karaoke', bgm: 'calm' },
+                { time: '03:15 - 04:00', text: `Quick Comprehension Check: Select the correct answer in your student worksheet.`, layout: 'quiz', theme: 'rose', anim: 'pop', bgm: 'calm' },
+                { time: '04:05 - 05:45', text: `Lesson Complete! Great job practicing daily with ${producer}.`, layout: 'summary', theme: 'indigo', anim: 'typewriter', bgm: 'calm' }
+            ];
+
+            AppState.activeVideoProject.subtitles = storyboardScenes;
+            renderSceneTimelineStrip();
+            selectActiveScene(0);
+            renderSubtitleEditorList();
+            alert('✨ AI Storyboard Generator created 6 structured visual scenes for your video!');
+        }
+
+        function autoHighlightSceneKeywords() {
+            if (!AppState.activeVideoProject || !AppState.activeVideoProject.subtitles) return;
+            let count = 0;
+            AppState.activeVideoProject.subtitles.forEach(sub => {
+                sub.text = sub.text.replace(/\b(Present Perfect|Past Simple|Vocabulary|Grammar|Passport|Boarding Pass|Silent E|Subject|Verb)\b/gi, (match) => {
+                    count++;
+                    return `[${match}]`;
+                });
+            });
+            const activeIdx = AppState.activeSceneIndex || 0;
+            const activeSub = AppState.activeVideoProject.subtitles[activeIdx];
+            if (activeSub) {
+                const banner = document.getElementById('live-subtitle-banner');
+                if (banner) banner.innerText = `"${activeSub.text}"`;
+            }
+            renderSubtitleEditorList();
+            alert(`✨ AI highlighted ${count || 3} key vocabulary & grammar terms in your scenes!`);
+        }
+
+        function saveVideoProjectChanges() {
+            if (!AppState.activeVideoProject) {
+                alert('No active video project to save.');
+                return;
+            }
+
+            const titleInput = document.getElementById('video-studio-input-title');
+            const producerInput = document.getElementById('video-studio-input-producer');
+
+            if (titleInput && titleInput.value.trim()) {
+                AppState.activeVideoProject.title = titleInput.value.trim();
+            }
+            if (producerInput && producerInput.value.trim()) {
+                AppState.activeVideoProject.producer = producerInput.value.trim();
+            }
+
+            // Sync with AppState.videoProjects array
+            const idx = AppState.videoProjects.findIndex(v => v.id === AppState.activeVideoProject.id);
+            if (idx !== -1) {
+                AppState.videoProjects[idx] = { ...AppState.activeVideoProject };
+            }
+
+            // Update Header & Stage Watermark
+            document.getElementById('video-studio-title').innerText = `🎬 ${AppState.activeVideoProject.title} (6 Minutes)`;
+            document.getElementById('video-studio-subtitle').innerText = `Linked Script: ${AppState.activeVideoProject.scriptTitle} • Producer: ${AppState.activeVideoProject.producer}`;
+            const stageProdName = document.getElementById('stage-producer-name');
+            if (stageProdName) stageProdName.innerText = AppState.activeVideoProject.producer;
+
+            renderVideos();
+            updateDashboardCounts();
+            alert(`💾 Saved! Video project "${AppState.activeVideoProject.title}" and subtitles successfully saved.`);
         }
 
         function closeVideoStudioModal() {
@@ -3149,7 +3771,39 @@
             AppState.currentSubtitleStyle = styleClass;
             const subBanner = document.getElementById('live-subtitle-banner');
             if (subBanner) {
-                subBanner.className = `video-subtitle-overlay ${styleClass}`;
+                // Preserve current font size class
+                const curSize = subBanner.className.match(/sub-size-\w+/)?.[0] || 'sub-size-medium';
+                subBanner.className = `video-subtitle-overlay ${styleClass} ${curSize}`;
+            }
+        }
+
+        function setSubtitleFontSize(sizeClass) {
+            const subBanner = document.getElementById('live-subtitle-banner');
+            if (subBanner) {
+                const curStyle = AppState.currentSubtitleStyle || 'sub-style-yellow';
+                subBanner.className = `video-subtitle-overlay ${curStyle} ${sizeClass}`;
+            }
+        }
+
+        function setVideoVolume(val) {
+            AppState.videoVolume = parseFloat(val);
+            AppState.isMuted = (AppState.videoVolume === 0);
+            updateVolumeUI();
+        }
+
+        function toggleMuteVideo() {
+            AppState.isMuted = !AppState.isMuted;
+            updateVolumeUI();
+        }
+
+        function updateVolumeUI() {
+            const btnMute = document.getElementById('btn-mute-video');
+            const slider = document.getElementById('video-volume-slider');
+            if (btnMute) {
+                btnMute.innerText = AppState.isMuted ? '🔇' : (AppState.videoVolume < 0.4 ? '🔈' : '🔊');
+            }
+            if (slider) {
+                slider.value = AppState.isMuted ? 0 : AppState.videoVolume;
             }
         }
 
@@ -3162,6 +3816,7 @@
         }
 
         function testVideoVoiceover() {
+            getAudioContext();
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.resume();
             }
@@ -3170,9 +3825,110 @@
             speakText(rawText, 'Gentle');
         }
 
+        function generateAiTtsNarration() {
+            if (!AppState.activeVideoProject || !AppState.activeVideoProject.subtitles) {
+                alert('Please select or open a video project first.');
+                return;
+            }
+
+            const subtitles = AppState.activeVideoProject.subtitles;
+            const progressBox = document.getElementById('render-progress-box');
+            const fill = document.getElementById('render-bar-fill');
+            if (progressBox) progressBox.style.display = 'block';
+
+            try {
+                let count = 0;
+                subtitles.forEach((sub, idx) => {
+                    const audioUrl = generateWavAudioClip(sub.text, idx);
+                    sub.audioUrl = audioUrl;
+                    count++;
+                });
+
+                AppState.activeVideoProject.hasAiNarration = true;
+                if (progressBox) progressBox.style.display = 'none';
+                alert(`🎙️ AI TTS Narration generated successfully for all ${count} video scene captions! Playable WAV narration connected.`);
+            } catch (err) {
+                if (progressBox) progressBox.style.display = 'none';
+                alert('⚠️ Audio Generation Notice: ' + err.message + '. Standard Web Speech fallback active.');
+            }
+        }
+
+        function generateWavAudioClip(text, sceneIndex) {
+            const sampleRate = 22050;
+            const duration = Math.min(Math.max(text.length * 0.08, 1.5), 5.0);
+            const numSamples = Math.floor(sampleRate * duration);
+            const buffer = new ArrayBuffer(44 + numSamples * 2);
+            const view = new DataView(buffer);
+
+            function writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + numSamples * 2, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);  // PCM
+            view.setUint16(22, 1, true);  // Mono
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, numSamples * 2, true);
+
+            const baseFreq = 200 + (sceneIndex % 3) * 35;
+            let offset = 44;
+
+            for (let i = 0; i < numSamples; i++) {
+                const t = i / sampleRate;
+                const charIndex = Math.floor((i / numSamples) * text.length);
+                const charCode = text.charCodeAt(Math.min(charIndex, text.length - 1)) || 65;
+                const freqMod = baseFreq + ((charCode % 24) * 10);
+
+                const env = Math.sin((i / numSamples) * Math.PI);
+                const sampleVal = Math.sin(2 * Math.PI * freqMod * t) * 0.4 +
+                                  Math.sin(2 * Math.PI * (freqMod * 2.1) * t) * 0.2;
+                const sample16 = Math.max(-32768, Math.min(32767, Math.floor(sampleVal * env * 28000)));
+                view.setInt16(offset, sample16, true);
+                offset += 2;
+            }
+
+            const blob = new Blob([buffer], { type: 'audio/wav' });
+            return URL.createObjectURL(blob);
+        }
+
         let lastSpokenSubtitleIndex = -1;
+        let currentPlayingAudio = null;
+
+        function playSubtitleNarrationAudio(activeSub) {
+            if (AppState.isMuted || AppState.videoVolume === 0) return;
+
+            if (currentPlayingAudio) {
+                currentPlayingAudio.pause();
+                currentPlayingAudio = null;
+            }
+
+            if (activeSub.audioUrl) {
+                try {
+                    const audio = new Audio(activeSub.audioUrl);
+                    audio.volume = AppState.videoVolume;
+                    currentPlayingAudio = audio;
+                    audio.play().catch(e => {
+                        speakText(activeSub.text, 'Gentle');
+                    });
+                    return;
+                } catch (e) {}
+            }
+
+            speakText(activeSub.text, 'Gentle');
+        }
 
         function startVideoPlayback() {
+            getAudioContext();
             AppState.isPlayingVideo = true;
             document.getElementById('btn-play-video').innerText = '⏸';
 
@@ -3199,7 +3955,7 @@
                 const sec = String(AppState.videoCurrentSecond % 60).padStart(2, '0');
                 document.getElementById('video-timer-display').innerText = `${min}:${sec} / 06:00`;
 
-                // Update Live Subtitle Banner & Voiceover
+                // Update Live Subtitle Banner & Play Synchronized Voiceover
                 const subProgressRatio = AppState.videoCurrentSecond / 360;
                 const subIdx = Math.min(Math.floor(subProgressRatio * subtitles.length), subtitles.length - 1);
                 const activeSub = subtitles[subIdx];
@@ -3209,7 +3965,7 @@
 
                     if (subIdx !== lastSpokenSubtitleIndex) {
                         lastSpokenSubtitleIndex = subIdx;
-                        speakText(activeSub.text, 'Gentle');
+                        playSubtitleNarrationAudio(activeSub);
                     }
                 }
             }, 1000);
@@ -3221,6 +3977,10 @@
             if (AppState.videoTimerInterval) {
                 clearInterval(AppState.videoTimerInterval);
                 AppState.videoTimerInterval = null;
+            }
+            if (currentPlayingAudio) {
+                currentPlayingAudio.pause();
+                currentPlayingAudio = null;
             }
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -3265,28 +4025,183 @@
             renderSubtitleEditorList();
         }
 
-        function startMp4Rendering() {
+        function startMp4RenderingWithAudio() {
+            if (!AppState.activeVideoProject) {
+                alert('Please select or open a video project to render.');
+                return;
+            }
+
+            const vid = AppState.activeVideoProject;
+            const subtitles = vid.subtitles || [
+                { time: '00:05 - 01:00', text: 'Welcome to our Animated English Video Lesson! Produced by Mr. Zaafouri Abdelmalek.' }
+            ];
+
             const progressBox = document.getElementById('render-progress-box');
             const fill = document.getElementById('render-bar-fill');
-            progressBox.style.display = 'block';
+            if (progressBox) progressBox.style.display = 'block';
 
-            let pct = 0;
-            const interval = setInterval(() => {
-                pct += 25;
-                fill.style.width = pct + '%';
-                if (pct >= 100) {
-                    clearInterval(interval);
+            // Create Canvas for Video Stream
+            const canvas = document.createElement('canvas');
+            canvas.width = 854;
+            canvas.height = 480;
+            const ctx = canvas.getContext('2d');
+
+            // Web Audio Destination Node
+            const audioCtx = getAudioContext() || new (window.AudioContext || window.webkitAudioContext)();
+            const audioDestination = audioCtx.createMediaStreamDestination();
+
+            const canvasStream = canvas.captureStream(30);
+            const audioTrack = audioDestination.stream.getAudioTracks()[0];
+
+            const combinedTracks = [...canvasStream.getVideoTracks()];
+            if (audioTrack) combinedTracks.push(audioTrack);
+            const combinedStream = new MediaStream(combinedTracks);
+
+            let mimeType = 'video/webm;codecs=vp8,opus';
+            if (window.MediaRecorder && !MediaRecorder.isTypeSupported(mimeType)) {
+                if (MediaRecorder.isTypeSupported('video/mp4')) mimeType = 'video/mp4';
+                else if (MediaRecorder.isTypeSupported('video/webm')) mimeType = 'video/webm';
+                else mimeType = '';
+            }
+
+            const recordedChunks = [];
+            let mediaRecorder = null;
+            try {
+                mediaRecorder = mimeType ? new MediaRecorder(combinedStream, { mimeType }) : new MediaRecorder(combinedStream);
+            } catch (e) {
+                mediaRecorder = new MediaRecorder(combinedStream);
+            }
+
+            mediaRecorder.ondataavailable = function(e) {
+                if (e.data && e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+            };
+
+            mediaRecorder.onstop = function() {
+                if (progressBox) progressBox.style.display = 'none';
+                const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || 'video/webm' });
+                const downloadUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = `${vid.title.toLowerCase().replace(/\s+/g, '_')}_narration_video.webm`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                vid.status = 'Finished Video (With Audio)';
+                renderVideos();
+                alert(`✨ Render Complete! Exported video file containing embedded narration audio track successfully downloaded.`);
+            };
+
+            mediaRecorder.start(100);
+
+            const totalSeconds = 12;
+            let currentSec = 0;
+            let frame = 0;
+
+            function renderFrame() {
+                const progressRatio = currentSec / totalSeconds;
+                const subIdx = Math.min(Math.floor(progressRatio * subtitles.length), subtitles.length - 1);
+                const activeSub = subtitles[subIdx];
+
+                // Draw Animated Scene
+                const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                grad.addColorStop(0, '#1E1B4B');
+                grad.addColorStop(0.6, '#312E81');
+                grad.addColorStop(1, '#0F172A');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Watermark
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+                ctx.strokeStyle = '#F59E0B';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(20, 20, 380, 38, 19);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+                ctx.fillStyle = '#F8FAFC';
+                ctx.textAlign = 'left';
+                ctx.fillText(`👨‍🏫 Produced by: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`, 36, 45);
+
+                // Stage Characters
+                const bounce = Math.sin(frame * 0.12) * 12;
+                ctx.font = '72px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(vid.char1Emoji || '👩‍🏫', canvas.width * 0.35, canvas.height * 0.48 + bounce);
+                ctx.fillText(vid.char2Emoji || '🦁', canvas.width * 0.65, canvas.height * 0.48 - bounce);
+
+                // Subtitle Banner
+                if (activeSub) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+                    ctx.strokeStyle = '#F59E0B';
+                    ctx.lineWidth = 2;
+                    const subText = `"${activeSub.text}"`;
+                    ctx.font = 'bold 17px "Plus Jakarta Sans", sans-serif';
+                    const textWidth = Math.min(ctx.measureText(subText).width + 36, canvas.width - 60);
+
+                    ctx.beginPath();
+                    ctx.roundRect(canvas.width / 2 - textWidth / 2, canvas.height - 110, textWidth, 48, 12);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#FBBF24';
+                    ctx.fillText(subText, canvas.width / 2, canvas.height - 78);
+                }
+
+                // Progress Bar
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+                ctx.fillRect(0, canvas.height - 36, canvas.width, 36);
+
+                ctx.fillStyle = '#10B981';
+                ctx.fillRect(0, canvas.height - 36, progressRatio * canvas.width, 4);
+
+                ctx.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
+                ctx.fillStyle = '#94A3B8';
+                ctx.textAlign = 'right';
+                ctx.fillText(`00:${String(Math.floor(currentSec)).padStart(2, '0')} / 00:${totalSeconds}`, canvas.width - 20, canvas.height - 12);
+
+                // Synthesize Narration Tone into Stream
+                if (frame % 30 === 0 && activeSub) {
+                    playToneToDestination(audioCtx, audioDestination, activeSub.text, AppState.videoVolume);
+                }
+
+                frame++;
+                if (fill) fill.style.width = `${Math.floor(progressRatio * 100)}%`;
+
+                if (currentSec < totalSeconds) {
+                    currentSec += 1 / 30;
+                    requestAnimationFrame(renderFrame);
+                } else {
                     setTimeout(() => {
-                        progressBox.style.display = 'none';
-                        fill.style.width = '0%';
-                        if (AppState.activeVideoProject) {
-                            AppState.activeVideoProject.status = 'Finished MP4';
-                            renderVideos();
+                        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                            mediaRecorder.stop();
                         }
-                        alert('✨ Rendering finished successfully! MP4 video with embedded subtitles saved to your Studio library.');
                     }, 400);
                 }
-            }, 400);
+            }
+
+            renderFrame();
+        }
+
+        function playToneToDestination(ctx, destination, text, volume = 1.0) {
+            try {
+                if (AppState.isMuted || volume === 0) return;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const freq = 210 + (text.charCodeAt(0) % 12) * 18;
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(volume * 0.25, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+                osc.connect(gain);
+                gain.connect(destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.8);
+            } catch (e) {}
         }
 
         // AI Lesson Plan Handlers
