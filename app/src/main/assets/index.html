@@ -1901,14 +1901,17 @@
                     👨‍🏫 Produced by: <span id="stage-producer-name">Mr. Zaafouri Abdelmalek</span>
                 </div>
 
-                <div class="video-scene-backdrop" id="video-stage-backdrop">
+                <!-- Live Animated Canvas Stage -->
+                <canvas id="live-stage-canvas" width="854" height="480" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:2; pointer-events:none; border-radius:14px;"></canvas>
+
+                <div class="video-scene-backdrop" id="video-stage-backdrop" style="display:none;">
                     <div class="video-characters-stage" id="video-characters-stage">
                         <div id="stage-avatar-1" class="stage-avatar" style="font-size:48px;">👩‍🏫</div>
                         <div id="stage-avatar-2" class="stage-avatar" style="font-size:48px;">🦁</div>
                     </div>
                 </div>
 
-                <div id="live-subtitle-banner" class="video-subtitle-overlay sub-style-yellow sub-size-medium">
+                <div id="live-subtitle-banner" class="video-subtitle-overlay sub-style-yellow sub-size-medium" style="z-index:8;">
                     "Welcome to our Animated English Video Lesson! Produced by Mr. Zaafouri Abdelmalek."
                 </div>
 
@@ -3520,6 +3523,7 @@
             selectActiveScene(0);
             renderSubtitleEditorList();
             document.getElementById('preview-video-modal')?.classList.add('show');
+            startLiveStageAnimationLoop();
         }
 
         function setVideoAspectRatio(modeClass) {
@@ -3764,6 +3768,7 @@
 
         function closeVideoStudioModal() {
             pauseVideoPlayback();
+            stopLiveStageAnimationLoop();
             document.getElementById('preview-video-modal')?.classList.remove('show');
         }
 
@@ -3901,8 +3906,318 @@
             return URL.createObjectURL(blob);
         }
 
-        let lastSpokenSubtitleIndex = -1;
-        let currentPlayingAudio = null;
+        let liveAnimationReqId = null;
+        let liveFrameCounter = 0;
+
+        function startLiveStageAnimationLoop() {
+            stopLiveStageAnimationLoop();
+            const canvas = document.getElementById('live-stage-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function animate() {
+                if (!AppState.activeVideoProject) return;
+                liveFrameCounter++;
+
+                const vid = AppState.activeVideoProject;
+                const subs = vid.subtitles || [];
+                
+                let activeSub = null;
+                if (AppState.isPlayingVideo) {
+                    const progressRatio = AppState.videoCurrentSecond / 360;
+                    const subIdx = Math.min(Math.floor(progressRatio * subs.length), Math.max(0, subs.length - 1));
+                    activeSub = subs[subIdx] || subs[0];
+                } else {
+                    const activeIdx = AppState.activeSceneIndex || 0;
+                    activeSub = subs[activeIdx] || subs[0];
+                }
+
+                drawFullSceneFrame(ctx, canvas.width, canvas.height, liveFrameCounter, activeSub, vid, AppState.videoCurrentSecond, 360);
+                liveAnimationReqId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function stopLiveStageAnimationLoop() {
+            if (liveAnimationReqId) {
+                cancelAnimationFrame(liveAnimationReqId);
+                liveAnimationReqId = null;
+            }
+        }
+
+        function drawFullSceneFrame(ctx, width, height, frame, activeSub, vid, currentSec, totalSeconds) {
+            const layout = activeSub?.layout || 'intro';
+            const theme = activeSub?.theme || 'indigo';
+
+            // 1. Continuous Camera Zoom & Pan Movement
+            const cameraZoom = 1 + Math.sin(frame * 0.02) * 0.035;
+            const cameraPanX = Math.cos(frame * 0.015) * 16;
+            const cameraPanY = Math.sin(frame * 0.015) * 10;
+
+            ctx.save();
+            ctx.translate(width / 2 + cameraPanX, height / 2 + cameraPanY);
+            ctx.scale(cameraZoom, cameraZoom);
+            ctx.translate(-width / 2, -height / 2);
+
+            // 2. Animated Gradient Background
+            const grad = ctx.createLinearGradient(0, 0, 0, height);
+            if (theme === 'dark') {
+                grad.addColorStop(0, '#0F172A');
+                grad.addColorStop(1, '#1E293B');
+            } else if (theme === 'emerald') {
+                grad.addColorStop(0, '#064E3B');
+                grad.addColorStop(1, '#022C22');
+            } else if (theme === 'sunset') {
+                grad.addColorStop(0, '#78350F');
+                grad.addColorStop(1, '#451A03');
+            } else if (theme === 'rose') {
+                grad.addColorStop(0, '#831843');
+                grad.addColorStop(1, '#500724');
+            } else {
+                grad.addColorStop(0, '#1E1B4B');
+                grad.addColorStop(0.5, '#312E81');
+                grad.addColorStop(1, '#0F172A');
+            }
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height);
+
+            // 3. Floating Animated Educational Props (📚 💡 🌟 ✏️ 🎓 💬)
+            const props = ['📚', '💡', '🌟', '✏️', '🎓', '💬'];
+            props.forEach((prop, i) => {
+                const px = (width * (0.12 + i * 0.15) + Math.sin(frame * 0.04 + i * 1.2) * 28);
+                const py = (height * 0.22 + Math.cos(frame * 0.035 + i * 0.9) * 18);
+                const size = Math.floor(height * 0.048);
+                ctx.font = `${size}px sans-serif`;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+                ctx.fillText(prop, px, py);
+            });
+
+            // 4. Floating Sparkling Star Particles
+            for (let s = 0; s < 10; s++) {
+                const sx = (width * (0.05 + s * 0.1)) % width;
+                const sy = (height * 0.15 + (s * 35 + frame * 0.8) % (height * 0.6));
+                const alpha = 0.2 + Math.sin(frame * 0.1 + s) * 0.3;
+                ctx.font = `${Math.floor(height * 0.025)}px sans-serif`;
+                ctx.fillStyle = `rgba(245, 158, 11, ${Math.max(0.1, alpha)})`;
+                ctx.fillText('✨', sx, sy);
+            }
+
+            // 5. Layout Specific Educational Visual Storytelling Cards
+            const cardY = height * 0.18;
+            const cardW = width * 0.62;
+            const cardH = height * 0.35;
+            const cardX = (width - cardW) / 2;
+
+            if (layout === 'intro') {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                ctx.strokeStyle = '#F59E0B';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.roundRect(cardX, cardY, cardW, cardH, 20);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = `bold ${Math.floor(height * 0.042)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#FBBF24';
+                ctx.textAlign = 'center';
+                ctx.fillText(`🎬 ${vid.title || 'English Lesson'}`, width / 2, cardY + cardH * 0.42);
+
+                ctx.font = `bold ${Math.floor(height * 0.026)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#CBD5E1';
+                ctx.fillText(`👨‍🏫 Produced by: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`, width / 2, cardY + cardH * 0.72);
+            } else if (layout === 'vocab') {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                ctx.strokeStyle = '#10B981';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.roundRect(cardX, cardY, cardW, cardH, 20);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#34D399';
+                ctx.textAlign = 'center';
+                ctx.fillText('📖 VOCABULARY EXPLAINER', width / 2, cardY + cardH * 0.28);
+
+                const rawText = activeSub?.text || 'Target Vocabulary Word';
+                const vocabWord = rawText.match(/\[(.*?)\]/)?.[1] || rawText.split(' ')[0] || 'Expression';
+
+                ctx.font = `900 ${Math.floor(height * 0.048)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#F8FAFC';
+                ctx.fillText(`"${vocabWord}"`, width / 2, cardY + cardH * 0.58);
+
+                ctx.font = `italic ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#A7F3D0';
+                ctx.fillText('Phonetics: /' + vocabWord.toLowerCase() + '/ • Essential Phrase', width / 2, cardY + cardH * 0.82);
+            } else if (layout === 'grammar') {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                ctx.strokeStyle = '#6366F1';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.roundRect(cardX, cardY, cardW, cardH, 20);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#A5B4FC';
+                ctx.textAlign = 'center';
+                ctx.fillText('📐 GRAMMAR STRUCTURE RULE', width / 2, cardY + cardH * 0.28);
+
+                ctx.font = `bold ${Math.floor(height * 0.036)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#F8FAFC';
+                ctx.fillText('[SUBJECT] + [VERB] + [COMPLEMENT]', width / 2, cardY + cardH * 0.58);
+
+                const lineLen = (Math.sin(frame * 0.1) * 0.5 + 0.5) * (cardW * 0.4);
+                ctx.strokeStyle = '#F59E0B';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(width / 2 - lineLen / 2, cardY + cardH * 0.66);
+                ctx.lineTo(width / 2 + lineLen / 2, cardY + cardH * 0.66);
+                ctx.stroke();
+            } else if (layout === 'dialogue') {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                ctx.strokeStyle = '#EC4899';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.roundRect(cardX, cardY, cardW, cardH, 20);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#F472B6';
+                ctx.textAlign = 'center';
+                ctx.fillText('🗣️ INTERACTIVE DIALOGUE STAGE', width / 2, cardY + cardH * 0.28);
+
+                ctx.font = `bold ${Math.floor(height * 0.034)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#F8FAFC';
+                ctx.fillText('Listen carefully & repeat after character voices!', width / 2, cardY + cardH * 0.62);
+            } else if (layout === 'quiz') {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                ctx.strokeStyle = '#F59E0B';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.roundRect(cardX, cardY, cardW, cardH, 20);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#FBBF24';
+                ctx.textAlign = 'center';
+                ctx.fillText('❓ COMPREHENSION QUIZ CHALLENGE', width / 2, cardY + cardH * 0.28);
+
+                ctx.font = `bold ${Math.floor(height * 0.034)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#F8FAFC';
+                ctx.fillText('Select the correct answer option:', width / 2, cardY + cardH * 0.58);
+
+                ctx.font = `bold ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#34D399';
+                ctx.fillText('[A] Option One    [B] Option Two    [C] Option Three', width / 2, cardY + cardH * 0.82);
+            } else {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                ctx.strokeStyle = '#3B82F6';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.roundRect(cardX, cardY, cardW, cardH, 20);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#60A5FA';
+                ctx.textAlign = 'center';
+                ctx.fillText('🏆 LESSON SUMMARY & RECAP', width / 2, cardY + cardH * 0.28);
+
+                ctx.font = `bold ${Math.floor(height * 0.034)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#F8FAFC';
+                ctx.fillText('Excellent Progress! Practice daily with Mr. Zaafouri Abdelmalek.', width / 2, cardY + cardH * 0.62);
+            }
+
+            // 6. Stage Characters Continuous Walking & Gesturing Animations
+            const charWalk1 = Math.sin(frame * 0.06) * (width * 0.04);
+            const charBounce1 = Math.abs(Math.sin(frame * 0.14)) * -(height * 0.028);
+
+            const charWalk2 = Math.cos(frame * 0.06) * (width * 0.04);
+            const charBounce2 = Math.abs(Math.cos(frame * 0.14)) * -(height * 0.028);
+
+            const char1X = width * 0.22 + charWalk1;
+            const char1Y = height * 0.64 + charBounce1;
+
+            const char2X = width * 0.78 + charWalk2;
+            const char2Y = height * 0.64 + charBounce2;
+
+            const charSize = Math.floor(height * 0.16);
+            ctx.font = `${charSize}px sans-serif`;
+            ctx.textAlign = 'center';
+
+            ctx.fillText(vid.char1Emoji || '👩‍🏫', char1X, char1Y);
+
+            if (layout === 'vocab' || layout === 'grammar') {
+                ctx.font = `${Math.floor(height * 0.06)}px sans-serif`;
+                ctx.fillText('🪄', char1X + width * 0.06, char1Y - height * 0.04);
+            }
+
+            ctx.fillText(vid.char2Emoji || '🦁', char2X, char2Y);
+
+            // 7. Active Speaking Speech Bubble
+            const isChar1Active = (frame % 120 < 60);
+            const activeEmoji = isChar1Active ? (vid.char1Emoji || '👩‍🏫') : (vid.char2Emoji || '🦁');
+            const bubbleX = isChar1Active ? (char1X + width * 0.05) : (char2X - width * 0.05);
+            const bubbleY = (height * 0.50) + Math.sin(frame * 0.1) * 6;
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.strokeStyle = '#6366F1';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.roundRect(bubbleX - 90, bubbleY - 45, 180, 48, 14);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.font = `bold ${Math.floor(height * 0.022)}px "Plus Jakarta Sans", sans-serif`;
+            ctx.fillStyle = '#1E1B4B';
+            ctx.fillText(`${activeEmoji} Speaking...`, bubbleX, bubbleY - 16);
+
+            // 8. Script Subtitle Karaoke Word-by-Word Highlight Overlay
+            if (activeSub) {
+                const subBoxW = width * 0.88;
+                const subBoxH = height * 0.18;
+                const subBoxX = (width - subBoxW) / 2;
+                const subBoxY = height * 0.74;
+
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.92)';
+                ctx.strokeStyle = '#F59E0B';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.roundRect(subBoxX, subBoxY, subBoxW, subBoxH, 20);
+                ctx.fill();
+                ctx.stroke();
+
+                const words = (activeSub.text || '').split(' ');
+                const activeWordIdx = Math.floor(((frame % 90) / 90) * words.length);
+
+                ctx.font = `bold ${Math.floor(height * 0.03)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.textAlign = 'center';
+
+                const lineText = words.map((w, idx) => idx === activeWordIdx ? `[${w.toUpperCase()}]` : w).join(' ');
+                ctx.fillStyle = '#FBBF24';
+                ctx.fillText(`"${lineText}"`, width / 2, subBoxY + subBoxH * 0.58);
+            }
+
+            // 9. Video Timecode & Progress Bar
+            const progressRatio = currentSec / (totalSeconds || 360);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+            ctx.fillRect(0, height - height * 0.05, width, height * 0.05);
+
+            ctx.fillStyle = '#10B981';
+            ctx.fillRect(0, height - height * 0.05, progressRatio * width, 6);
+
+            ctx.font = `bold ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
+            ctx.fillStyle = '#94A3B8';
+            ctx.textAlign = 'right';
+            const minStr = String(Math.floor(currentSec / 60)).padStart(2, '0');
+            const secStr = String(currentSec % 60).padStart(2, '0');
+            ctx.fillText(`${minStr}:${secStr} / 06:00`, width * 0.96, height - height * 0.015);
+
+            ctx.restore();
+        }
 
         function playSubtitleNarrationAudio(activeSub) {
             if (AppState.isMuted || AppState.videoVolume === 0) return;
@@ -3912,7 +4227,6 @@
                 currentPlayingAudio = null;
             }
 
-            // Word-by-word highlight animation trigger in banner
             animateLiveSubtitleWords(activeSub.text);
 
             if (activeSub.audioUrl) {
@@ -3979,7 +4293,6 @@
                 const sec = String(AppState.videoCurrentSecond % 60).padStart(2, '0');
                 document.getElementById('video-timer-display').innerText = `${min}:${sec} / 06:00`;
 
-                // Update Live Subtitle Banner & Play Synchronized Voiceover
                 const subProgressRatio = AppState.videoCurrentSecond / 360;
                 const subIdx = Math.min(Math.floor(subProgressRatio * subtitles.length), subtitles.length - 1);
                 const activeSub = subtitles[subIdx];
@@ -4065,7 +4378,6 @@
             const fill = document.getElementById('render-bar-fill');
             if (progressBox) progressBox.style.display = 'block';
 
-            // Create Canvas for High Definition 1080p Video Stream
             const canvas = document.createElement('canvas');
             const aspect = vid.aspectRatio || 'aspect-16-9';
             if (aspect === 'aspect-9-16') {
@@ -4080,7 +4392,6 @@
             }
             const ctx = canvas.getContext('2d');
 
-            // Web Audio Destination Node
             const audioCtx = getAudioContext() || new (window.AudioContext || window.webkitAudioContext)();
             const audioDestination = audioCtx.createMediaStreamDestination();
 
@@ -4139,139 +4450,10 @@
                 const subIdx = Math.min(Math.floor(progressRatio * subtitles.length), subtitles.length - 1);
                 const activeSub = subtitles[subIdx];
 
-                // Continuous Camera Zoom & Pan Movement
-                const cameraZoom = 1 + Math.sin(frame * 0.02) * 0.03;
-                const cameraPanX = Math.cos(frame * 0.015) * 15;
-                const cameraPanY = Math.sin(frame * 0.015) * 10;
+                drawFullSceneFrame(ctx, canvas.width, canvas.height, frame, activeSub, vid, currentSec, totalSeconds);
 
-                ctx.save();
-                ctx.translate(canvas.width / 2 + cameraPanX, canvas.height / 2 + cameraPanY);
-                ctx.scale(cameraZoom, cameraZoom);
-                ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
-                // Animated Gradient Scene Background
-                const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                if (activeSub?.theme === 'dark') {
-                    grad.addColorStop(0, '#0F172A');
-                    grad.addColorStop(1, '#1E293B');
-                } else if (activeSub?.theme === 'emerald') {
-                    grad.addColorStop(0, '#064E3B');
-                    grad.addColorStop(1, '#022C22');
-                } else if (activeSub?.theme === 'sunset') {
-                    grad.addColorStop(0, '#78350F');
-                    grad.addColorStop(1, '#451A03');
-                } else {
-                    grad.addColorStop(0, '#1E1B4B');
-                    grad.addColorStop(0.5, '#312E81');
-                    grad.addColorStop(1, '#0F172A');
-                }
-                ctx.fillStyle = grad;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Animated Floating Educational Particles & Props (📚 💡 🌟 ✏️ 🎓)
-                const propEmojis = ['📚', '💡', '🌟', '✏️', '🎓', '💬'];
-                propEmojis.forEach((emoji, i) => {
-                    const px = (canvas.width * (0.15 + i * 0.14) + Math.sin(frame * 0.05 + i) * 30);
-                    const py = (canvas.height * 0.25 + Math.cos(frame * 0.04 + i) * 20);
-                    ctx.font = `${Math.floor(canvas.height * 0.045)}px sans-serif`;
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                    ctx.fillText(emoji, px, py);
-                });
-
-                // Top Producer Watermark Banner
-                ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
-                ctx.strokeStyle = '#F59E0B';
-                ctx.lineWidth = 3;
-                const bannerW = Math.min(canvas.width * 0.55, 680);
-                const bannerH = canvas.height * 0.06;
-                ctx.beginPath();
-                ctx.roundRect(canvas.width * 0.04, canvas.height * 0.04, bannerW, bannerH, 20);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.font = `bold ${Math.floor(canvas.height * 0.028)}px "Plus Jakarta Sans", sans-serif`;
-                ctx.fillStyle = '#F8FAFC';
-                ctx.textAlign = 'left';
-                ctx.fillText(`👨‍🏫 Produced by: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`, canvas.width * 0.06, canvas.height * 0.08);
-
-                // Stage Characters Continuous Smooth Walking & Speaking Bounce
-                const charBounce1 = Math.sin(frame * 0.15) * (canvas.height * 0.025);
-                const charBounce2 = Math.cos(frame * 0.15) * (canvas.height * 0.025);
-
-                const charSize = Math.floor(canvas.height * 0.16);
-                ctx.font = `${charSize}px sans-serif`;
-                ctx.textAlign = 'center';
-
-                // Character 1 (Teacher)
-                ctx.fillText(vid.char1Emoji || '👩‍🏫', canvas.width * 0.32, canvas.height * 0.52 + charBounce1);
-                // Character 2 (Mascot)
-                ctx.fillText(vid.char2Emoji || '🦁', canvas.width * 0.68, canvas.height * 0.52 + charBounce2);
-
-                // Active Character Speech Bubble
-                const activeSpeakerEmoji = (frame % 120 < 60) ? (vid.char1Emoji || '👩‍🏫') : (vid.char2Emoji || '🦁');
-                const bubbleX = (frame % 120 < 60) ? canvas.width * 0.38 : canvas.width * 0.62;
-                const bubbleY = canvas.height * 0.36 + Math.sin(frame * 0.1) * 8;
-
-                ctx.fillStyle = '#FFFFFF';
-                ctx.strokeStyle = '#6366F1';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.roundRect(bubbleX - 110, bubbleY - 50, 220, 55, 16);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.font = `bold ${Math.floor(canvas.height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
-                ctx.fillStyle = '#1E1B4B';
-                ctx.fillText(`${activeSpeakerEmoji} Speaking...`, bubbleX, bubbleY - 18);
-
-                // Subtitle Karaoke Word-by-Word Highlighted Script Display
-                if (activeSub) {
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
-                    ctx.strokeStyle = '#F59E0B';
-                    ctx.lineWidth = 4;
-
-                    const rawText = activeSub.text || '';
-                    const words = rawText.split(' ');
-                    const activeWordIdx = Math.floor((frame % 90) / 90 * words.length);
-
-                    const subBoxW = canvas.width * 0.88;
-                    const subBoxH = canvas.height * 0.18;
-                    const subBoxX = canvas.width * 0.06;
-                    const subBoxY = canvas.height * 0.72;
-
-                    ctx.beginPath();
-                    ctx.roundRect(subBoxX, subBoxY, subBoxW, subBoxH, 20);
-                    ctx.fill();
-                    ctx.stroke();
-
-                    // Display Full Script Sentence with Current Word Highlighted
-                    ctx.font = `bold ${Math.floor(canvas.height * 0.032)}px "Plus Jakarta Sans", sans-serif`;
-                    ctx.textAlign = 'center';
-
-                    // Draw words with highlighted active word pill
-                    const lineText = words.map((w, idx) => idx === activeWordIdx ? `[${w.toUpperCase()}]` : w).join(' ');
-                    ctx.fillStyle = '#FBBF24';
-                    ctx.fillText(`"${lineText}"`, canvas.width / 2, subBoxY + subBoxH * 0.58);
-                }
-
-                // Video Progress Bar & Timecode
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
-                ctx.fillRect(0, canvas.height - canvas.height * 0.05, canvas.width, canvas.height * 0.05);
-
-                ctx.fillStyle = '#10B981';
-                ctx.fillRect(0, canvas.height - canvas.height * 0.05, progressRatio * canvas.width, 6);
-
-                ctx.font = `bold ${Math.floor(canvas.height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
-                ctx.fillStyle = '#94A3B8';
-                ctx.textAlign = 'right';
-                ctx.fillText(`00:${String(Math.floor(currentSec)).padStart(2, '0')} / 00:${totalSeconds}`, canvas.width * 0.96, canvas.height - canvas.height * 0.015);
-
-                ctx.restore();
-
-                // Multi-Track Audio Mixing into MediaStreamDestination (Narration + BGM)
                 if (frame % 30 === 0 && activeSub) {
                     playToneToDestination(audioCtx, audioDestination, activeSub.text, AppState.videoVolume);
-                    // Add subtle background melody chord
                     playBgmHarmonicChord(audioCtx, audioDestination, frame, AppState.videoVolume);
                 }
 
