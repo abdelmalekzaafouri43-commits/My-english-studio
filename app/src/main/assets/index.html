@@ -3912,6 +3912,9 @@
                 currentPlayingAudio = null;
             }
 
+            // Word-by-word highlight animation trigger in banner
+            animateLiveSubtitleWords(activeSub.text);
+
             if (activeSub.audioUrl) {
                 try {
                     const audio = new Audio(activeSub.audioUrl);
@@ -3925,6 +3928,27 @@
             }
 
             speakText(activeSub.text, 'Gentle');
+        }
+
+        function animateLiveSubtitleWords(text) {
+            const banner = document.getElementById('live-subtitle-banner');
+            if (!banner) return;
+            const words = text.split(' ');
+            let wordIdx = 0;
+            if (window.subtitleWordInterval) clearInterval(window.subtitleWordInterval);
+
+            function updateHighlight() {
+                const highlighted = words.map((w, i) => {
+                    if (i === wordIdx) {
+                        return `<span class="keyword-badge-pill" style="font-size:1.1em; background:#F59E0B; color:#000; padding:2px 6px; border-radius:4px; box-shadow:0 0 8px #F59E0B;">${w}</span>`;
+                    }
+                    return w;
+                }).join(' ');
+                banner.innerHTML = `"${highlighted}"`;
+                wordIdx = (wordIdx + 1) % words.length;
+            }
+            updateHighlight();
+            window.subtitleWordInterval = setInterval(updateHighlight, 350);
         }
 
         function startVideoPlayback() {
@@ -3960,9 +3984,6 @@
                 const subIdx = Math.min(Math.floor(subProgressRatio * subtitles.length), subtitles.length - 1);
                 const activeSub = subtitles[subIdx];
                 if (activeSub) {
-                    const banner = document.getElementById('live-subtitle-banner');
-                    if (banner) banner.innerText = `"${activeSub.text}"`;
-
                     if (subIdx !== lastSpokenSubtitleIndex) {
                         lastSpokenSubtitleIndex = subIdx;
                         playSubtitleNarrationAudio(activeSub);
@@ -3977,6 +3998,10 @@
             if (AppState.videoTimerInterval) {
                 clearInterval(AppState.videoTimerInterval);
                 AppState.videoTimerInterval = null;
+            }
+            if (window.subtitleWordInterval) {
+                clearInterval(window.subtitleWordInterval);
+                window.subtitleWordInterval = null;
             }
             if (currentPlayingAudio) {
                 currentPlayingAudio.pause();
@@ -4040,10 +4065,19 @@
             const fill = document.getElementById('render-bar-fill');
             if (progressBox) progressBox.style.display = 'block';
 
-            // Create Canvas for Video Stream
+            // Create Canvas for High Definition 1080p Video Stream
             const canvas = document.createElement('canvas');
-            canvas.width = 854;
-            canvas.height = 480;
+            const aspect = vid.aspectRatio || 'aspect-16-9';
+            if (aspect === 'aspect-9-16') {
+                canvas.width = 1080;
+                canvas.height = 1920;
+            } else if (aspect === 'aspect-1-1') {
+                canvas.width = 1080;
+                canvas.height = 1080;
+            } else {
+                canvas.width = 1920;
+                canvas.height = 1080;
+            }
             const ctx = canvas.getContext('2d');
 
             // Web Audio Destination Node
@@ -4084,19 +4118,19 @@
                 const downloadUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = downloadUrl;
-                a.download = `${vid.title.toLowerCase().replace(/\s+/g, '_')}_narration_video.webm`;
+                a.download = `${vid.title.toLowerCase().replace(/\s+/g, '_')}_1080p_animated_video.webm`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
 
-                vid.status = 'Finished Video (With Audio)';
+                vid.status = 'Finished Video (1080p HD + Audio)';
                 renderVideos();
-                alert(`✨ Render Complete! Exported video file containing embedded narration audio track successfully downloaded.`);
+                alert(`✨ 1080p Render Complete! Exported video with continuous character animations, synchronized karaoke script subtitles, and embedded audio narration successfully downloaded.`);
             };
 
             mediaRecorder.start(100);
 
-            const totalSeconds = 12;
+            const totalSeconds = 15;
             let currentSec = 0;
             let frame = 0;
 
@@ -4105,68 +4139,140 @@
                 const subIdx = Math.min(Math.floor(progressRatio * subtitles.length), subtitles.length - 1);
                 const activeSub = subtitles[subIdx];
 
-                // Draw Animated Scene
+                // Continuous Camera Zoom & Pan Movement
+                const cameraZoom = 1 + Math.sin(frame * 0.02) * 0.03;
+                const cameraPanX = Math.cos(frame * 0.015) * 15;
+                const cameraPanY = Math.sin(frame * 0.015) * 10;
+
+                ctx.save();
+                ctx.translate(canvas.width / 2 + cameraPanX, canvas.height / 2 + cameraPanY);
+                ctx.scale(cameraZoom, cameraZoom);
+                ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+                // Animated Gradient Scene Background
                 const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                grad.addColorStop(0, '#1E1B4B');
-                grad.addColorStop(0.6, '#312E81');
-                grad.addColorStop(1, '#0F172A');
+                if (activeSub?.theme === 'dark') {
+                    grad.addColorStop(0, '#0F172A');
+                    grad.addColorStop(1, '#1E293B');
+                } else if (activeSub?.theme === 'emerald') {
+                    grad.addColorStop(0, '#064E3B');
+                    grad.addColorStop(1, '#022C22');
+                } else if (activeSub?.theme === 'sunset') {
+                    grad.addColorStop(0, '#78350F');
+                    grad.addColorStop(1, '#451A03');
+                } else {
+                    grad.addColorStop(0, '#1E1B4B');
+                    grad.addColorStop(0.5, '#312E81');
+                    grad.addColorStop(1, '#0F172A');
+                }
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Watermark
-                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+                // Animated Floating Educational Particles & Props (📚 💡 🌟 ✏️ 🎓)
+                const propEmojis = ['📚', '💡', '🌟', '✏️', '🎓', '💬'];
+                propEmojis.forEach((emoji, i) => {
+                    const px = (canvas.width * (0.15 + i * 0.14) + Math.sin(frame * 0.05 + i) * 30);
+                    const py = (canvas.height * 0.25 + Math.cos(frame * 0.04 + i) * 20);
+                    ctx.font = `${Math.floor(canvas.height * 0.045)}px sans-serif`;
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.fillText(emoji, px, py);
+                });
+
+                // Top Producer Watermark Banner
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
                 ctx.strokeStyle = '#F59E0B';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 3;
+                const bannerW = Math.min(canvas.width * 0.55, 680);
+                const bannerH = canvas.height * 0.06;
                 ctx.beginPath();
-                ctx.roundRect(20, 20, 380, 38, 19);
+                ctx.roundRect(canvas.width * 0.04, canvas.height * 0.04, bannerW, bannerH, 20);
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+                ctx.font = `bold ${Math.floor(canvas.height * 0.028)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#F8FAFC';
                 ctx.textAlign = 'left';
-                ctx.fillText(`👨‍🏫 Produced by: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`, 36, 45);
+                ctx.fillText(`👨‍🏫 Produced by: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`, canvas.width * 0.06, canvas.height * 0.08);
 
-                // Stage Characters
-                const bounce = Math.sin(frame * 0.12) * 12;
-                ctx.font = '72px sans-serif';
+                // Stage Characters Continuous Smooth Walking & Speaking Bounce
+                const charBounce1 = Math.sin(frame * 0.15) * (canvas.height * 0.025);
+                const charBounce2 = Math.cos(frame * 0.15) * (canvas.height * 0.025);
+
+                const charSize = Math.floor(canvas.height * 0.16);
+                ctx.font = `${charSize}px sans-serif`;
                 ctx.textAlign = 'center';
-                ctx.fillText(vid.char1Emoji || '👩‍🏫', canvas.width * 0.35, canvas.height * 0.48 + bounce);
-                ctx.fillText(vid.char2Emoji || '🦁', canvas.width * 0.65, canvas.height * 0.48 - bounce);
 
-                // Subtitle Banner
+                // Character 1 (Teacher)
+                ctx.fillText(vid.char1Emoji || '👩‍🏫', canvas.width * 0.32, canvas.height * 0.52 + charBounce1);
+                // Character 2 (Mascot)
+                ctx.fillText(vid.char2Emoji || '🦁', canvas.width * 0.68, canvas.height * 0.52 + charBounce2);
+
+                // Active Character Speech Bubble
+                const activeSpeakerEmoji = (frame % 120 < 60) ? (vid.char1Emoji || '👩‍🏫') : (vid.char2Emoji || '🦁');
+                const bubbleX = (frame % 120 < 60) ? canvas.width * 0.38 : canvas.width * 0.62;
+                const bubbleY = canvas.height * 0.36 + Math.sin(frame * 0.1) * 8;
+
+                ctx.fillStyle = '#FFFFFF';
+                ctx.strokeStyle = '#6366F1';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.roundRect(bubbleX - 110, bubbleY - 50, 220, 55, 16);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = `bold ${Math.floor(canvas.height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillStyle = '#1E1B4B';
+                ctx.fillText(`${activeSpeakerEmoji} Speaking...`, bubbleX, bubbleY - 18);
+
+                // Subtitle Karaoke Word-by-Word Highlighted Script Display
                 if (activeSub) {
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
                     ctx.strokeStyle = '#F59E0B';
-                    ctx.lineWidth = 2;
-                    const subText = `"${activeSub.text}"`;
-                    ctx.font = 'bold 17px "Plus Jakarta Sans", sans-serif';
-                    const textWidth = Math.min(ctx.measureText(subText).width + 36, canvas.width - 60);
+                    ctx.lineWidth = 4;
+
+                    const rawText = activeSub.text || '';
+                    const words = rawText.split(' ');
+                    const activeWordIdx = Math.floor((frame % 90) / 90 * words.length);
+
+                    const subBoxW = canvas.width * 0.88;
+                    const subBoxH = canvas.height * 0.18;
+                    const subBoxX = canvas.width * 0.06;
+                    const subBoxY = canvas.height * 0.72;
 
                     ctx.beginPath();
-                    ctx.roundRect(canvas.width / 2 - textWidth / 2, canvas.height - 110, textWidth, 48, 12);
+                    ctx.roundRect(subBoxX, subBoxY, subBoxW, subBoxH, 20);
                     ctx.fill();
                     ctx.stroke();
 
+                    // Display Full Script Sentence with Current Word Highlighted
+                    ctx.font = `bold ${Math.floor(canvas.height * 0.032)}px "Plus Jakarta Sans", sans-serif`;
+                    ctx.textAlign = 'center';
+
+                    // Draw words with highlighted active word pill
+                    const lineText = words.map((w, idx) => idx === activeWordIdx ? `[${w.toUpperCase()}]` : w).join(' ');
                     ctx.fillStyle = '#FBBF24';
-                    ctx.fillText(subText, canvas.width / 2, canvas.height - 78);
+                    ctx.fillText(`"${lineText}"`, canvas.width / 2, subBoxY + subBoxH * 0.58);
                 }
 
-                // Progress Bar
+                // Video Progress Bar & Timecode
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
-                ctx.fillRect(0, canvas.height - 36, canvas.width, 36);
+                ctx.fillRect(0, canvas.height - canvas.height * 0.05, canvas.width, canvas.height * 0.05);
 
                 ctx.fillStyle = '#10B981';
-                ctx.fillRect(0, canvas.height - 36, progressRatio * canvas.width, 4);
+                ctx.fillRect(0, canvas.height - canvas.height * 0.05, progressRatio * canvas.width, 6);
 
-                ctx.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
+                ctx.font = `bold ${Math.floor(canvas.height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#94A3B8';
                 ctx.textAlign = 'right';
-                ctx.fillText(`00:${String(Math.floor(currentSec)).padStart(2, '0')} / 00:${totalSeconds}`, canvas.width - 20, canvas.height - 12);
+                ctx.fillText(`00:${String(Math.floor(currentSec)).padStart(2, '0')} / 00:${totalSeconds}`, canvas.width * 0.96, canvas.height - canvas.height * 0.015);
 
-                // Synthesize Narration Tone into Stream
+                ctx.restore();
+
+                // Multi-Track Audio Mixing into MediaStreamDestination (Narration + BGM)
                 if (frame % 30 === 0 && activeSub) {
                     playToneToDestination(audioCtx, audioDestination, activeSub.text, AppState.videoVolume);
+                    // Add subtle background melody chord
+                    playBgmHarmonicChord(audioCtx, audioDestination, frame, AppState.videoVolume);
                 }
 
                 frame++;
@@ -4185,6 +4291,25 @@
             }
 
             renderFrame();
+        }
+
+        function playBgmHarmonicChord(ctx, destination, frameIndex, volume = 1.0) {
+            try {
+                if (AppState.isMuted || volume === 0) return;
+                const baseFreqs = [261.63, 329.63, 392.00, 523.25]; // C Major Chord
+                const freq = baseFreqs[(frameIndex / 30) % baseFreqs.length];
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(volume * 0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.9);
+                osc.connect(gain);
+                gain.connect(destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.9);
+            } catch (e) {}
         }
 
         function playToneToDestination(ctx, destination, text, volume = 1.0) {
