@@ -4317,11 +4317,231 @@
             ctx.restore();
         }
 
+        function drawPeppaPigEnvironment(ctx, width, height, frame) {
+            // 1. Bright Pastel Blue Sky
+            ctx.fillStyle = '#BAE6FD';
+            ctx.fillRect(0, 0, width, height);
+
+            // Smiling Sun
+            const sunX = width * 0.85;
+            const sunY = height * 0.18;
+            ctx.fillStyle = '#FDE047';
+            ctx.beginPath();
+            ctx.arc(sunX, sunY, 32, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Sun Rays
+            ctx.strokeStyle = '#FACC15';
+            ctx.lineWidth = 3;
+            for (let r = 0; r < 8; r++) {
+                const ang = (r * Math.PI / 4) + frame * 0.02;
+                ctx.beginPath();
+                ctx.moveTo(sunX + Math.cos(ang) * 38, sunY + Math.sin(ang) * 38);
+                ctx.lineTo(sunX + Math.cos(ang) * 50, sunY + Math.sin(ang) * 50);
+                ctx.stroke();
+            }
+
+            // Drifting Fluffy White Clouds
+            ctx.fillStyle = '#FFFFFF';
+            [-0.1, 0.35, 0.7].forEach((relX, i) => {
+                const cx = (width * relX + (frame * 0.4 + i * 80)) % (width + 120) - 60;
+                const cy = height * 0.12 + Math.sin(frame * 0.02 + i) * 8;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+                ctx.arc(cx + 22, cy - 10, 24, 0, Math.PI * 2);
+                ctx.arc(cx + 44, cy, 20, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 2. Rolling Green Hills (Pastel Green)
+            const horizonY = height * 0.48;
+
+            ctx.fillStyle = '#A3E635';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.quadraticCurveTo(width * 0.3, horizonY - 40, width * 0.65, horizonY + 20);
+            ctx.quadraticCurveTo(width * 0.85, horizonY - 20, width, height);
+            ctx.fill();
+
+            // Iconic Yellow House on Hill Top
+            const houseX = width * 0.28;
+            const houseY = horizonY - 46;
+            ctx.fillStyle = '#FEF08A';
+            ctx.fillRect(houseX, houseY, 44, 38);
+            ctx.fillStyle = '#EF4444';
+            ctx.beginPath();
+            ctx.moveTo(houseX - 6, houseY);
+            ctx.lineTo(houseX + 22, houseY - 22);
+            ctx.lineTo(houseX + 50, houseY);
+            ctx.closePath();
+            ctx.fill();
+
+            // Foreground Hill
+            ctx.fillStyle = '#84CC16';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.quadraticCurveTo(width * 0.5, horizonY - 10, width, height);
+            ctx.fill();
+
+            // 3. Muddy Puddle (Peppa's Favorite Muddy Puddle SPLASH!)
+            const puddleX = width * 0.5;
+            const puddleY = height * 0.68;
+            ctx.fillStyle = '#92400E';
+            ctx.beginPath();
+            ctx.ellipse(puddleX, puddleY, width * 0.22, height * 0.08, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#78350F';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Mud Splash Droplets
+            if (frame % 30 < 15) {
+                ctx.fillStyle = '#78350F';
+                for (let p = 0; p < 6; p++) {
+                    const dropX = puddleX + (Math.sin(frame * 0.3 + p) * 60);
+                    const dropY = puddleY - 10 - (Math.abs(Math.sin(frame * 0.4 + p)) * 25);
+                    ctx.beginPath();
+                    ctx.arc(dropX, dropY, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        function drawPeppaPigCharacter(ctx, x, y, scale, charEmoji, isSpeaking, gesture, frame, charIndex = 0) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+
+            // Muddy Puddle Hop Bounce
+            const puddleHop = Math.abs(Math.sin(frame * 0.2 + charIndex * 1.5)) * -22;
+            ctx.translate(0, puddleHop);
+
+            let isGeorge = charEmoji.includes('George') || (charIndex === 1);
+            let skinColor = '#FBCFE8'; // Soft Peppa Pig Pink
+            let outfitColor = isGeorge ? '#38BDF8' : '#EF4444'; // Red dress for Peppa, Blue shirt for George
+            let bootColor = '#EF4444'; // Red Muddy Puddle Rubber Boots!
+
+            // 1. Red Rubber Boots
+            ctx.fillStyle = bootColor;
+            ctx.fillRect(-22, 65, 16, 24);
+            ctx.fillRect(6, 65, 16, 24);
+            ctx.fillStyle = '#78350F'; // Mud spots
+            ctx.beginPath();
+            ctx.arc(-14, 82, 4, 0, Math.PI * 2);
+            ctx.arc(14, 82, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 2. Legs & Arms
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(-14, 40); ctx.lineTo(-14, 65);
+            ctx.moveTo(14, 40); ctx.lineTo(14, 65);
+            ctx.stroke();
+
+            // Arms
+            const armWave = Math.sin(frame * 0.2 + charIndex) * 15;
+            ctx.beginPath();
+            ctx.moveTo(-30, 15); ctx.lineTo(-55, 25 + armWave);
+            ctx.moveTo(30, 15); ctx.lineTo(55, 10 - armWave);
+            ctx.stroke();
+
+            // 3. Body Dress / Shirt (A-Line Shape)
+            ctx.fillStyle = outfitColor;
+            ctx.beginPath();
+            ctx.moveTo(-20, -15);
+            ctx.lineTo(20, -15);
+            ctx.lineTo(38, 45);
+            ctx.lineTo(-38, 45);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // 4. Peppa Pig Head & Snout (Iconic 2D Shape)
+            const headY = -48;
+            ctx.fillStyle = skinColor;
+            ctx.strokeStyle = '#F472B6';
+            ctx.lineWidth = 4;
+
+            ctx.beginPath();
+            ctx.arc(0, headY, 36, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Snout
+            ctx.beginPath();
+            ctx.ellipse(30, headY - 8, 16, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Snout Nostrils
+            ctx.fillStyle = '#F472B6';
+            ctx.beginPath();
+            ctx.arc(28, headY - 10, 3, 0, Math.PI * 2);
+            ctx.arc(36, headY - 10, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 5. Ears
+            ctx.fillStyle = skinColor;
+            ctx.strokeStyle = '#F472B6';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.ellipse(-14, headY - 42, 7, 14, -0.2, 0, Math.PI * 2);
+            ctx.ellipse(6, headY - 42, 7, 14, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // 6. Eyes
+            const isBlinking = Math.sin(frame * 0.08 + charIndex) > 0.95;
+            [-8, 10].forEach(ex => {
+                ctx.fillStyle = '#FFFFFF';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(ex, headY - 16, 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                if (!isBlinking) {
+                    ctx.fillStyle = '#000000';
+                    ctx.beginPath();
+                    ctx.arc(ex + 2, headY - 16, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            // Rosy Pink Cheek
+            ctx.fillStyle = '#F472B6';
+            ctx.beginPath();
+            ctx.arc(-16, headY + 4, 9, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 7. Mouth
+            ctx.strokeStyle = '#E11D48';
+            ctx.lineWidth = 4;
+            if (isSpeaking) {
+                ctx.fillStyle = '#BE123C';
+                ctx.beginPath();
+                ctx.arc(8, headY + 8, 10, 0, Math.PI);
+                ctx.fill();
+                ctx.stroke();
+            } else {
+                ctx.beginPath();
+                ctx.arc(8, headY + 6, 10, 0.1 * Math.PI, 0.9 * Math.PI);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
         function drawFullSceneFrame(ctx, width, height, frame, activeSub, vid, currentSec, totalSeconds) {
             const layout = activeSub?.layout || 'intro';
             const theme = activeSub?.theme || 'indigo';
+            const isPeppaStyle = vid?.id === 'vid_peppa_demo' || vid?.char1Emoji === '🐷' || vid?.char2Emoji === '🐷';
 
-            // 1. Continuous Cinematic 3D Camera Zoom & Over-the-Shoulder Pan
+            // 1. Continuous Cinematic Camera Zoom & Pan
             const cameraZoom = 1 + Math.sin(frame * 0.02) * 0.035;
             const cameraPanX = Math.cos(frame * 0.015) * 16;
             const cameraPanY = Math.sin(frame * 0.015) * 10;
@@ -4331,8 +4551,12 @@
             ctx.scale(cameraZoom, cameraZoom);
             ctx.translate(-width / 2, -height / 2);
 
-            // 2. Render 3D Perspective Environment
-            draw3DEnvironment(ctx, width, height, theme, frame);
+            // 2. Render Selected Environment (Peppa Pig 2D World or 3D Perspective Studio)
+            if (isPeppaStyle) {
+                drawPeppaPigEnvironment(ctx, width, height, frame);
+            } else {
+                draw3DEnvironment(ctx, width, height, theme, frame);
+            }
 
             // 3. Floating Animated Educational Props (📚 💡 🌟 ✏️ 🎓 💬)
             const props = ['📚', '💡', '🌟', '✏️', '🎓', '💬'];
@@ -4497,11 +4721,15 @@
             const isChar1Active = (frame % 120 < 60);
             const charScale = height / 650;
 
-            // Character 1 (3D Teacher Emma)
-            drawPixar3DCharacter(ctx, char1X, char1Y, charScale, vid?.char1Emoji || '👩‍🏫', isChar1Active, (layout === 'vocab' || layout === 'grammar') ? 'point' : 'idle', frame);
-
-            // Character 2 (3D Mascot Elephant / Lion)
-            drawPixar3DCharacter(ctx, char2X, char2Y, charScale, vid?.char2Emoji || '🐘', !isChar1Active, 'idle', frame);
+            // Character 1 & Character 2 Rendering (Peppa Pig 2D vs 3D Pixar Engine)
+            if (isPeppaStyle) {
+                const peppaScale = height / 580;
+                drawPeppaPigCharacter(ctx, char1X, char1Y, peppaScale, vid?.char1Emoji || '🐷', isChar1Active, 'idle', frame, 0);
+                drawPeppaPigCharacter(ctx, char2X, char2Y, peppaScale, vid?.char2Emoji || '🐷', !isChar1Active, 'idle', frame, 1);
+            } else {
+                drawPixar3DCharacter(ctx, char1X, char1Y, charScale, vid?.char1Emoji || '👩‍🏫', isChar1Active, (layout === 'vocab' || layout === 'grammar') ? 'point' : 'idle', frame);
+                drawPixar3DCharacter(ctx, char2X, char2Y, charScale, vid?.char2Emoji || '🐘', !isChar1Active, 'idle', frame);
+            }
 
             // 7. Active 3D Speech Bubble Overlay
             const activeEmoji = isChar1Active ? (vid?.char1Emoji || '👩‍🏫') : (vid?.char2Emoji || '🐘');
