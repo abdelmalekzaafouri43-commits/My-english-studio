@@ -981,37 +981,37 @@
             </div>
 
             <div class="sidebar-nav">
-                <a class="nav-item active" data-section="dashboard">
+                <a class="nav-item active" data-section="dashboard" href="javascript:void(0)" onclick="switchSection('dashboard')">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <a class="nav-item" data-section="students">
+                <a class="nav-item" data-section="students" href="javascript:void(0)" onclick="switchSection('students')">
                     <span class="nav-icon">🎓</span>
                     <span class="nav-text">My Students</span>
                 </a>
-                <a class="nav-item" data-section="worksheets">
+                <a class="nav-item" data-section="worksheets" href="javascript:void(0)" onclick="switchSection('worksheets')">
                     <span class="nav-icon">📁</span>
                     <span class="nav-text">Worksheets</span>
                 </a>
-                <a class="nav-item" data-section="lessons">
+                <a class="nav-item" data-section="lessons" href="javascript:void(0)" onclick="switchSection('lessons')">
                     <span class="nav-icon">📚</span>
                     <span class="nav-text">My Lessons</span>
                 </a>
-                <a class="nav-item" data-section="scripts">
+                <a class="nav-item" data-section="scripts" href="javascript:void(0)" onclick="switchSection('scripts')">
                     <span class="nav-icon">🎙️</span>
                     <span class="nav-text">Teaching Scripts</span>
                 </a>
-                <a class="nav-item" data-section="characters">
+                <a class="nav-item" data-section="characters" href="javascript:void(0)" onclick="switchSection('characters')">
                     <span class="nav-icon">🎭</span>
                     <span class="nav-text">Characters</span>
                 </a>
-                <a class="nav-item" data-section="video-projects">
+                <a class="nav-item" data-section="video-projects" href="javascript:void(0)" onclick="switchSection('video-projects')">
                     <span class="nav-icon">🎬</span>
                     <span class="nav-text">Video Projects</span>
                 </a>
 
                 <!-- Dark Mode Theme Toggle Item -->
-                <a class="nav-item" id="nav-toggle-theme" onclick="toggleDarkMode()">
+                <a class="nav-item" id="nav-toggle-theme" href="javascript:void(0)" onclick="toggleDarkMode()">
                     <span class="nav-icon" id="theme-icon">🌙</span>
                     <span class="nav-text" id="theme-text">Dark Mode</span>
                 </a>
@@ -2054,6 +2054,22 @@
 
     <!-- JavaScript App Logic -->
     <script>
+        // Universal Polyfill for CanvasRenderingContext2D.prototype.roundRect for cross-browser / WebView compatibility
+        if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+                let r = typeof radii === 'number' ? radii : (Array.isArray(radii) ? radii[0] : 0);
+                r = Math.min(Math.abs(r), Math.abs(w) / 2, Math.abs(h) / 2);
+                this.beginPath();
+                this.moveTo(x + r, y);
+                this.arcTo(x + w, y, x + w, y + h, r);
+                this.arcTo(x + w, y + h, x, y + h, r);
+                this.arcTo(x, y + h, x, y, r);
+                this.arcTo(x, y, x + w, y, r);
+                this.closePath();
+                return this;
+            };
+        }
+
         // App State Store
         const AppState = {
             activeSection: 'dashboard',
@@ -2435,8 +2451,8 @@
             }
         });
 
-        document.getElementById('toggle-sidebar-btn').addEventListener('click', () => {
-            document.getElementById('left-dashboard').classList.toggle('collapsed');
+        document.getElementById('toggle-sidebar-btn')?.addEventListener('click', () => {
+            document.getElementById('left-dashboard')?.classList.toggle('collapsed');
         });
 
         // Modals Control
@@ -3900,23 +3916,27 @@
             const ctx = canvas.getContext('2d');
 
             function animate() {
-                if (!AppState.activeVideoProject) return;
-                liveFrameCounter++;
+                try {
+                    if (!AppState.activeVideoProject) return;
+                    liveFrameCounter++;
 
-                const vid = AppState.activeVideoProject;
-                const subs = vid.subtitles || [];
-                
-                let activeSub = null;
-                if (AppState.isPlayingVideo) {
-                    const progressRatio = AppState.videoCurrentSecond / 360;
-                    const subIdx = Math.min(Math.floor(progressRatio * subs.length), Math.max(0, subs.length - 1));
-                    activeSub = subs[subIdx] || subs[0];
-                } else {
-                    const activeIdx = AppState.activeSceneIndex || 0;
-                    activeSub = subs[activeIdx] || subs[0];
+                    const vid = AppState.activeVideoProject;
+                    const subs = vid.subtitles || [];
+                    
+                    let activeSub = null;
+                    if (AppState.isPlayingVideo) {
+                        const progressRatio = AppState.videoCurrentSecond / 360;
+                        const subIdx = Math.min(Math.floor(progressRatio * subs.length), Math.max(0, subs.length - 1));
+                        activeSub = subs[subIdx] || subs[0];
+                    } else {
+                        const activeIdx = AppState.activeSceneIndex || 0;
+                        activeSub = subs[activeIdx] || subs[0];
+                    }
+
+                    drawFullSceneFrame(ctx, canvas.width, canvas.height, liveFrameCounter, activeSub, vid, AppState.videoCurrentSecond, 360);
+                } catch (err) {
+                    console.warn('Animation frame render protected error:', err);
                 }
-
-                drawFullSceneFrame(ctx, canvas.width, canvas.height, liveFrameCounter, activeSub, vid, AppState.videoCurrentSecond, 360);
                 liveAnimationReqId = requestAnimationFrame(animate);
             }
             animate();
