@@ -1034,7 +1034,7 @@
                     <div>
                         <span class="badge" style="background: #F59E0B; color: black; margin-bottom: 8px;">TEACHER STUDIO</span>
                         <h3>Welcome to My English Studio!</h3>
-                        <p>Manage students, worksheets, AI lesson plans, cartoon characters, dialogues, and video projects.</p>
+                        <p>Manage students, worksheets, AI lesson plans, 3D characters, dialogues, and video projects.</p>
                     </div>
                 </div>
 
@@ -1073,9 +1073,9 @@
                     </div>
                     <div class="studio-card" onclick="switchSection('characters')">
                         <div>
-                            <p style="color: var(--text-muted); font-size: 12px;">Cartoon Characters</p>
+                            <p style="color: var(--text-muted); font-size: 12px;">Realistic 3D Characters</p>
                             <h2 id="dash-count-characters" style="color: var(--accent-rose); font-size: 28px;">6</h2>
-                            <p style="font-size: 11px; color: var(--text-muted);">Avatars & Voices</p>
+                            <p style="font-size: 11px; color: var(--text-muted);">3D Avatars & Voices</p>
                         </div>
                         <div style="font-size: 24px; align-self: flex-end;">🎭</div>
                     </div>
@@ -1188,15 +1188,15 @@
                 </div>
             </section>
 
-            <!-- 6. CARTOON CHARACTERS SECTION -->
+            <!-- 6. REALISTIC 3D CHARACTERS SECTION -->
             <section id="section-characters" class="section-view">
                 <div class="page-header">
                     <div class="page-title">
-                        <h2>Cartoon Characters & Voice Avatars</h2>
-                        <p>Organize teacher, student, and mascot avatars for dialogue scripts</p>
+                        <h2>Realistic 3D Characters & Voice Avatars</h2>
+                        <p>Organize 3D teachers, university professors, and student avatars for dialogue scripts</p>
                     </div>
                     <button id="btn-open-character-modal" class="btn-primary btn-violet" onclick="openAddCharacterModal()">
-                        <span>➕</span> Add Cartoon Character
+                        <span>➕</span> Add 3D Character
                     </button>
                 </div>
 
@@ -1563,11 +1563,11 @@
         </div>
     </div>
 
-    <!-- MODAL 7: ADD CARTOON CHARACTER MODAL -->
+    <!-- MODAL 7: ADD REALISTIC 3D CHARACTER MODAL -->
     <div id="add-character-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🎭 Add Cartoon Character Avatar</h3>
+                <h3>🎭 Add Realistic 3D Character Avatar</h3>
                 <button class="close-btn" onclick="closeAddCharacterModal()">&times;</button>
             </div>
 
@@ -1576,55 +1576,56 @@
                     <label>Choose Avatar Emoji *</label>
                     <div class="emoji-selector">
                         <div class="emoji-option selected" onclick="selectCharacterEmoji(this, '👩‍🏫')">👩‍🏫</div>
-                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🦁')">🦁</div>
-                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🦉')">🦉</div>
-                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🐻')">🐻</div>
-                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🐰')">🐰</div>
-                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🐧')">🐧</div>
-                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🤖')">🤖</div>
-                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🦊')">🦊</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '👨‍⚕️')">👨‍⚕️</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '👨‍💻')">👨‍💻</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '👩‍🔬')">👩‍🔬</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '🧑‍🎓')">🧑‍🎓</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '👩‍🎨')">👩‍🎨</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '👨‍🏫')">👨‍🏫</div>
+                        <div class="emoji-option" onclick="selectCharacterEmoji(this, '👩‍💼')">👩‍💼</div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="input-character-name">Character Name *</label>
-                    <input type="text" id="input-character-name" class="form-input" placeholder="e.g. Sparky the Dragon" required>
+                    <input type="text" id="input-character-name" class="form-input" placeholder="e.g. Prof. Emma Watson" required>
                 </div>
 
                 <div class="form-group">
                     <label for="input-character-role">Character Role *</label>
                     <select id="input-character-role" class="form-select" required>
-                        <option value="Lead Teacher">Lead Teacher</option>
-                        <option value="Cartoon Mascot" selected>Cartoon Mascot</option>
-                        <option value="Student Buddy">Student Buddy</option>
-                        <option value="Phonics Pal">Phonics Pal</option>
-                        <option value="Grammar Assistant">Grammar Assistant</option>
+                        <option value="Lead Teacher" selected>Lead Teacher</option>
+                        <option value="University Professor">University Professor</option>
+                        <option value="ESL Specialist">ESL Specialist</option>
+                        <option value="High School Student">High School Student</option>
+                        <option value="Medical Doctor">Medical Doctor</option>
+                        <option value="AI Engineer">AI Engineer</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="input-character-voice">Voice Tone Profile *</label>
                     <select id="input-character-voice" class="form-select" required>
-                        <option value="Energetic & High Pitch">Energetic & High Pitch</option>
-                        <option value="Gentle & Warm" selected>Gentle & Warm</option>
-                        <option value="Wise & Clear">Wise & Clear</option>
-                        <option value="Playful & Funny">Playful & Funny</option>
+                        <option value="Wise & Clear" selected>Wise & Clear</option>
+                        <option value="Gentle & Warm">Gentle & Warm</option>
+                        <option value="Energetic & Confident">Energetic & Confident</option>
+                        <option value="Academic & Precise">Academic & Precise</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="input-character-catchphrase">Signature Catchphrase *</label>
-                    <input type="text" id="input-character-catchphrase" class="form-input" placeholder="e.g. Roar into new vocabulary words today!" required>
+                    <input type="text" id="input-character-catchphrase" class="form-input" placeholder="e.g. Master key grammar structures with confidence!" required>
                 </div>
 
                 <button type="submit" class="btn-primary btn-violet" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">
-                    💾 Save Cartoon Character
+                    💾 Save 3D Character
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 8: CARTOON CHARACTER PREVIEW MODAL -->
+    <!-- MODAL 8: 3D CHARACTER PREVIEW MODAL -->
     <div id="preview-character-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -1747,16 +1748,16 @@
                 </div>
 
                 <button class="btn-primary btn-ai" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;" onclick="generateAiScript()">
-                    ✨ Generate Cartoon Dialogue Script
+                    ✨ Generate 3D Dialogue Script
                 </button>
             </div>
 
             <div id="ai-script-loading-view" style="display: none;">
                 <div class="ai-loading-box">
                     <div class="ai-spinner"></div>
-                    <h4 style="color: #7E22CE; font-weight: 800; font-size: 16px;">Generating Dialogue Script...</h4>
+                    <h4 style="color: #7E22CE; font-weight: 800; font-size: 16px;">Generating 3D Dialogue Script...</h4>
                     <p style="font-size: 12px; color: var(--text-dark); font-weight: 600;">
-                        Matching cartoon character voices and writing natural ESL dialogue...
+                        Matching 3D character voices and writing natural ESL dialogue...
                     </p>
                 </div>
             </div>
@@ -1771,26 +1772,26 @@
     <div id="ai-video-modal" class="modal-overlay">
         <div class="modal-content" style="max-width: 620px;">
             <div class="modal-header">
-                <h3>✨ AI Video Lesson Generator</h3>
+                <h3>✨ AI 3D Video Lesson Generator</h3>
                 <button class="close-btn" onclick="closeAiVideoModal()">&times;</button>
             </div>
 
             <div id="ai-vid-form-view">
                 <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
-                    Create an animated cartoon video lesson complete with voiceover audio, character dialogue, and timed subtitles.
+                    Create a realistic 3D animated video lesson complete with voiceover audio, character dialogue, and timed subtitles.
                 </p>
 
                 <div class="form-group">
                     <label for="ai-vid-input-topic">1. Video Lesson Topic *</label>
-                    <input type="text" id="ai-vid-input-topic" class="form-input" placeholder="e.g. Ordering at Sunshine Cafe, Phonics Vowels, Zoo Animals, Travel & Airport">
+                    <input type="text" id="ai-vid-input-topic" class="form-input" placeholder="e.g. Airport Terminal Directions, Phonics Vowels, Daily Conversations, Business English">
                 </div>
 
                 <div class="form-group">
-                    <label for="ai-vid-input-cast">2. Cartoon Character Cast *</label>
+                    <label for="ai-vid-input-cast">2. 3D Character Cast *</label>
                     <select id="ai-vid-input-cast" class="form-select">
-                        <option value="Teacher Emma & Leo the Lion">👩‍🏫 Teacher Emma & 🦁 Leo the Lion</option>
-                        <option value="Maya the Owl & Barnaby Bear">🦉 Maya the Owl & 🐻 Barnaby Bear</option>
-                        <option value="Benny Bunny & Penny Penguin">🐰 Benny Bunny & 🐧 Penny Penguin</option>
+                        <option value="Prof. Emma Watson & Lucas Bennett" selected>👩‍🏫 Prof. Emma Watson & 👨‍💻 Lucas Bennett</option>
+                        <option value="Dr. Arthur Kingsley & Sophia Chen">👨‍⚕️ Dr. Arthur Kingsley & 👩‍🔬 Sophia Chen</option>
+                        <option value="Oliver Smith & Amara Johnson">🧑‍🎓 Oliver Smith & 👩‍🎨 Amara Johnson</option>
                     </select>
                 </div>
 
@@ -1819,14 +1820,14 @@
                 </div>
 
                 <button class="btn-primary btn-ai" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;" onclick="generateAiVideoProject()">
-                    ✨ Generate Cartoon Video Project
+                    ✨ Generate 3D Video Project
                 </button>
             </div>
 
             <div id="ai-vid-loading-view" style="display: none; text-align: center; padding: 30px 20px;">
                 <div class="loading-spinner" style="margin: 0 auto 16px auto;"></div>
-                <h4 style="font-size: 16px; font-weight: 800; color: var(--accent-violet); margin-bottom: 6px;">Building AI Video Lesson...</h4>
-                <p style="font-size: 13px; color: var(--text-muted);">Configuring cartoon scene stage, voiceover audio tracks, and timing subtitle captions...</p>
+                <h4 style="font-size: 16px; font-weight: 800; color: var(--accent-violet); margin-bottom: 6px;">Building AI 3D Video Lesson...</h4>
+                <p style="font-size: 13px; color: var(--text-muted);">Configuring 3D scene stage, voiceover audio tracks, and timing subtitle captions...</p>
             </div>
         </div>
     </div>
@@ -1842,7 +1843,7 @@
             <form id="video-form" onsubmit="handleVideoFormSubmit(event)">
                 <div class="form-group">
                     <label for="input-video-title">Project Title *</label>
-                    <input type="text" id="input-video-title" class="form-input" placeholder="e.g. Daily English: Restaurant Order Cartoon" required>
+                    <input type="text" id="input-video-title" class="form-input" placeholder="e.g. Daily English: Restaurant Order 3D Lesson" required>
                 </div>
 
                 <div class="form-group">
@@ -2200,118 +2201,82 @@
                 }
             ],
             characters: [
-                { id: 'ch_1', name: 'Teacher Emma', role: 'Lead Teacher', emoji: '👩‍🏫', voiceTone: 'Wise & Clear', catchphrase: 'Wonderful attempt! Let\'s practice together step by step!' },
-                { id: 'ch_2', name: 'Ellie the Elephant', role: '3D Chibi Mascot', emoji: '🐘', voiceTone: 'Cute & Enthusiastic', catchphrase: 'Trumpet joy! Let\'s learn big vocabulary together!' },
-                { id: 'ch_3', name: 'Barnaby Bunny', role: '3D Chibi Mascot', emoji: '🐰', voiceTone: 'Playful & Funny', catchphrase: 'Hop into new English expressions with me!' },
-                { id: 'ch_4', name: 'Dash the Dolphin', role: '3D Chibi Mascot', emoji: '🐬', voiceTone: 'Energetic & Cheerful', catchphrase: 'Splash into speaking practice! You can do it!' },
-                { id: 'ch_5', name: 'Leo the Lion', role: 'Cartoon Mascot', emoji: '🦁', voiceTone: 'Energetic & High Pitch', catchphrase: 'Roar! English speaking is fun and easy!' },
-                { id: 'ch_6', name: 'Maya the Owl', role: 'Phonics Pal', emoji: '🦉', voiceTone: 'Gentle & Warm', catchphrase: 'Hoot hoot! Time for a quick grammar check!' }
+                { id: 'ch_1', name: 'Prof. Emma Watson', role: 'Lead Educator', emoji: '👩‍🏫', voiceTone: 'Wise & Professional', catchphrase: 'Welcome to our 3D Studio! Let\'s master English dialogue together.' },
+                { id: 'ch_2', name: 'Dr. Arthur Kingsley', role: 'Academic Professor', emoji: '👨‍🏫', voiceTone: 'Warm & Authoritative', catchphrase: 'Clear pronunciation and structured grammar lead to true fluency.' },
+                { id: 'ch_3', name: 'Lucas Bennett', role: 'Teen Student', emoji: '👦', voiceTone: 'Energetic & Enthusiastic', catchphrase: 'Excited to practice real-world 3D conversations today!' },
+                { id: 'ch_4', name: 'Sophia Chen', role: 'Teen Student', emoji: '👧', voiceTone: 'Friendly & Articulate', catchphrase: 'I love exploring new vocabulary in our realistic 3D environments.' },
+                { id: 'ch_5', name: 'Oliver Smith', role: 'Primary Pupil', emoji: '👦', voiceTone: 'Bright & Cheerful', catchphrase: '3D speaking practice makes learning English so interactive!' },
+                { id: 'ch_6', name: 'Amara Johnson', role: 'Primary Pupil', emoji: '👧', voiceTone: 'Encouraging & Expressive', catchphrase: 'Let's study together and build our confidence step by step.' }
             ],
             scripts: [
                 {
                     id: 'sc_1',
-                    title: 'Ordering Food at a Cafe Dialogue',
-                    topic: 'Food & Politeness',
+                    title: '3D Studio: Modern Classroom Dialogue',
+                    topic: 'Classroom & Greetings',
                     level: 'PRIMARY',
-                    char1: 'Teacher Emma',
+                    char1: 'Prof. Emma Watson',
                     char1Emoji: '👩‍🏫',
-                    char2: 'Leo the Lion',
-                    char2Emoji: '🦁',
+                    char2: 'Lucas Bennett',
+                    char2Emoji: '👦',
                     lines: [
-                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'Hello Leo! Welcome to Sunshine Cafe. What would you like today?' },
-                        { speaker: 'Leo the Lion', emoji: '🦁', text: 'Hi Teacher Emma! I would like a chocolate muffin and orange juice, please.' },
-                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'Certainly! Would you like a small or large orange juice?' },
-                        { speaker: 'Leo the Lion', emoji: '🦁', text: 'A large juice, please. How much is that?' },
-                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'That is 5 dollars total. Here is your order!' }
+                        { speaker: 'Prof. Emma Watson', emoji: '👩‍🏫', text: 'Good morning Lucas! Welcome to our modern 3D English classroom.' },
+                        { speaker: 'Lucas Bennett', emoji: '👦', text: 'Good morning Professor Emma! I am ready for today\'s speaking lesson.' },
+                        { speaker: 'Prof. Emma Watson', emoji: '👩‍🏫', text: 'Excellent! Today we will practice polite requests and travel vocabulary.' },
+                        { speaker: 'Lucas Bennett', emoji: '👦', text: 'That sounds wonderful! I am looking forward to our interactive dialogue.' }
                     ]
                 },
                 {
                     id: 'sc_2',
-                    title: 'At the Zoo: Animals & Comparative Adjectives',
-                    topic: 'Animals & Vocabulary',
-                    level: 'PRIMARY',
-                    char1: 'Maya the Owl',
-                    char1Emoji: '🦉',
-                    char2: 'Barnaby Bear',
-                    char2Emoji: '🐻',
-                    lines: [
-                        { speaker: 'Maya the Owl', emoji: '🦉', text: 'Look Barnaby! That giraffe is so tall!' },
-                        { speaker: 'Barnaby Bear', emoji: '🐻', text: 'Yes Maya! And look at the elephant, it is bigger than the hippopotamus!' },
-                        { speaker: 'Maya the Owl', emoji: '🦉', text: 'Which animal is your favorite?' },
-                        { speaker: 'Barnaby Bear', emoji: '🐻', text: 'I like the fluffy pandas because they eat bamboo happily!' }
-                    ]
-                },
-                {
-                    id: 'sc_3',
-                    title: 'Planning a Weekend Trip',
-                    topic: 'Future Tense & Travel',
+                    title: 'Airport Terminal: Asking Directions',
+                    topic: 'Travel & Navigation',
                     level: 'MIDDLE',
-                    char1: 'Teacher Emma',
+                    char1: 'Prof. Emma Watson',
                     char1Emoji: '👩‍🏫',
-                    char2: 'Maya the Owl',
-                    char2Emoji: '🦉',
+                    char2: 'Sophia Chen',
+                    char2Emoji: '👧',
                     lines: [
-                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'Maya, where are you going to visit this coming weekend?' },
-                        { speaker: 'Maya the Owl', emoji: '🦉', text: 'I am going to visit the Science Museum with my family on Saturday.' },
-                        { speaker: 'Teacher Emma', emoji: '👩‍🏫', text: 'That sounds exciting! What will you see there?' },
-                        { speaker: 'Maya the Owl', emoji: '🦉', text: 'We will explore the space exploration exhibit and robot laboratory!' }
+                        { speaker: 'Prof. Emma Watson', emoji: '👩‍🏫', text: 'Excuse me Sophia! Could you tell me where Terminal 3 is located?' },
+                        { speaker: 'Sophia Chen', emoji: '👧', text: 'Yes, of course! Go straight ahead past the main departure hall and turn right.' },
+                        { speaker: 'Prof. Emma Watson', emoji: '👩‍🏫', text: 'Thank you very much! Have a safe flight to London.' },
+                        { speaker: 'Sophia Chen', emoji: '👧', text: 'You are very welcome! Enjoy your trip.' }
                     ]
                 }
             ],
             videoProjects: [
                 {
-                    id: 'vid_1',
-                    title: 'Daily English: Cafe Order Cartoon',
+                    id: 'vid_3d_demo',
+                    title: '3D Studio Demo: Modern Classroom Dialogue',
                     level: 'PRIMARY',
-                    status: 'Finished 6m MP4',
+                    status: 'Finished 3D Studio HD',
                     duration: '6 Minutes (360s)',
                     producer: 'Mr. Zaafouri Abdelmalek',
-                    scriptTitle: 'Ordering Food at a Cafe Dialogue',
+                    scriptTitle: '3D Studio: Modern Classroom Dialogue',
                     char1Emoji: '👩‍🏫',
-                    char2Emoji: '🦁',
+                    char2Emoji: '👦',
                     subtitles: [
-                        { time: '00:05 - 00:45', text: 'Welcome to our 6-Minute Animated English Video Lesson! Produced by Mr. Zaafouri Abdelmalek.' },
-                        { time: '00:50 - 01:30', text: 'Hello Leo! Welcome to Sunshine Cafe today.' },
-                        { time: '01:35 - 02:30', text: 'I would like a fresh chocolate muffin and orange juice, please!' },
-                        { time: '02:35 - 03:45', text: 'Certainly! Would you like a small or large glass of juice?' },
-                        { time: '03:50 - 04:45', text: 'A large juice, please. How much is that altogether?' },
-                        { time: '04:50 - 05:45', text: 'That will be 4 dollars. Thank you for practicing with Mr. Zaafouri Abdelmalek!' }
+                        { time: '00:05 - 00:45', text: 'Welcome to our Realistic 3D Studio! Produced by Mr. Zaafouri Abdelmalek.', layout: 'intro', theme: 'indigo' },
+                        { time: '00:50 - 01:35', text: 'Good morning Lucas! Welcome to our modern 3D English classroom today.', layout: 'vocab', theme: 'emerald' },
+                        { time: '01:40 - 02:40', text: 'Good morning Professor Emma! I am ready for our interactive speaking lesson.', layout: 'grammar', theme: 'dark' },
+                        { time: '02:45 - 03:50', text: 'Excellent! We are mastering structured grammar rules and polite expressions.', layout: 'dialogue', theme: 'sunset' },
+                        { time: '03:55 - 04:55', text: 'Practice daily with Mr. Zaafouri Abdelmalek\'s Realistic 3D Studio!', layout: 'summary', theme: 'indigo' }
                     ]
                 },
                 {
                     id: 'vid_2',
-                    title: 'Grammar Animation: Present Tense & Weekend Trip',
+                    title: '3D Airport Studio: Travel Directions & Terminal Navigation',
                     level: 'MIDDLE',
-                    status: 'In Subtitle Studio (6m)',
+                    status: 'In 3D Studio (6m)',
                     duration: '6 Minutes (360s)',
                     producer: 'Mr. Zaafouri Abdelmalek',
-                    scriptTitle: 'Planning a Weekend Trip',
+                    scriptTitle: 'Airport Terminal: Asking Directions',
                     char1Emoji: '👩‍🏫',
-                    char2Emoji: '🦉',
+                    char2Emoji: '👧',
                     subtitles: [
-                        { time: '00:05 - 01:00', text: 'Welcome to our 6-Minute Grammar Video Lesson! Produced by Mr. Zaafouri Abdelmalek.', layout: 'intro', theme: 'indigo' },
-                        { time: '01:05 - 02:15', text: 'Where are you going to visit this coming weekend, Maya?', layout: 'vocab', theme: 'emerald' },
-                        { time: '02:20 - 03:30', text: 'I am going to visit the Science Museum with my family on Saturday!', layout: 'grammar', theme: 'dark' },
-                        { time: '03:35 - 04:45', text: 'That sounds exciting! We will explore space and robotics exhibits.', layout: 'dialogue', theme: 'sunset' },
+                        { time: '00:05 - 01:00', text: 'Welcome to our 3D Travel Video Studio! Produced by Mr. Zaafouri Abdelmalek.', layout: 'intro', theme: 'indigo' },
+                        { time: '01:05 - 02:15', text: 'Excuse me! Could you tell me where Gate 14 is located in Terminal 3?', layout: 'vocab', theme: 'emerald' },
+                        { time: '02:20 - 03:30', text: 'Go straight ahead past security and turn right at the departures lounge.', layout: 'grammar', theme: 'dark' },
+                        { time: '03:35 - 04:45', text: 'Thank you so much for your help! Have a wonderful flight.', layout: 'dialogue', theme: 'sunset' },
                         { time: '04:50 - 05:55', text: 'Great job! Practice speaking daily with Mr. Zaafouri Abdelmalek\'s studio!', layout: 'summary', theme: 'indigo' }
-                    ]
-                },
-                {
-                    id: 'vid_3d_demo',
-                    title: '3D Pixar Studio: Asking Directions in London',
-                    level: 'PRIMARY',
-                    status: 'Finished 3D Pixar HD',
-                    duration: '6 Minutes (360s)',
-                    producer: 'Mr. Zaafouri Abdelmalek',
-                    scriptTitle: 'Asking Directions in London',
-                    char1Emoji: '👩‍🏫',
-                    char2Emoji: '🐘',
-                    subtitles: [
-                        { time: '00:05 - 00:45', text: 'Welcome to our 3D Pixar Animated Studio! Produced by Mr. Zaafouri Abdelmalek.', layout: 'intro', theme: 'indigo' },
-                        { time: '00:50 - 01:35', text: 'Excuse me! Could you tell me where the British Museum is, please?', layout: 'vocab', theme: 'emerald' },
-                        { time: '01:40 - 02:40', text: 'Go straight ahead and turn left at the corner onto High Holborn Street.', layout: 'grammar', theme: 'dark' },
-                        { time: '02:45 - 03:50', text: 'Thank you so much! Is it far to walk on foot from here?', layout: 'dialogue', theme: 'sunset' },
-                        { time: '03:55 - 04:55', text: 'No, it is only a 5-minute walk. Have a wonderful visit in London!', layout: 'summary', theme: 'indigo' }
                     ]
                 }
             ]
@@ -2911,7 +2876,7 @@
             }
         }
 
-        // Cartoon Characters Handlers
+        // Realistic 3D Characters Handlers
         function selectCharacterEmoji(el, emoji) {
             el.parentElement.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
             el.classList.add('selected');
@@ -2953,7 +2918,7 @@
             );
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--text-muted);">No cartoon characters found</div>`;
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--text-muted);">No 3D characters found</div>`;
                 return;
             }
 
@@ -3312,7 +3277,7 @@
                     char2Emoji: char2Emoji,
                     subtitles: [
                         { time: '00:05 - 00:45', text: `Welcome to our 6-Minute Animated Video Lesson on ${topic}! Produced by ${producer}.` },
-                        { time: '00:50 - 01:30', text: `Watch our cartoon characters practice key ${topic} phrases in English.` },
+                        { time: '00:50 - 01:30', text: `Watch our 3D characters practice key ${topic} phrases in English.` },
                         { time: '01:35 - 02:45', text: `Listen carefully to the native voiceover and repeat out loud!` },
                         { time: '02:50 - 04:00', text: `Practice speaking daily to build your confidence and fluency.` },
                         { time: '04:05 - 05:45', text: `Great effort! Complete your worksheet exercises in your student studio.` }
@@ -3361,10 +3326,10 @@
                 producer: producer,
                 scriptTitle: scriptTitle,
                 char1Emoji: '👩‍🏫',
-                char2Emoji: '🦁',
+                char2Emoji: '👨‍💻',
                 subtitles: [
                     { time: '00:05 - 01:00', text: `Welcome to ${title} 6-Minute Video Lesson! Produced by ${producer}.` },
-                    { time: '01:05 - 03:00', text: 'Listen carefully to the cartoon characters and repeat after them out loud.' },
+                    { time: '01:05 - 03:00', text: 'Listen carefully to the 3D characters and repeat after them out loud.' },
                     { time: '03:05 - 05:55', text: 'Great job practicing English today with your studio characters!' }
                 ]
             };
@@ -3523,11 +3488,11 @@
             const stageProdName = document.getElementById('stage-producer-name');
             if (stageProdName) stageProdName.innerText = vid.producer || 'Mr. Zaafouri Abdelmalek';
 
-            // Update stage cartoon avatars
+            // Update stage 3D avatars
             const av1 = document.getElementById('stage-avatar-1');
             const av2 = document.getElementById('stage-avatar-2');
             if (av1) av1.innerText = vid.char1Emoji || '👩‍🏫';
-            if (av2) av2.innerText = vid.char2Emoji || '🦁';
+            if (av2) av2.innerText = vid.char2Emoji || '👨‍💻';
 
             // Reset video timer
             AppState.videoCurrentSecond = 0;
@@ -4317,229 +4282,9 @@
             ctx.restore();
         }
 
-        function drawPeppaPigEnvironment(ctx, width, height, frame) {
-            // 1. Bright Pastel Blue Sky
-            ctx.fillStyle = '#BAE6FD';
-            ctx.fillRect(0, 0, width, height);
-
-            // Smiling Sun
-            const sunX = width * 0.85;
-            const sunY = height * 0.18;
-            ctx.fillStyle = '#FDE047';
-            ctx.beginPath();
-            ctx.arc(sunX, sunY, 32, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Sun Rays
-            ctx.strokeStyle = '#FACC15';
-            ctx.lineWidth = 3;
-            for (let r = 0; r < 8; r++) {
-                const ang = (r * Math.PI / 4) + frame * 0.02;
-                ctx.beginPath();
-                ctx.moveTo(sunX + Math.cos(ang) * 38, sunY + Math.sin(ang) * 38);
-                ctx.lineTo(sunX + Math.cos(ang) * 50, sunY + Math.sin(ang) * 50);
-                ctx.stroke();
-            }
-
-            // Drifting Fluffy White Clouds
-            ctx.fillStyle = '#FFFFFF';
-            [-0.1, 0.35, 0.7].forEach((relX, i) => {
-                const cx = (width * relX + (frame * 0.4 + i * 80)) % (width + 120) - 60;
-                const cy = height * 0.12 + Math.sin(frame * 0.02 + i) * 8;
-                ctx.beginPath();
-                ctx.arc(cx, cy, 20, 0, Math.PI * 2);
-                ctx.arc(cx + 22, cy - 10, 24, 0, Math.PI * 2);
-                ctx.arc(cx + 44, cy, 20, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            // 2. Rolling Green Hills (Pastel Green)
-            const horizonY = height * 0.48;
-
-            ctx.fillStyle = '#A3E635';
-            ctx.beginPath();
-            ctx.moveTo(0, height);
-            ctx.quadraticCurveTo(width * 0.3, horizonY - 40, width * 0.65, horizonY + 20);
-            ctx.quadraticCurveTo(width * 0.85, horizonY - 20, width, height);
-            ctx.fill();
-
-            // Iconic Yellow House on Hill Top
-            const houseX = width * 0.28;
-            const houseY = horizonY - 46;
-            ctx.fillStyle = '#FEF08A';
-            ctx.fillRect(houseX, houseY, 44, 38);
-            ctx.fillStyle = '#EF4444';
-            ctx.beginPath();
-            ctx.moveTo(houseX - 6, houseY);
-            ctx.lineTo(houseX + 22, houseY - 22);
-            ctx.lineTo(houseX + 50, houseY);
-            ctx.closePath();
-            ctx.fill();
-
-            // Foreground Hill
-            ctx.fillStyle = '#84CC16';
-            ctx.beginPath();
-            ctx.moveTo(0, height);
-            ctx.quadraticCurveTo(width * 0.5, horizonY - 10, width, height);
-            ctx.fill();
-
-            // 3. Muddy Puddle (Peppa's Favorite Muddy Puddle SPLASH!)
-            const puddleX = width * 0.5;
-            const puddleY = height * 0.68;
-            ctx.fillStyle = '#92400E';
-            ctx.beginPath();
-            ctx.ellipse(puddleX, puddleY, width * 0.22, height * 0.08, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#78350F';
-            ctx.lineWidth = 3;
-            ctx.stroke();
-
-            // Mud Splash Droplets
-            if (frame % 30 < 15) {
-                ctx.fillStyle = '#78350F';
-                for (let p = 0; p < 6; p++) {
-                    const dropX = puddleX + (Math.sin(frame * 0.3 + p) * 60);
-                    const dropY = puddleY - 10 - (Math.abs(Math.sin(frame * 0.4 + p)) * 25);
-                    ctx.beginPath();
-                    ctx.arc(dropX, dropY, 5, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-        }
-
-        function drawPeppaPigCharacter(ctx, x, y, scale, charEmoji, isSpeaking, gesture, frame, charIndex = 0) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.scale(scale, scale);
-
-            // Muddy Puddle Hop Bounce
-            const puddleHop = Math.abs(Math.sin(frame * 0.2 + charIndex * 1.5)) * -22;
-            ctx.translate(0, puddleHop);
-
-            let isGeorge = charEmoji.includes('George') || (charIndex === 1);
-            let skinColor = '#FBCFE8'; // Soft Peppa Pig Pink
-            let outfitColor = isGeorge ? '#38BDF8' : '#EF4444'; // Red dress for Peppa, Blue shirt for George
-            let bootColor = '#EF4444'; // Red Muddy Puddle Rubber Boots!
-
-            // 1. Red Rubber Boots
-            ctx.fillStyle = bootColor;
-            ctx.fillRect(-22, 65, 16, 24);
-            ctx.fillRect(6, 65, 16, 24);
-            ctx.fillStyle = '#78350F'; // Mud spots
-            ctx.beginPath();
-            ctx.arc(-14, 82, 4, 0, Math.PI * 2);
-            ctx.arc(14, 82, 4, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 2. Legs & Arms
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(-14, 40); ctx.lineTo(-14, 65);
-            ctx.moveTo(14, 40); ctx.lineTo(14, 65);
-            ctx.stroke();
-
-            // Arms
-            const armWave = Math.sin(frame * 0.2 + charIndex) * 15;
-            ctx.beginPath();
-            ctx.moveTo(-30, 15); ctx.lineTo(-55, 25 + armWave);
-            ctx.moveTo(30, 15); ctx.lineTo(55, 10 - armWave);
-            ctx.stroke();
-
-            // 3. Body Dress / Shirt (A-Line Shape)
-            ctx.fillStyle = outfitColor;
-            ctx.beginPath();
-            ctx.moveTo(-20, -15);
-            ctx.lineTo(20, -15);
-            ctx.lineTo(38, 45);
-            ctx.lineTo(-38, 45);
-            ctx.closePath();
-            ctx.fill();
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 3;
-            ctx.stroke();
-
-            // 4. Peppa Pig Head & Snout (Iconic 2D Shape)
-            const headY = -48;
-            ctx.fillStyle = skinColor;
-            ctx.strokeStyle = '#F472B6';
-            ctx.lineWidth = 4;
-
-            ctx.beginPath();
-            ctx.arc(0, headY, 36, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // Snout
-            ctx.beginPath();
-            ctx.ellipse(30, headY - 8, 16, 12, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // Snout Nostrils
-            ctx.fillStyle = '#F472B6';
-            ctx.beginPath();
-            ctx.arc(28, headY - 10, 3, 0, Math.PI * 2);
-            ctx.arc(36, headY - 10, 3, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 5. Ears
-            ctx.fillStyle = skinColor;
-            ctx.strokeStyle = '#F472B6';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.ellipse(-14, headY - 42, 7, 14, -0.2, 0, Math.PI * 2);
-            ctx.ellipse(6, headY - 42, 7, 14, 0.2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // 6. Eyes
-            const isBlinking = Math.sin(frame * 0.08 + charIndex) > 0.95;
-            [-8, 10].forEach(ex => {
-                ctx.fillStyle = '#FFFFFF';
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(ex, headY - 16, 7, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
-
-                if (!isBlinking) {
-                    ctx.fillStyle = '#000000';
-                    ctx.beginPath();
-                    ctx.arc(ex + 2, headY - 16, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            });
-
-            // Rosy Pink Cheek
-            ctx.fillStyle = '#F472B6';
-            ctx.beginPath();
-            ctx.arc(-16, headY + 4, 9, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 7. Mouth
-            ctx.strokeStyle = '#E11D48';
-            ctx.lineWidth = 4;
-            if (isSpeaking) {
-                ctx.fillStyle = '#BE123C';
-                ctx.beginPath();
-                ctx.arc(8, headY + 8, 10, 0, Math.PI);
-                ctx.fill();
-                ctx.stroke();
-            } else {
-                ctx.beginPath();
-                ctx.arc(8, headY + 6, 10, 0.1 * Math.PI, 0.9 * Math.PI);
-                ctx.stroke();
-            }
-
-            ctx.restore();
-        }
-
         function drawFullSceneFrame(ctx, width, height, frame, activeSub, vid, currentSec, totalSeconds) {
             const layout = activeSub?.layout || 'intro';
             const theme = activeSub?.theme || 'indigo';
-            const isPeppaStyle = vid?.id === 'vid_peppa_demo' || vid?.char1Emoji === '🐷' || vid?.char2Emoji === '🐷';
 
             // 1. Continuous Cinematic Camera Zoom & Pan
             const cameraZoom = 1 + Math.sin(frame * 0.02) * 0.035;
@@ -4551,12 +4296,8 @@
             ctx.scale(cameraZoom, cameraZoom);
             ctx.translate(-width / 2, -height / 2);
 
-            // 2. Render Selected Environment (Peppa Pig 2D World or 3D Perspective Studio)
-            if (isPeppaStyle) {
-                drawPeppaPigEnvironment(ctx, width, height, frame);
-            } else {
-                draw3DEnvironment(ctx, width, height, theme, frame);
-            }
+            // 2. Render Selected Environment (3D Perspective Studio)
+            draw3DEnvironment(ctx, width, height, theme, frame);
 
             // 3. Floating Animated Educational Props (📚 💡 🌟 ✏️ 🎓 💬)
             const props = ['📚', '💡', '🌟', '✏️', '🎓', '💬'];
@@ -4667,7 +4408,7 @@
 
                 ctx.font = `bold ${Math.floor(height * 0.032)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#F8FAFC';
-                ctx.fillText('Listen carefully & repeat after 3D Pixar voices!', width / 2, cardY + cardH * 0.62);
+                ctx.fillText('Listen carefully & repeat after 3D character voices!', width / 2, cardY + cardH * 0.62);
             } else if (layout === 'quiz') {
                 ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
                 ctx.strokeStyle = '#F59E0B';
@@ -4708,7 +4449,7 @@
                 ctx.fillText('Excellent Progress! Practice daily with Mr. Zaafouri Abdelmalek.', width / 2, cardY + cardH * 0.62);
             }
 
-            // 6. Render 3D Pixar Cartoon Character Models
+            // 6. Render Realistic 3D Character Models
             const charWalk1 = Math.sin(frame * 0.06) * (width * 0.03);
             const charWalk2 = Math.cos(frame * 0.06) * (width * 0.03);
 
@@ -4721,18 +4462,11 @@
             const isChar1Active = (frame % 120 < 60);
             const charScale = height / 650;
 
-            // Character 1 & Character 2 Rendering (Peppa Pig 2D vs 3D Pixar Engine)
-            if (isPeppaStyle) {
-                const peppaScale = height / 580;
-                drawPeppaPigCharacter(ctx, char1X, char1Y, peppaScale, vid?.char1Emoji || '🐷', isChar1Active, 'idle', frame, 0);
-                drawPeppaPigCharacter(ctx, char2X, char2Y, peppaScale, vid?.char2Emoji || '🐷', !isChar1Active, 'idle', frame, 1);
-            } else {
-                drawPixar3DCharacter(ctx, char1X, char1Y, charScale, vid?.char1Emoji || '👩‍🏫', isChar1Active, (layout === 'vocab' || layout === 'grammar') ? 'point' : 'idle', frame);
-                drawPixar3DCharacter(ctx, char2X, char2Y, charScale, vid?.char2Emoji || '🐘', !isChar1Active, 'idle', frame);
-            }
+            drawPixar3DCharacter(ctx, char1X, char1Y, charScale, vid?.char1Emoji || '👩‍🏫', isChar1Active, (layout === 'vocab' || layout === 'grammar') ? 'point' : 'idle', frame);
+            drawPixar3DCharacter(ctx, char2X, char2Y, charScale, vid?.char2Emoji || '👨‍🎓', !isChar1Active, 'idle', frame);
 
             // 7. Active 3D Speech Bubble Overlay
-            const activeEmoji = isChar1Active ? (vid?.char1Emoji || '👩‍🏫') : (vid?.char2Emoji || '🐘');
+            const activeEmoji = isChar1Active ? (vid?.char1Emoji || '👩‍🏫') : (vid?.char2Emoji || '👨‍🎓');
             const bubbleX = isChar1Active ? (char1X + width * 0.06) : (char2X - width * 0.06);
             const bubbleY = (height * 0.46) + Math.sin(frame * 0.1) * 6;
 
