@@ -2289,11 +2289,29 @@
                     char1Emoji: '👩‍🏫',
                     char2Emoji: '🦉',
                     subtitles: [
-                        { time: '00:05 - 01:00', text: 'Welcome to our 6-Minute Grammar Video Lesson! Produced by Mr. Zaafouri Abdelmalek.' },
-                        { time: '01:05 - 02:15', text: 'Where are you going to visit this coming weekend, Maya?' },
-                        { time: '02:20 - 03:30', text: 'I am going to visit the Science Museum with my family on Saturday!' },
-                        { time: '03:35 - 04:45', text: 'That sounds exciting! We will explore space and robotics exhibits.' },
-                        { time: '04:50 - 05:55', text: 'Great job! Practice speaking daily with Mr. Zaafouri Abdelmalek\'s studio!' }
+                        { time: '00:05 - 01:00', text: 'Welcome to our 6-Minute Grammar Video Lesson! Produced by Mr. Zaafouri Abdelmalek.', layout: 'intro', theme: 'indigo' },
+                        { time: '01:05 - 02:15', text: 'Where are you going to visit this coming weekend, Maya?', layout: 'vocab', theme: 'emerald' },
+                        { time: '02:20 - 03:30', text: 'I am going to visit the Science Museum with my family on Saturday!', layout: 'grammar', theme: 'dark' },
+                        { time: '03:35 - 04:45', text: 'That sounds exciting! We will explore space and robotics exhibits.', layout: 'dialogue', theme: 'sunset' },
+                        { time: '04:50 - 05:55', text: 'Great job! Practice speaking daily with Mr. Zaafouri Abdelmalek\'s studio!', layout: 'summary', theme: 'indigo' }
+                    ]
+                },
+                {
+                    id: 'vid_3d_demo',
+                    title: '3D Pixar Studio: Asking Directions in London',
+                    level: 'PRIMARY',
+                    status: 'Finished 3D Pixar HD',
+                    duration: '6 Minutes (360s)',
+                    producer: 'Mr. Zaafouri Abdelmalek',
+                    scriptTitle: 'Asking Directions in London',
+                    char1Emoji: '👩‍🏫',
+                    char2Emoji: '🐘',
+                    subtitles: [
+                        { time: '00:05 - 00:45', text: 'Welcome to our 3D Pixar Animated Studio! Produced by Mr. Zaafouri Abdelmalek.', layout: 'intro', theme: 'indigo' },
+                        { time: '00:50 - 01:35', text: 'Excuse me! Could you tell me where the British Museum is, please?', layout: 'vocab', theme: 'emerald' },
+                        { time: '01:40 - 02:40', text: 'Go straight ahead and turn left at the corner onto High Holborn Street.', layout: 'grammar', theme: 'dark' },
+                        { time: '02:45 - 03:50', text: 'Thank you so much! Is it far to walk on foot from here?', layout: 'dialogue', theme: 'sunset' },
+                        { time: '03:55 - 04:55', text: 'No, it is only a 5-minute walk. Have a wonderful visit in London!', layout: 'summary', theme: 'indigo' }
                     ]
                 }
             ]
@@ -3945,11 +3963,365 @@
             }
         }
 
+        function draw3DEnvironment(ctx, width, height, theme, frame) {
+            const horizonY = height * 0.44;
+
+            // 1. Perspective Wall Background with Atmospheric Gradient
+            const wallGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
+            if (theme === 'dark') {
+                wallGrad.addColorStop(0, '#0F172A');
+                wallGrad.addColorStop(1, '#1E293B');
+            } else if (theme === 'emerald') {
+                wallGrad.addColorStop(0, '#064E3B');
+                wallGrad.addColorStop(1, '#022C22');
+            } else if (theme === 'sunset') {
+                wallGrad.addColorStop(0, '#78350F');
+                wallGrad.addColorStop(1, '#451A03');
+            } else if (theme === 'rose') {
+                wallGrad.addColorStop(0, '#831843');
+                wallGrad.addColorStop(1, '#500724');
+            } else {
+                wallGrad.addColorStop(0, '#1E1B4B');
+                wallGrad.addColorStop(0.6, '#312E81');
+                wallGrad.addColorStop(1, '#1E1B4B');
+            }
+            ctx.fillStyle = wallGrad;
+            ctx.fillRect(0, 0, width, horizonY);
+
+            // 2. 3D Perspective Wood Floor
+            const floorGrad = ctx.createLinearGradient(0, horizonY, 0, height);
+            floorGrad.addColorStop(0, '#1E293B');
+            floorGrad.addColorStop(0.5, '#0F172A');
+            floorGrad.addColorStop(1, '#020617');
+            ctx.fillStyle = floorGrad;
+            ctx.fillRect(0, horizonY, width, height - horizonY);
+
+            // 3. 3D Perspective Floor Grid & Planks
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.12)';
+            ctx.lineWidth = 2;
+            const gridLines = 14;
+            for (let i = 0; i <= gridLines; i++) {
+                const xEnd = (width / gridLines) * i;
+                ctx.beginPath();
+                ctx.moveTo(width / 2, horizonY);
+                ctx.lineTo(xEnd, height);
+                ctx.stroke();
+            }
+
+            // Floor Horizon Divider Line
+            ctx.strokeStyle = '#F59E0B';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, horizonY);
+            ctx.lineTo(width, horizonY);
+            ctx.stroke();
+
+            // 4. Volumetric Spotlight Rays
+            const spotGrad = ctx.createRadialGradient(width / 2, 0, 10, width / 2, height * 0.5, width * 0.5);
+            spotGrad.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
+            spotGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = spotGrad;
+            ctx.beginPath();
+            ctx.moveTo(width * 0.35, 0);
+            ctx.lineTo(width * 0.65, 0);
+            ctx.lineTo(width * 0.9, height);
+            ctx.lineTo(width * 0.1, height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawPixar3DCharacter(ctx, x, y, scale, charEmoji, isSpeaking, gesture, frame) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+
+            const isBlinking = Math.sin(frame * 0.08) > 0.94;
+            const bodyBounce = Math.abs(Math.sin(frame * 0.14)) * -8;
+            const armAngleLeft = Math.sin(frame * 0.12) * 0.25;
+            const armAngleRight = (gesture === 'point') ? -0.85 : Math.cos(frame * 0.12) * 0.25;
+
+            // 1. 3D Drop-Shadow on Floor
+            ctx.save();
+            ctx.scale(1, 0.3);
+            const shadowGrad = ctx.createRadialGradient(0, 420, 10, 0, 420, 90);
+            shadowGrad.addColorStop(0, 'rgba(0, 0, 0, 0.5)');
+            shadowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = shadowGrad;
+            ctx.beginPath();
+            ctx.arc(0, 420, 90, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            ctx.translate(0, bodyBounce);
+
+            // Determine character style colors
+            let skinColor = '#FFD1B3';
+            let clothingColor = '#4F46E5';
+            let secondaryColor = '#818CF8';
+            let eyeColor = '#3B82F6';
+            let isAnimal = false;
+
+            if (charEmoji.includes('🐘') || charEmoji.includes('Elephant')) {
+                skinColor = '#94A3B8';
+                clothingColor = '#0284C7';
+                secondaryColor = '#38BDF8';
+                eyeColor = '#0EA5E9';
+                isAnimal = 'elephant';
+            } else if (charEmoji.includes('🐰') || charEmoji.includes('Bunny')) {
+                skinColor = '#F8FAFC';
+                clothingColor = '#EC4899';
+                secondaryColor = '#F472B6';
+                eyeColor = '#D946EF';
+                isAnimal = 'bunny';
+            } else if (charEmoji.includes('🐬') || charEmoji.includes('Dolphin')) {
+                skinColor = '#38BDF8';
+                clothingColor = '#0284C7';
+                secondaryColor = '#7DD3FC';
+                eyeColor = '#0284C7';
+                isAnimal = 'dolphin';
+            } else if (charEmoji.includes('🦁') || charEmoji.includes('Lion')) {
+                skinColor = '#F59E0B';
+                clothingColor = '#D97706';
+                secondaryColor = '#FBBF24';
+                eyeColor = '#D97706';
+                isAnimal = 'lion';
+            }
+
+            // 2. 3D Skeletal Legs & Gait Cycle
+            const legOffset1 = Math.sin(frame * 0.12) * 12;
+            const legOffset2 = -legOffset1;
+
+            ctx.fillStyle = clothingColor;
+            ctx.beginPath();
+            ctx.roundRect(-32, 55, 20, 55 + legOffset1, 10);
+            ctx.roundRect(12, 55, 20, 55 + legOffset2, 10);
+            ctx.fill();
+
+            // 3D Shoes
+            ctx.fillStyle = '#0F172A';
+            ctx.beginPath();
+            ctx.roundRect(-36, 110 + legOffset1, 28, 16, 8);
+            ctx.roundRect(8, 110 + legOffset2, 28, 16, 8);
+            ctx.fill();
+
+            // 3. 3D Torso & Shaded Blazer Clothing
+            const torsoGrad = ctx.createLinearGradient(-45, -20, 45, 70);
+            torsoGrad.addColorStop(0, secondaryColor);
+            torsoGrad.addColorStop(0.4, clothingColor);
+            torsoGrad.addColorStop(1, '#1E1B4B');
+            ctx.fillStyle = torsoGrad;
+            ctx.beginPath();
+            ctx.roundRect(-45, -20, 90, 80, 20);
+            ctx.fill();
+
+            // 3D Collar & Gold Buttons
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-20, -20);
+            ctx.lineTo(0, 10);
+            ctx.lineTo(20, -20);
+            ctx.stroke();
+
+            ctx.fillStyle = '#FBBF24';
+            ctx.beginPath();
+            ctx.arc(0, 25, 4, 0, Math.PI * 2);
+            ctx.arc(0, 45, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 4. 3D Skeletal Arms
+            // Left Arm
+            ctx.save();
+            ctx.translate(-45, -10);
+            ctx.rotate(armAngleLeft);
+            ctx.fillStyle = clothingColor;
+            ctx.beginPath();
+            ctx.roundRect(-14, 0, 18, 55, 9);
+            ctx.fill();
+            ctx.fillStyle = skinColor;
+            ctx.beginPath();
+            ctx.arc(-5, 58, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Right Arm
+            ctx.save();
+            ctx.translate(45, -10);
+            ctx.rotate(armAngleRight);
+            ctx.fillStyle = clothingColor;
+            ctx.beginPath();
+            ctx.roundRect(-4, 0, 18, 55, 9);
+            ctx.fill();
+            ctx.fillStyle = skinColor;
+            ctx.beginPath();
+            ctx.arc(5, 58, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (gesture === 'point') {
+                ctx.fillStyle = '#F59E0B';
+                ctx.beginPath();
+                ctx.roundRect(5, 45, 8, 70, 4);
+                ctx.fill();
+                ctx.font = '16px sans-serif';
+                ctx.fillText('✨', 4, 125);
+            }
+            ctx.restore();
+
+            // 5. 3D Head Sphere with Radial Gradient Specular Shading
+            const headY = -68;
+            const headRadius = 48;
+
+            const headGrad = ctx.createRadialGradient(-15, headY - 15, 8, 0, headY, headRadius);
+            headGrad.addColorStop(0, '#FFFFFF');
+            headGrad.addColorStop(0.2, skinColor);
+            headGrad.addColorStop(1, '#B91C1C'); // Warm shade fallback
+            ctx.fillStyle = headGrad;
+            ctx.beginPath();
+            ctx.arc(0, headY, headRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Animal 3D Ear Props
+            if (isAnimal === 'elephant') {
+                const earBounce = Math.sin(frame * 0.1) * 6;
+                ctx.fillStyle = '#CBD5E1';
+                ctx.beginPath();
+                ctx.ellipse(-58, headY - 5 + earBounce, 32, 42, -0.2, 0, Math.PI * 2);
+                ctx.ellipse(58, headY - 5 - earBounce, 32, 42, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#F472B6';
+                ctx.beginPath();
+                ctx.ellipse(-56, headY - 5 + earBounce, 20, 28, -0.2, 0, Math.PI * 2);
+                ctx.ellipse(56, headY - 5 - earBounce, 20, 28, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (isAnimal === 'bunny') {
+                ctx.fillStyle = '#F8FAFC';
+                ctx.beginPath();
+                ctx.ellipse(-22, headY - 65, 14, 45, -0.15, 0, Math.PI * 2);
+                ctx.ellipse(22, headY - 65, 14, 45, 0.15, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#F472B6';
+                ctx.beginPath();
+                ctx.ellipse(-22, headY - 65, 8, 32, -0.15, 0, Math.PI * 2);
+                ctx.ellipse(22, headY - 65, 8, 32, 0.15, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 6. 3D Pixar Eyes & Catchlight Reflections
+            const eyeOffsetX = 18;
+            const eyeOffsetY = headY - 8;
+            const eyeRadius = 14;
+
+            [-eyeOffsetX, eyeOffsetX].forEach(ex => {
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(ex, eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (!isBlinking) {
+                    const irisGrad = ctx.createRadialGradient(ex, eyeOffsetY, 2, ex, eyeOffsetY, 8);
+                    irisGrad.addColorStop(0, eyeColor);
+                    irisGrad.addColorStop(1, '#0F172A');
+                    ctx.fillStyle = irisGrad;
+                    ctx.beginPath();
+                    ctx.arc(ex + (isSpeaking ? Math.sin(frame * 0.1) * 2 : 0), eyeOffsetY, 8, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#090D16';
+                    ctx.beginPath();
+                    ctx.arc(ex, eyeOffsetY, 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Specular Pixar Sparkle Catchlights
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.beginPath();
+                    ctx.arc(ex - 3, eyeOffsetY - 4, 3, 0, Math.PI * 2);
+                    ctx.arc(ex + 3, eyeOffsetY + 3, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.strokeStyle = '#1E293B';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(ex, eyeOffsetY, 10, 0.1 * Math.PI, 0.9 * Math.PI);
+                    ctx.stroke();
+                }
+            });
+
+            // 7. Dynamic 3D Eyebrows (Expression Rig)
+            ctx.strokeStyle = '#1E293B';
+            ctx.lineWidth = 3.5;
+            const browTilt = isSpeaking ? Math.sin(frame * 0.15) * 4 : 0;
+
+            ctx.beginPath();
+            ctx.moveTo(-30, headY - 26 + browTilt);
+            ctx.quadraticCurveTo(-18, headY - 32 - browTilt, -8, headY - 26);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(8, headY - 26);
+            ctx.quadraticCurveTo(18, headY - 32 - browTilt, 30, headY - 26 + browTilt);
+            ctx.stroke();
+
+            // Rosy Cheeks
+            ctx.fillStyle = 'rgba(244, 63, 94, 0.35)';
+            ctx.beginPath();
+            ctx.arc(-26, headY + 12, 10, 0, Math.PI * 2);
+            ctx.arc(26, headY + 12, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 8. 3D Viseme Lip-Sync Mouth Shapes
+            const mouthY = headY + 22;
+            if (isSpeaking) {
+                const visemeState = Math.floor((frame / 6) % 4);
+                ctx.fillStyle = '#881337';
+                ctx.strokeStyle = '#4C0519';
+                ctx.lineWidth = 2;
+
+                if (visemeState === 0) { // 'A/O' Round Open
+                    ctx.beginPath();
+                    ctx.ellipse(0, mouthY, 12, 16, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(-8, mouthY - 14, 16, 6);
+                    ctx.fillStyle = '#F43F5E';
+                    ctx.beginPath();
+                    ctx.arc(0, mouthY + 10, 8, 0, Math.PI);
+                    ctx.fill();
+                } else if (visemeState === 1) { // 'E/I' Wide Open
+                    ctx.beginPath();
+                    ctx.ellipse(0, mouthY, 16, 10, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(-10, mouthY - 8, 20, 5);
+                } else if (visemeState === 2) { // 'U' Small Pouted
+                    ctx.beginPath();
+                    ctx.arc(0, mouthY, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                } else { // 'M/P' Closed
+                    ctx.strokeStyle = '#881337';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.arc(0, mouthY - 6, 14, 0.1 * Math.PI, 0.9 * Math.PI);
+                    ctx.stroke();
+                }
+            } else {
+                ctx.strokeStyle = '#881337';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.arc(0, mouthY - 6, 14, 0.15 * Math.PI, 0.85 * Math.PI);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
         function drawFullSceneFrame(ctx, width, height, frame, activeSub, vid, currentSec, totalSeconds) {
             const layout = activeSub?.layout || 'intro';
             const theme = activeSub?.theme || 'indigo';
 
-            // 1. Continuous Camera Zoom & Pan Movement
+            // 1. Continuous Cinematic 3D Camera Zoom & Over-the-Shoulder Pan
             const cameraZoom = 1 + Math.sin(frame * 0.02) * 0.035;
             const cameraPanX = Math.cos(frame * 0.015) * 16;
             const cameraPanY = Math.sin(frame * 0.015) * 10;
@@ -3959,27 +4331,8 @@
             ctx.scale(cameraZoom, cameraZoom);
             ctx.translate(-width / 2, -height / 2);
 
-            // 2. Animated Gradient Background
-            const grad = ctx.createLinearGradient(0, 0, 0, height);
-            if (theme === 'dark') {
-                grad.addColorStop(0, '#0F172A');
-                grad.addColorStop(1, '#1E293B');
-            } else if (theme === 'emerald') {
-                grad.addColorStop(0, '#064E3B');
-                grad.addColorStop(1, '#022C22');
-            } else if (theme === 'sunset') {
-                grad.addColorStop(0, '#78350F');
-                grad.addColorStop(1, '#451A03');
-            } else if (theme === 'rose') {
-                grad.addColorStop(0, '#831843');
-                grad.addColorStop(1, '#500724');
-            } else {
-                grad.addColorStop(0, '#1E1B4B');
-                grad.addColorStop(0.5, '#312E81');
-                grad.addColorStop(1, '#0F172A');
-            }
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, width, height);
+            // 2. Render 3D Perspective Environment
+            draw3DEnvironment(ctx, width, height, theme, frame);
 
             // 3. Floating Animated Educational Props (📚 💡 🌟 ✏️ 🎓 💬)
             const props = ['📚', '💡', '🌟', '✏️', '🎓', '💬'];
@@ -4003,9 +4356,9 @@
             }
 
             // 5. Layout Specific Educational Visual Storytelling Cards
-            const cardY = height * 0.18;
+            const cardY = height * 0.16;
             const cardW = width * 0.62;
-            const cardH = height * 0.35;
+            const cardH = height * 0.34;
             const cardX = (width - cardW) / 2;
 
             if (layout === 'intro') {
@@ -4017,12 +4370,12 @@
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.font = `bold ${Math.floor(height * 0.042)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.04)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#FBBF24';
                 ctx.textAlign = 'center';
-                ctx.fillText(`🎬 ${vid.title || 'English Lesson'}`, width / 2, cardY + cardH * 0.42);
+                ctx.fillText(`🎬 ${vid.title || '3D English Lesson'}`, width / 2, cardY + cardH * 0.42);
 
-                ctx.font = `bold ${Math.floor(height * 0.026)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#CBD5E1';
                 ctx.fillText(`👨‍🏫 Produced by: ${vid.producer || 'Mr. Zaafouri Abdelmalek'}`, width / 2, cardY + cardH * 0.72);
             } else if (layout === 'vocab') {
@@ -4034,19 +4387,19 @@
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#34D399';
                 ctx.textAlign = 'center';
-                ctx.fillText('📖 VOCABULARY EXPLAINER', width / 2, cardY + cardH * 0.28);
+                ctx.fillText('📖 3D VOCABULARY EXPLAINER', width / 2, cardY + cardH * 0.28);
 
                 const rawText = activeSub?.text || 'Target Vocabulary Word';
                 const vocabWord = rawText.match(/\[(.*?)\]/)?.[1] || rawText.split(' ')[0] || 'Expression';
 
-                ctx.font = `900 ${Math.floor(height * 0.048)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `900 ${Math.floor(height * 0.046)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#F8FAFC';
                 ctx.fillText(`"${vocabWord}"`, width / 2, cardY + cardH * 0.58);
 
-                ctx.font = `italic ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `italic ${Math.floor(height * 0.023)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#A7F3D0';
                 ctx.fillText('Phonetics: /' + vocabWord.toLowerCase() + '/ • Essential Phrase', width / 2, cardY + cardH * 0.82);
             } else if (layout === 'grammar') {
@@ -4058,12 +4411,12 @@
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#A5B4FC';
                 ctx.textAlign = 'center';
-                ctx.fillText('📐 GRAMMAR STRUCTURE RULE', width / 2, cardY + cardH * 0.28);
+                ctx.fillText('📐 3D GRAMMAR STRUCTURE RULE', width / 2, cardY + cardH * 0.28);
 
-                ctx.font = `bold ${Math.floor(height * 0.036)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.035)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#F8FAFC';
                 ctx.fillText('[SUBJECT] + [VERB] + [COMPLEMENT]', width / 2, cardY + cardH * 0.58);
 
@@ -4083,14 +4436,14 @@
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#F472B6';
                 ctx.textAlign = 'center';
-                ctx.fillText('🗣️ INTERACTIVE DIALOGUE STAGE', width / 2, cardY + cardH * 0.28);
+                ctx.fillText('🗣️ 3D INTERACTIVE DIALOGUE STAGE', width / 2, cardY + cardH * 0.28);
 
-                ctx.font = `bold ${Math.floor(height * 0.034)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.032)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#F8FAFC';
-                ctx.fillText('Listen carefully & repeat after character voices!', width / 2, cardY + cardH * 0.62);
+                ctx.fillText('Listen carefully & repeat after 3D Pixar voices!', width / 2, cardY + cardH * 0.62);
             } else if (layout === 'quiz') {
                 ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
                 ctx.strokeStyle = '#F59E0B';
@@ -4100,16 +4453,16 @@
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#FBBF24';
                 ctx.textAlign = 'center';
-                ctx.fillText('❓ COMPREHENSION QUIZ CHALLENGE', width / 2, cardY + cardH * 0.28);
+                ctx.fillText('❓ 3D COMPREHENSION QUIZ CHALLENGE', width / 2, cardY + cardH * 0.28);
 
-                ctx.font = `bold ${Math.floor(height * 0.034)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.032)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#F8FAFC';
                 ctx.fillText('Select the correct answer option:', width / 2, cardY + cardH * 0.58);
 
-                ctx.font = `bold ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.023)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#34D399';
                 ctx.fillText('[A] Option One    [B] Option Two    [C] Option Three', width / 2, cardY + cardH * 0.82);
             } else {
@@ -4121,47 +4474,39 @@
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.font = `bold ${Math.floor(height * 0.025)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.024)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#60A5FA';
                 ctx.textAlign = 'center';
-                ctx.fillText('🏆 LESSON SUMMARY & RECAP', width / 2, cardY + cardH * 0.28);
+                ctx.fillText('🏆 3D LESSON SUMMARY & RECAP', width / 2, cardY + cardH * 0.28);
 
-                ctx.font = `bold ${Math.floor(height * 0.034)}px "Plus Jakarta Sans", sans-serif`;
+                ctx.font = `bold ${Math.floor(height * 0.032)}px "Plus Jakarta Sans", sans-serif`;
                 ctx.fillStyle = '#F8FAFC';
                 ctx.fillText('Excellent Progress! Practice daily with Mr. Zaafouri Abdelmalek.', width / 2, cardY + cardH * 0.62);
             }
 
-            // 6. Stage Characters Continuous Walking & Gesturing Animations
-            const charWalk1 = Math.sin(frame * 0.06) * (width * 0.04);
-            const charBounce1 = Math.abs(Math.sin(frame * 0.14)) * -(height * 0.028);
+            // 6. Render 3D Pixar Cartoon Character Models
+            const charWalk1 = Math.sin(frame * 0.06) * (width * 0.03);
+            const charWalk2 = Math.cos(frame * 0.06) * (width * 0.03);
 
-            const charWalk2 = Math.cos(frame * 0.06) * (width * 0.04);
-            const charBounce2 = Math.abs(Math.cos(frame * 0.14)) * -(height * 0.028);
+            const char1X = width * 0.20 + charWalk1;
+            const char1Y = height * 0.65;
 
-            const char1X = width * 0.22 + charWalk1;
-            const char1Y = height * 0.64 + charBounce1;
+            const char2X = width * 0.80 + charWalk2;
+            const char2Y = height * 0.65;
 
-            const char2X = width * 0.78 + charWalk2;
-            const char2Y = height * 0.64 + charBounce2;
-
-            const charSize = Math.floor(height * 0.16);
-            ctx.font = `${charSize}px sans-serif`;
-            ctx.textAlign = 'center';
-
-            ctx.fillText(vid.char1Emoji || '👩‍🏫', char1X, char1Y);
-
-            if (layout === 'vocab' || layout === 'grammar') {
-                ctx.font = `${Math.floor(height * 0.06)}px sans-serif`;
-                ctx.fillText('🪄', char1X + width * 0.06, char1Y - height * 0.04);
-            }
-
-            ctx.fillText(vid.char2Emoji || '🦁', char2X, char2Y);
-
-            // 7. Active Speaking Speech Bubble
             const isChar1Active = (frame % 120 < 60);
-            const activeEmoji = isChar1Active ? (vid.char1Emoji || '👩‍🏫') : (vid.char2Emoji || '🦁');
-            const bubbleX = isChar1Active ? (char1X + width * 0.05) : (char2X - width * 0.05);
-            const bubbleY = (height * 0.50) + Math.sin(frame * 0.1) * 6;
+            const charScale = height / 650;
+
+            // Character 1 (3D Teacher Emma)
+            drawPixar3DCharacter(ctx, char1X, char1Y, charScale, vid?.char1Emoji || '👩‍🏫', isChar1Active, (layout === 'vocab' || layout === 'grammar') ? 'point' : 'idle', frame);
+
+            // Character 2 (3D Mascot Elephant / Lion)
+            drawPixar3DCharacter(ctx, char2X, char2Y, charScale, vid?.char2Emoji || '🐘', !isChar1Active, 'idle', frame);
+
+            // 7. Active 3D Speech Bubble Overlay
+            const activeEmoji = isChar1Active ? (vid?.char1Emoji || '👩‍🏫') : (vid?.char2Emoji || '🐘');
+            const bubbleX = isChar1Active ? (char1X + width * 0.06) : (char2X - width * 0.06);
+            const bubbleY = (height * 0.46) + Math.sin(frame * 0.1) * 6;
 
             ctx.fillStyle = '#FFFFFF';
             ctx.strokeStyle = '#6366F1';
@@ -4173,7 +4518,7 @@
 
             ctx.font = `bold ${Math.floor(height * 0.022)}px "Plus Jakarta Sans", sans-serif`;
             ctx.fillStyle = '#1E1B4B';
-            ctx.fillText(`${activeEmoji} Speaking...`, bubbleX, bubbleY - 16);
+            ctx.fillText(`${activeEmoji} 3D Speaking...`, bubbleX, bubbleY - 16);
 
             // 8. Script Subtitle Karaoke Word-by-Word Highlight Overlay
             if (activeSub) {
