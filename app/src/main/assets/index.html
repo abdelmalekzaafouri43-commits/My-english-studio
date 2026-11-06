@@ -1890,9 +1890,40 @@
                     <button class="btn-primary" style="font-size:10px; padding:4px 8px; background:#8B5CF6;" onclick="setVideoAspectRatio('aspect-9-16')">📱 9:16 Short</button>
                     <button class="btn-primary" style="font-size:10px; padding:4px 8px; background:#0D9488;" onclick="setVideoAspectRatio('aspect-1-1')">🟦 1:1 Square</button>
                 </div>
-                <div style="display:flex; gap:6px;">
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
                     <button class="btn-primary btn-ai" style="font-size:10.5px; padding:4px 8px;" onclick="generateAiStoryboard()">✨ AI Storyboard</button>
                     <button class="btn-primary btn-amber" style="font-size:10.5px; padding:4px 8px;" onclick="autoHighlightSceneKeywords()">✨ Auto-Highlight Keywords</button>
+                    <button class="btn-primary" style="font-size:10.5px; padding:4px 8px; background:#475569;" onclick="exportProjectJson()">💾 Export Studio Project</button>
+                </div>
+            </div>
+
+            <!-- Voice Accent, Pitch & Sound Effects Bar -->
+            <div style="background:var(--surface-variant); border:1px solid var(--border); padding:10px 12px; border-radius:12px; margin-bottom:12px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;">
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <span style="font-size:11px; font-weight:800; color:var(--primary);">🎙️ Voice Settings:</span>
+                    <select id="voice-accent-select" class="form-select" style="padding:4px 8px; font-size:11px; width:auto;" onchange="updateVoiceAccent(this.value)">
+                        <option value="US-Female" selected>🇺🇸 US English (Female - Emma)</option>
+                        <option value="US-Male">🇺🇸 US English (Male - Lucas)</option>
+                        <option value="UK-Male">🇬🇧 UK English (Male - Arthur)</option>
+                        <option value="UK-Female">🇬🇧 UK English (Female - Sophia)</option>
+                    </select>
+                    <select id="voice-speed-select" class="form-select" style="padding:4px 8px; font-size:11px; width:auto;" onchange="updateVoiceSpeed(this.value)">
+                        <option value="0.8">⏱️ 0.8x Slow (Beginners)</option>
+                        <option value="0.95" selected>⏱️ 0.95x Standard</option>
+                        <option value="1.15">⏱️ 1.15x Fast Drill</option>
+                    </select>
+                    <select id="voice-pitch-select" class="form-select" style="padding:4px 8px; font-size:11px; width:auto;" onchange="updateVoicePitch(this.value)">
+                        <option value="0.85">🔊 Low Pitch</option>
+                        <option value="1.0" selected>🔊 Standard Pitch</option>
+                        <option value="1.2">🔊 High Pitch</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                    <span style="font-size:11px; font-weight:800; color:var(--emerald);">SFX:</span>
+                    <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#10B981;" onclick="playSoundEffect('bell')">🔔 Bell</button>
+                    <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#F59E0B; color:black;" onclick="playSoundEffect('applause')">👏 Applause</button>
+                    <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#6366F1;" onclick="playSoundEffect('pageturn')">📖 Page Turn</button>
+                    <button class="btn-primary" style="font-size:10px; padding:3px 7px; background:#EC4899;" onclick="playSoundEffect('magic')">✨ Magic</button>
                 </div>
             </div>
 
@@ -2045,7 +2076,7 @@
                 <button class="btn-primary btn-emerald" style="flex:1.5; min-width:220px; justify-content:center; padding:12px;" onclick="startMp4RenderingWithAudio()">
                     🎬 Render & Download Video (With Narration Audio)
                 </button>
-                <button class="btn-primary" style="background:#64748B; flex:1; min-width:140px; justify-content:center; padding:12px;" onclick="alert('Exported SRT subtitle file successfully!')">
+                <button class="btn-primary" style="background:#64748B; flex:1; min-width:140px; justify-content:center; padding:12px;" onclick="exportSrtFile()">
                     📄 Export .SRT File
                 </button>
             </div>
@@ -2392,26 +2423,179 @@
             return priorityVoice || nativeEnglishVoices[0] || null;
         }
 
+        let selectedVoiceAccent = 'US-Female';
+        let selectedVoiceSpeed = 0.95;
+        let selectedVoicePitch = 1.0;
+
+        function updateVoiceAccent(val) { selectedVoiceAccent = val; }
+        function updateVoiceSpeed(val) { selectedVoiceSpeed = parseFloat(val); }
+        function updateVoicePitch(val) { selectedVoicePitch = parseFloat(val); }
+
+        function playSoundEffect(type) {
+            try {
+                if (AppState.isMuted || AppState.videoVolume === 0) return;
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const now = ctx.currentTime;
+
+                if (type === 'bell') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1046.5, now);
+                    osc.frequency.exponentialRampToValueAtTime(2093, now + 0.3);
+                    gain.gain.setValueAtTime(0.3 * AppState.videoVolume, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                } else if (type === 'applause') {
+                    for (let i = 0; i < 5; i++) {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(300 + Math.random() * 400, now + i * 0.08);
+                        gain.gain.setValueAtTime(0.2 * AppState.videoVolume, now + i * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.15);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + i * 0.08);
+                        osc.stop(now + i * 0.08 + 0.15);
+                    }
+                } else if (type === 'pageturn') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.linearRampToValueAtTime(150, now + 0.15);
+                    gain.gain.setValueAtTime(0.15 * AppState.videoVolume, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                } else if (type === 'magic') {
+                    const freqs = [523.25, 659.25, 783.99, 1046.50];
+                    freqs.forEach((f, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(f, now + idx * 0.06);
+                        gain.gain.setValueAtTime(0.25 * AppState.videoVolume, now + idx * 0.06);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.25);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + idx * 0.06);
+                        osc.stop(now + idx * 0.06 + 0.25);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        function exportSrtFile() {
+            if (!AppState.activeVideoProject || !AppState.activeVideoProject.subtitles) {
+                alert('No active video project to export SRT subtitles from.');
+                return;
+            }
+
+            const subs = AppState.activeVideoProject.subtitles;
+            let srtContent = '';
+
+            subs.forEach((sub, index) => {
+                const seq = index + 1;
+                let startFormatted = '00:00:05,000';
+                let endFormatted = '00:00:45,000';
+
+                if (sub.time && sub.time.includes('-')) {
+                    const parts = sub.time.split('-').map(s => s.trim());
+                    if (parts[0]) startFormatted = `00:${parts[0]},000`;
+                    if (parts[1]) endFormatted = `00:${parts[1]},000`;
+                } else {
+                    const s = index * 40 + 5;
+                    const e = s + 35;
+                    const sm = String(Math.floor(s / 60)).padStart(2, '0');
+                    const ss = String(s % 60).padStart(2, '0');
+                    const em = String(Math.floor(e / 60)).padStart(2, '0');
+                    const es = String(e % 60).padStart(2, '0');
+                    startFormatted = `00:${sm}:${ss},000`;
+                    endFormatted = `00:${em}:${es},000`;
+                }
+
+                srtContent += `${seq}\n${startFormatted} --> ${endFormatted}\n${sub.text.replace(/\[|\]/g, '')}\n\n`;
+            });
+
+            const blob = new Blob([srtContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${(AppState.activeVideoProject.title || 'subtitles').toLowerCase().replace(/\s+/g, '_')}_captions.srt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            alert('📄 Standard SRT Subtitle File generated and downloaded successfully!');
+        }
+
+        function exportProjectJson() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(AppState, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "my_english_studio_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            alert('💾 Exported complete Studio Project backup JSON file!');
+        }
+
+        function saveProjectToLocalStorage() {
+            try {
+                const data = {
+                    students: AppState.students,
+                    worksheets: AppState.worksheets,
+                    lessons: AppState.lessons,
+                    characters: AppState.characters,
+                    scripts: AppState.scripts,
+                    videoProjects: AppState.videoProjects
+                };
+                localStorage.setItem('studio_project_data', JSON.stringify(data));
+            } catch (e) {}
+        }
+
+        function loadProjectFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem('studio_project_data');
+                if (raw) {
+                    const data = JSON.parse(raw);
+                    if (data.students && data.students.length) AppState.students = data.students;
+                    if (data.worksheets && data.worksheets.length) AppState.worksheets = data.worksheets;
+                    if (data.lessons && data.lessons.length) AppState.lessons = data.lessons;
+                    if (data.characters && data.characters.length) AppState.characters = data.characters;
+                    if (data.scripts && data.scripts.length) AppState.scripts = data.scripts;
+                    if (data.videoProjects && data.videoProjects.length) AppState.videoProjects = data.videoProjects;
+                }
+            } catch (e) {}
+        }
+
         function speakText(text, voiceTone = 'Gentle') {
             if (AppState.isMuted || AppState.videoVolume === 0) return;
             getAudioContext();
-            playSyntheticChime(440, 'sine', 0.15, 0.5); // Audible cue indicator
+            playSyntheticChime(440, 'sine', 0.15, 0.5);
 
             if ('speechSynthesis' in window) {
                 try {
                     window.speechSynthesis.resume();
                     window.speechSynthesis.cancel();
                     const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'en-US';
+                    utterance.lang = selectedVoiceAccent.includes('UK') ? 'en-GB' : 'en-US';
                     utterance.volume = Math.max(0, Math.min(1, AppState.videoVolume));
 
-                    const selectedVoice = getNativeVoice(voiceTone);
+                    const selectedVoice = getNativeVoice(selectedVoiceAccent || voiceTone);
                     if (selectedVoice) {
                         utterance.voice = selectedVoice;
                     }
 
-                    utterance.rate = 0.92;
-                    utterance.pitch = voiceTone.includes('High') ? 1.3 : voiceTone.includes('Playful') ? 1.25 : 1.0;
+                    utterance.rate = selectedVoiceSpeed || 0.95;
+                    utterance.pitch = (selectedVoicePitch || 1.0) * (voiceTone.includes('High') ? 1.2 : 1.0);
 
                     utterance.onerror = function() {
                         playSyntheticChime(587.33, 'triangle', 0.3, 0.8);

@@ -9,7 +9,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [36])
+@Config(sdk = [33])
 class ExampleRobolectricTest {
 
   @Test
@@ -37,7 +37,15 @@ class ExampleRobolectricTest {
     assert(htmlContent.contains("class ThreeStudioEngine")) { "Missing ThreeStudioEngine class" }
     assert(htmlContent.contains("globalThreeStudioEngine")) { "Missing globalThreeStudioEngine instance" }
 
-    // Stage 4: Verify producer credit is preserved
+    // Stage 4: Verify Master Upgrade Professional Features
+    assert(htmlContent.contains("function exportSrtFile")) { "Missing exportSrtFile function" }
+    assert(htmlContent.contains("function playSoundEffect")) { "Missing playSoundEffect function" }
+    assert(htmlContent.contains("function exportProjectJson")) { "Missing exportProjectJson function" }
+    assert(htmlContent.contains("function updateVoiceAccent")) { "Missing updateVoiceAccent function" }
+    assert(htmlContent.contains("function updateVoiceSpeed")) { "Missing updateVoiceSpeed function" }
+
+    // Stage 5: Verify left navigation and producer credit
+    assert(htmlContent.contains("id=\"left-dashboard\"")) { "Left dashboard navigation missing" }
     assert(htmlContent.contains("Mr. Zaafouri Abdelmalek")) { "Producer attribution credit missing" }
   }
 }
