@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My English Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
             --primary: #4F46E5;
@@ -970,7 +971,7 @@
         <nav id="left-dashboard">
             <div class="sidebar-header">
                 <div class="brand-box">
-                    <div class="brand-icon">🦉</div>
+                    <div class="brand-icon">🎓</div>
                     <div class="brand-text">
                         <h1>My English</h1>
                         <p>Studio Dashboard</p>
@@ -1908,7 +1909,7 @@
                 <div class="video-scene-backdrop" id="video-stage-backdrop" style="display:none;">
                     <div class="video-characters-stage" id="video-characters-stage">
                         <div id="stage-avatar-1" class="stage-avatar" style="font-size:48px;">👩‍🏫</div>
-                        <div id="stage-avatar-2" class="stage-avatar" style="font-size:48px;">🦁</div>
+                        <div id="stage-avatar-2" class="stage-avatar" style="font-size:48px;">👨‍💻</div>
                     </div>
                 </div>
 
@@ -3262,8 +3263,8 @@
             document.getElementById('ai-vid-loading-view').style.display = 'block';
 
             setTimeout(() => {
-                const char1Emoji = cast.includes('Teacher') ? '👩‍🏫' : cast.includes('Maya') ? '🦉' : '🐰';
-                const char2Emoji = cast.includes('Lion') ? '🦁' : cast.includes('Bear') ? '🐻' : '🐧';
+                const char1Emoji = cast.includes('Emma') ? '👩‍🏫' : cast.includes('Arthur') ? '👨‍🏫' : '🧑‍🎓';
+                const char2Emoji = cast.includes('Lucas') ? '👨‍💻' : cast.includes('Sophia') ? '👩‍🔬' : '👩‍🎨';
 
                 const newVid = {
                     id: 'vid_' + Date.now(),
@@ -3448,7 +3449,7 @@
                 producer: producer,
                 scriptTitle: title,
                 char1Emoji: '👩‍🏫',
-                char2Emoji: '🦁',
+                char2Emoji: '👨‍💻',
                 aspectRatio: type === 'short' ? 'aspect-9-16' : 'aspect-16-9',
                 subtitles: scenes
             };
@@ -3928,6 +3929,478 @@
             }
         }
 
+        // Three.js WebGL 3D Studio Engine with Detailed Rigged 3D Human Models
+        class ThreeStudioEngine {
+            constructor() {
+                this.initialized = false;
+                this.renderer = null;
+                this.scene = null;
+                this.camera = null;
+                this.char1Group = null;
+                this.char2Group = null;
+                this.environmentGroup = null;
+                this.offscreenCanvas = document.createElement('canvas');
+            }
+
+            init(width, height) {
+                if (typeof THREE === 'undefined') return false;
+                try {
+                    this.scene = new THREE.Scene();
+                    this.scene.background = new THREE.Color(0x0F172A);
+
+                    this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+                    this.camera.position.set(0, 3.8, 11.5);
+                    this.camera.lookAt(0, 2.5, 0);
+
+                    this.offscreenCanvas.width = width;
+                    this.offscreenCanvas.height = height;
+
+                    this.renderer = new THREE.WebGLRenderer({
+                        canvas: this.offscreenCanvas,
+                        antialias: true,
+                        alpha: true,
+                        preserveDrawingBuffer: true
+                    });
+                    this.renderer.setSize(width, height, false);
+                    this.renderer.shadowMap.enabled = true;
+                    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+                    // Cinematic Lighting
+                    const ambient = new THREE.AmbientLight(0xffffff, 0.75);
+                    this.scene.add(ambient);
+
+                    const dirLight = new THREE.DirectionalLight(0xfff5ea, 1.3);
+                    dirLight.position.set(5, 12, 8);
+                    dirLight.castShadow = true;
+                    dirLight.shadow.mapSize.width = 1024;
+                    dirLight.shadow.mapSize.height = 1024;
+                    dirLight.shadow.bias = -0.001;
+                    this.scene.add(dirLight);
+
+                    const spotLight = new THREE.SpotLight(0x6366F1, 2.5, 30, Math.PI / 4, 0.5);
+                    spotLight.position.set(-6, 10, 5);
+                    this.scene.add(spotLight);
+
+                    // 3D Environment
+                    this.build3DClassroom();
+
+                    // Detailed 3D Rigged Characters
+                    this.char1Group = this.createDetailed3DHuman('Prof. Emma Watson', 0x4F46E5, 0xFFD1B3, 'female', true);
+                    this.char1Group.position.set(-3.2, 0, 1);
+                    this.scene.add(this.char1Group);
+
+                    this.char2Group = this.createDetailed3DHuman('Lucas Bennett', 0x0D9488, 0xFFD1B3, 'male', false);
+                    this.char2Group.position.set(3.2, 0, 1);
+                    this.scene.add(this.char2Group);
+
+                    this.initialized = true;
+                    return true;
+                } catch (e) {
+                    console.error('ThreeJS init error:', e);
+                    return false;
+                }
+            }
+
+            build3DClassroom() {
+                this.environmentGroup = new THREE.Group();
+
+                // 3D Parquet Wood Floor
+                const floorGeo = new THREE.PlaneGeometry(32, 22);
+                const floorMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.25, metalness: 0.15 });
+                const floor = new THREE.Mesh(floorGeo, floorMat);
+                floor.rotation.x = -Math.PI / 2;
+                floor.receiveShadow = true;
+                this.environmentGroup.add(floor);
+
+                // 3D Blackboard
+                const boardGeo = new THREE.BoxGeometry(10.8, 4.9, 0.2);
+                const boardMat = new THREE.MeshStandardMaterial({ color: 0x064E3B, roughness: 0.45 });
+                const board = new THREE.Mesh(boardGeo, boardMat);
+                board.position.set(0, 4.5, -5.5);
+                board.castShadow = true;
+                this.environmentGroup.add(board);
+
+                // Blackboard Mahogany Frame
+                const frameGeo = new THREE.BoxGeometry(11.2, 5.3, 0.15);
+                const frameMat = new THREE.MeshStandardMaterial({ color: 0x78350F, roughness: 0.35 });
+                const frameMesh = new THREE.Mesh(frameGeo, frameMat);
+                frameMesh.position.set(0, 4.5, -5.6);
+                this.environmentGroup.add(frameMesh);
+
+                // 3D Teacher Desk
+                const deskGeo = new THREE.BoxGeometry(4.5, 1.4, 2.2);
+                const deskMat = new THREE.MeshStandardMaterial({ color: 0x451A03, roughness: 0.4 });
+                const desk = new THREE.Mesh(deskGeo, deskMat);
+                desk.position.set(0, 0.7, -3.2);
+                desk.castShadow = true;
+                desk.receiveShadow = true;
+                this.environmentGroup.add(desk);
+
+                // Laptop on Desk
+                const laptopBase = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.05, 0.6), new THREE.MeshStandardMaterial({ color: 0x64748B, metalness: 0.8, roughness: 0.2 }));
+                laptopBase.position.set(0, 1.43, -3.2);
+                laptopBase.castShadow = true;
+                this.environmentGroup.add(laptopBase);
+
+                const laptopScreen = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.6, 0.04), new THREE.MeshStandardMaterial({ color: 0x38BDF8, roughness: 0.1 }));
+                laptopScreen.position.set(0, 1.72, -3.45);
+                laptopScreen.rotation.x = -0.2;
+                this.environmentGroup.add(laptopScreen);
+
+                this.scene.add(this.environmentGroup);
+            }
+
+            createDetailed3DHuman(name, clothingColorHex, skinColorHex, gender, hasGlasses) {
+                const charGroup = new THREE.Group();
+
+                // Standard Materials
+                const skinMat = new THREE.MeshStandardMaterial({ color: skinColorHex, roughness: 0.4 });
+                const clothesMat = new THREE.MeshStandardMaterial({ color: clothingColorHex, roughness: 0.45 });
+                const pantsMat = new THREE.MeshStandardMaterial({ color: 0x1E1B4B, roughness: 0.6 });
+                const hairMat = new THREE.MeshStandardMaterial({ color: gender === 'female' ? 0x78350F : 0x1E293B, roughness: 0.5 });
+                const eyeScleraMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+                const irisMat = new THREE.MeshBasicMaterial({ color: gender === 'female' ? 0x0284C7 : 0x0369A1 });
+                const pupilMat = new THREE.MeshBasicMaterial({ color: 0x0F172A });
+                const catchlightMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+                const mouthMat = new THREE.MeshStandardMaterial({ color: 0x881337, roughness: 0.3 });
+                const lipMat = new THREE.MeshStandardMaterial({ color: 0xBE123C, roughness: 0.35 });
+
+                // Root Pelvis / Spine Group
+                const spineGroup = new THREE.Group();
+                spineGroup.position.y = 1.8;
+                charGroup.add(spineGroup);
+                charGroup.userData.spineGroup = spineGroup;
+
+                // 3D Neck Joint & Head Group
+                const neckGroup = new THREE.Group();
+                neckGroup.position.y = 1.45;
+                spineGroup.add(neckGroup);
+                charGroup.userData.neckGroup = neckGroup;
+
+                const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.22, 0.4, 16), skinMat);
+                neckMesh.position.y = -0.15;
+                neckGroup.add(neckMesh);
+
+                // 3D Head Oval
+                const headGeo = new THREE.SphereGeometry(0.82, 32, 32);
+                headGeo.scale(0.92, 1.15, 0.96);
+                const headMesh = new THREE.Mesh(headGeo, skinMat);
+                headMesh.position.y = 0.35;
+                headMesh.castShadow = true;
+                neckGroup.add(headMesh);
+
+                // 3D Facial Structure - Nose
+                const noseGeo = new THREE.ConeGeometry(0.12, 0.38, 16);
+                const noseMesh = new THREE.Mesh(noseGeo, skinMat);
+                noseMesh.position.set(0, 0.3, 0.78);
+                noseMesh.rotation.x = -0.2;
+                neckGroup.add(noseMesh);
+
+                // 3D Ears
+                [-0.72, 0.72].forEach(x => {
+                    const earGeo = new THREE.CylinderGeometry(0.14, 0.1, 0.28, 16);
+                    const earMesh = new THREE.Mesh(earGeo, skinMat);
+                    earMesh.position.set(x, 0.35, 0.05);
+                    earMesh.rotation.z = x > 0 ? -0.3 : 0.3;
+                    neckGroup.add(earMesh);
+                });
+
+                // 3D Styled Hair
+                if (gender === 'female') {
+                    // Styled Hair Bun & Sides
+                    const hairTop = new THREE.Mesh(new THREE.SphereGeometry(0.85, 24, 24), hairMat);
+                    hairTop.position.set(0, 0.6, -0.05);
+                    neckGroup.add(hairTop);
+
+                    const hairBun = new THREE.Mesh(new THREE.SphereGeometry(0.42, 16, 16), hairMat);
+                    hairBun.position.set(0, 0.65, -0.82);
+                    neckGroup.add(hairBun);
+                } else {
+                    // Male Crop Hair
+                    const hairTop = new THREE.Mesh(new THREE.SphereGeometry(0.86, 24, 24), hairMat);
+                    hairTop.position.set(0, 0.58, 0.02);
+                    hairTop.scale.set(0.96, 0.8, 1.02);
+                    neckGroup.add(hairTop);
+                }
+
+                // 3D Eyeglasses for Professor
+                if (hasGlasses) {
+                    const glassGroup = new THREE.Group();
+                    glassGroup.position.set(0, 0.42, 0.72);
+
+                    [-0.32, 0.32].forEach(x => {
+                        const frameMesh = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.03, 12, 24), new THREE.MeshStandardMaterial({ color: 0xF59E0B, metalness: 0.8, roughness: 0.2 }));
+                        frameMesh.position.x = x;
+                        glassGroup.add(frameMesh);
+                    });
+
+                    const bridgeMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.28, 8), new THREE.MeshStandardMaterial({ color: 0xF59E0B, metalness: 0.8 }));
+                    bridgeMesh.rotation.z = Math.PI / 2;
+                    glassGroup.add(bridgeMesh);
+
+                    neckGroup.add(glassGroup);
+                }
+
+                // Dual 3D Eyes & Catchlights
+                const eyesGroup = new THREE.Group();
+                eyesGroup.position.set(0, 0.42, 0.68);
+                neckGroup.add(eyesGroup);
+
+                const eyelidsList = [];
+
+                [-0.32, 0.32].forEach(x => {
+                    const sclera = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), eyeScleraMat);
+                    sclera.position.x = x;
+
+                    const iris = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), irisMat);
+                    iris.position.set(0, 0, 0.12);
+                    sclera.add(iris);
+
+                    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 12), pupilMat);
+                    pupil.position.set(0, 0, 0.16);
+                    sclera.add(pupil);
+
+                    const catchlight = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 8), catchlightMat);
+                    catchlight.position.set(-0.04, 0.04, 0.18);
+                    sclera.add(catchlight);
+
+                    // Eyelid Cover
+                    const eyelid = new THREE.Mesh(new THREE.SphereGeometry(0.19, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), skinMat);
+                    eyelid.position.set(x, 0, 0);
+                    eyelid.rotation.x = -Math.PI / 2;
+                    eyesGroup.add(eyelid);
+                    eyelidsList.push(eyelid);
+
+                    eyesGroup.add(sclera);
+                });
+                charGroup.userData.eyelids = eyelidsList;
+
+                // 3D Morphing Viseme Lips & Mouth
+                const mouthGroup = new THREE.Group();
+                mouthGroup.position.set(0, 0.08, 0.74);
+                neckGroup.add(mouthGroup);
+
+                const mouthCavity = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.14, 0.12), mouthMat);
+                mouthGroup.add(mouthCavity);
+
+                const upperLip = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.36, 12), lipMat);
+                upperLip.position.y = 0.08;
+                upperLip.rotation.z = Math.PI / 2;
+                mouthGroup.add(upperLip);
+
+                const lowerLip = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.36, 12), lipMat);
+                lowerLip.position.y = -0.08;
+                lowerLip.rotation.z = Math.PI / 2;
+                mouthGroup.add(lowerLip);
+
+                charGroup.userData.mouthGroup = mouthGroup;
+
+                // 3D Torso / Shaded Jacket with Lapels
+                const torsoMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.78, 0.62, 1.85, 16), clothesMat);
+                torsoMesh.position.y = 0.3;
+                torsoMesh.castShadow = true;
+                spineGroup.add(torsoMesh);
+
+                // Collar & Tie
+                const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.42, 0.22, 16), new THREE.MeshStandardMaterial({ color: 0xFFFFFF }));
+                collar.position.y = 1.22;
+                spineGroup.add(collar);
+
+                const tie = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.7, 0.06), new THREE.MeshStandardMaterial({ color: 0xE11D48 }));
+                tie.position.set(0, 0.75, 0.72);
+                spineGroup.add(tie);
+
+                // Articulated Arms (Shoulder -> Elbow -> Forearm -> Hand)
+                const armLGroup = new THREE.Group();
+                armLGroup.position.set(-0.92, 1.1, 0);
+                spineGroup.add(armLGroup);
+
+                const upperArmL = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.14, 0.8, 12), clothesMat);
+                upperArmL.position.y = -0.4;
+                upperArmL.castShadow = true;
+                armLGroup.add(upperArmL);
+
+                const forearmLGroup = new THREE.Group();
+                forearmLGroup.position.y = -0.8;
+                armLGroup.add(forearmLGroup);
+
+                const forearmL = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.75, 12), clothesMat);
+                forearmL.position.y = -0.38;
+                forearmL.castShadow = true;
+                forearmLGroup.add(forearmL);
+
+                const handL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.22, 0.18), skinMat);
+                handL.position.y = -0.82;
+                forearmLGroup.add(handL);
+
+                charGroup.userData.armLGroup = armLGroup;
+                charGroup.userData.forearmLGroup = forearmLGroup;
+
+                const armRGroup = new THREE.Group();
+                armRGroup.position.set(0.92, 1.1, 0);
+                spineGroup.add(armRGroup);
+
+                const upperArmR = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.14, 0.8, 12), clothesMat);
+                upperArmR.position.y = -0.4;
+                upperArmR.castShadow = true;
+                armRGroup.add(upperArmR);
+
+                const forearmRGroup = new THREE.Group();
+                forearmRGroup.position.y = -0.8;
+                armRGroup.add(forearmRGroup);
+
+                const forearmR = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.75, 12), clothesMat);
+                forearmR.position.y = -0.38;
+                forearmR.castShadow = true;
+                forearmRGroup.add(forearmR);
+
+                const handR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.22, 0.18), skinMat);
+                handR.position.y = -0.82;
+                forearmRGroup.add(handR);
+
+                charGroup.userData.armRGroup = armRGroup;
+                charGroup.userData.forearmRGroup = forearmRGroup;
+
+                // Articulated Legs (Hip -> Thigh -> Knee -> Shin -> Shoes)
+                const legLGroup = new THREE.Group();
+                legLGroup.position.set(-0.38, 0, 0);
+                charGroup.add(legLGroup);
+
+                const thighL = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.18, 0.9, 12), pantsMat);
+                thighL.position.y = -0.45;
+                thighL.castShadow = true;
+                legLGroup.add(thighL);
+
+                const shinLGroup = new THREE.Group();
+                shinLGroup.position.y = -0.9;
+                legLGroup.add(shinLGroup);
+
+                const shinL = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.15, 0.85, 12), pantsMat);
+                shinL.position.y = -0.42;
+                shinL.castShadow = true;
+                shinLGroup.add(shinL);
+
+                const shoeL = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.18, 0.45), new THREE.MeshStandardMaterial({ color: 0x0F172A }));
+                shoeL.position.set(0, -0.9, 0.12);
+                shinLGroup.add(shoeL);
+
+                charGroup.userData.legLGroup = legLGroup;
+                charGroup.userData.shinLGroup = shinLGroup;
+
+                const legRGroup = new THREE.Group();
+                legRGroup.position.set(0.38, 0, 0);
+                charGroup.add(legRGroup);
+
+                const thighR = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.18, 0.9, 12), pantsMat);
+                thighR.position.y = -0.45;
+                thighR.castShadow = true;
+                legRGroup.add(thighR);
+
+                const shinRGroup = new THREE.Group();
+                shinRGroup.position.y = -0.9;
+                legRGroup.add(shinRGroup);
+
+                const shinR = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.15, 0.85, 12), pantsMat);
+                shinR.position.y = -0.42;
+                shinR.castShadow = true;
+                shinRGroup.add(shinR);
+
+                const shoeR = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.18, 0.45), new THREE.MeshStandardMaterial({ color: 0x0F172A }));
+                shoeR.position.set(0, -0.9, 0.12);
+                shinRGroup.add(shoeR);
+
+                charGroup.userData.legRGroup = legRGroup;
+                charGroup.userData.shinRGroup = shinRGroup;
+
+                return charGroup;
+            }
+
+            render(frame, isChar1Active, isChar2Active) {
+                if (!this.initialized) return;
+
+                // Continuous Walking Gait Cycle
+                const walkCycle1 = Math.sin(frame * 0.14);
+                const walkCycle2 = -walkCycle1;
+
+                // Blinking Animation
+                const isBlinking = frame % 120 < 8;
+
+                if (this.char1Group) {
+                    const ud = this.char1Group.userData;
+
+                    // Hip & Spine Sway
+                    this.char1Group.position.y = Math.abs(Math.sin(frame * 0.14)) * 0.12;
+                    this.char1Group.rotation.y = Math.sin(frame * 0.04) * 0.15 + 0.32;
+
+                    // Eyelid Blinking
+                    if (ud.eyelids) {
+                        ud.eyelids.forEach(el => {
+                            el.rotation.x = isBlinking ? 0 : -Math.PI / 2;
+                        });
+                    }
+
+                    // Skeletal Legs Movement
+                    if (ud.legLGroup) ud.legLGroup.rotation.x = walkCycle1 * 0.25;
+                    if (ud.legRGroup) ud.legRGroup.rotation.x = walkCycle2 * 0.25;
+
+                    // Arm & Hand Gesture Speaking
+                    if (ud.armRGroup) {
+                        ud.armRGroup.rotation.z = -0.25 + (isChar1Active ? Math.sin(frame * 0.22) * 0.45 : 0);
+                        ud.armRGroup.rotation.x = isChar1Active ? -0.4 + Math.cos(frame * 0.2) * 0.3 : 0;
+                    }
+                    if (ud.forearmRGroup) {
+                        ud.forearmRGroup.rotation.x = isChar1Active ? -0.5 - Math.sin(frame * 0.25) * 0.4 : -0.2;
+                    }
+
+                    // Morphing Viseme Lips
+                    if (ud.mouthGroup) {
+                        const mScaleY = isChar1Active ? 1.0 + Math.abs(Math.sin(frame * 0.32)) * 2.2 : 0.35;
+                        const mScaleX = isChar1Active ? 1.0 + Math.cos(frame * 0.28) * 0.3 : 0.9;
+                        ud.mouthGroup.scale.set(mScaleX, mScaleY, 1);
+                    }
+                }
+
+                if (this.char2Group) {
+                    const ud = this.char2Group.userData;
+
+                    // Hip & Spine Sway
+                    this.char2Group.position.y = Math.abs(Math.sin(frame * 0.14 + 1)) * 0.12;
+                    this.char2Group.rotation.y = Math.cos(frame * 0.04) * 0.15 - 0.32;
+
+                    // Eyelid Blinking
+                    if (ud.eyelids) {
+                        ud.eyelids.forEach(el => {
+                            el.rotation.x = isBlinking ? 0 : -Math.PI / 2;
+                        });
+                    }
+
+                    // Skeletal Legs Movement
+                    if (ud.legLGroup) ud.legLGroup.rotation.x = walkCycle2 * 0.25;
+                    if (ud.legRGroup) ud.legRGroup.rotation.x = walkCycle1 * 0.25;
+
+                    // Arm & Hand Gesture Speaking
+                    if (ud.armLGroup) {
+                        ud.armLGroup.rotation.z = 0.25 - (isChar2Active ? Math.sin(frame * 0.22) * 0.45 : 0);
+                        ud.armLGroup.rotation.x = isChar2Active ? -0.4 + Math.cos(frame * 0.2) * 0.3 : 0;
+                    }
+                    if (ud.forearmLGroup) {
+                        ud.forearmLGroup.rotation.x = isChar2Active ? -0.5 - Math.sin(frame * 0.25) * 0.4 : -0.2;
+                    }
+
+                    // Morphing Viseme Lips
+                    if (ud.mouthGroup) {
+                        const mScaleY = isChar2Active ? 1.0 + Math.abs(Math.sin(frame * 0.32)) * 2.2 : 0.35;
+                        const mScaleX = isChar2Active ? 1.0 + Math.cos(frame * 0.28) * 0.3 : 0.9;
+                        ud.mouthGroup.scale.set(mScaleX, mScaleY, 1);
+                    }
+                }
+
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        const globalThreeStudioEngine = new ThreeStudioEngine();
+
         function draw3DEnvironment(ctx, width, height, theme, frame) {
             const horizonY = height * 0.44;
 
@@ -4024,33 +4497,6 @@
             let clothingColor = '#4F46E5';
             let secondaryColor = '#818CF8';
             let eyeColor = '#3B82F6';
-            let isAnimal = false;
-
-            if (charEmoji.includes('🐘') || charEmoji.includes('Elephant')) {
-                skinColor = '#94A3B8';
-                clothingColor = '#0284C7';
-                secondaryColor = '#38BDF8';
-                eyeColor = '#0EA5E9';
-                isAnimal = 'elephant';
-            } else if (charEmoji.includes('🐰') || charEmoji.includes('Bunny')) {
-                skinColor = '#F8FAFC';
-                clothingColor = '#EC4899';
-                secondaryColor = '#F472B6';
-                eyeColor = '#D946EF';
-                isAnimal = 'bunny';
-            } else if (charEmoji.includes('🐬') || charEmoji.includes('Dolphin')) {
-                skinColor = '#38BDF8';
-                clothingColor = '#0284C7';
-                secondaryColor = '#7DD3FC';
-                eyeColor = '#0284C7';
-                isAnimal = 'dolphin';
-            } else if (charEmoji.includes('🦁') || charEmoji.includes('Lion')) {
-                skinColor = '#F59E0B';
-                clothingColor = '#D97706';
-                secondaryColor = '#FBBF24';
-                eyeColor = '#D97706';
-                isAnimal = 'lion';
-            }
 
             // 2. 3D Skeletal Legs & Gait Cycle
             const legOffset1 = Math.sin(frame * 0.12) * 12;
@@ -4139,37 +4585,11 @@
             const headGrad = ctx.createRadialGradient(-15, headY - 15, 8, 0, headY, headRadius);
             headGrad.addColorStop(0, '#FFFFFF');
             headGrad.addColorStop(0.2, skinColor);
-            headGrad.addColorStop(1, '#B91C1C'); // Warm shade fallback
+            headGrad.addColorStop(1, '#B91C1C');
             ctx.fillStyle = headGrad;
             ctx.beginPath();
             ctx.arc(0, headY, headRadius, 0, Math.PI * 2);
             ctx.fill();
-
-            // Animal 3D Ear Props
-            if (isAnimal === 'elephant') {
-                const earBounce = Math.sin(frame * 0.1) * 6;
-                ctx.fillStyle = '#CBD5E1';
-                ctx.beginPath();
-                ctx.ellipse(-58, headY - 5 + earBounce, 32, 42, -0.2, 0, Math.PI * 2);
-                ctx.ellipse(58, headY - 5 - earBounce, 32, 42, 0.2, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#F472B6';
-                ctx.beginPath();
-                ctx.ellipse(-56, headY - 5 + earBounce, 20, 28, -0.2, 0, Math.PI * 2);
-                ctx.ellipse(56, headY - 5 - earBounce, 20, 28, 0.2, 0, Math.PI * 2);
-                ctx.fill();
-            } else if (isAnimal === 'bunny') {
-                ctx.fillStyle = '#F8FAFC';
-                ctx.beginPath();
-                ctx.ellipse(-22, headY - 65, 14, 45, -0.15, 0, Math.PI * 2);
-                ctx.ellipse(22, headY - 65, 14, 45, 0.15, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#F472B6';
-                ctx.beginPath();
-                ctx.ellipse(-22, headY - 65, 8, 32, -0.15, 0, Math.PI * 2);
-                ctx.ellipse(22, headY - 65, 8, 32, 0.15, 0, Math.PI * 2);
-                ctx.fill();
-            }
 
             // 6. 3D Pixar Eyes & Catchlight Reflections
             const eyeOffsetX = 18;
@@ -4296,8 +4716,29 @@
             ctx.scale(cameraZoom, cameraZoom);
             ctx.translate(-width / 2, -height / 2);
 
-            // 2. Render Selected Environment (3D Perspective Studio)
-            draw3DEnvironment(ctx, width, height, theme, frame);
+            const isChar1Active = (frame % 120 < 60);
+
+            // 2. Render 3D WebGL Scene Stage
+            if (!globalThreeStudioEngine.initialized) {
+                globalThreeStudioEngine.init(width, height);
+            }
+
+            if (globalThreeStudioEngine.initialized) {
+                globalThreeStudioEngine.render(frame, isChar1Active, !isChar1Active);
+                ctx.drawImage(globalThreeStudioEngine.offscreenCanvas, 0, 0, width, height);
+            } else {
+                draw3DEnvironment(ctx, width, height, theme, frame);
+                const charWalk1 = Math.sin(frame * 0.06) * (width * 0.03);
+                const charWalk2 = Math.cos(frame * 0.06) * (width * 0.03);
+                const char1X = width * 0.20 + charWalk1;
+                const char1Y = height * 0.65;
+                const char2X = width * 0.80 + charWalk2;
+                const char2Y = height * 0.65;
+                const charScale = height / 650;
+
+                drawPixar3DCharacter(ctx, char1X, char1Y, charScale, vid?.char1Emoji || '👩‍🏫', isChar1Active, (layout === 'vocab' || layout === 'grammar') ? 'point' : 'idle', frame);
+                drawPixar3DCharacter(ctx, char2X, char2Y, charScale, vid?.char2Emoji || '👨‍💻', !isChar1Active, 'idle', frame);
+            }
 
             // 3. Floating Animated Educational Props (📚 💡 🌟 ✏️ 🎓 💬)
             const props = ['📚', '💡', '🌟', '✏️', '🎓', '💬'];

@@ -32,7 +32,12 @@ class ExampleRobolectricTest {
     assert(!htmlContent.contains("drawPeppaPigEnvironment")) { "Legacy drawPeppaPigEnvironment still present" }
     assert(!htmlContent.contains("drawPeppaPigCharacter")) { "Legacy drawPeppaPigCharacter still present" }
 
-    // Stage 3: Verify producer credit is preserved
+    // Stage 3: Verify Three.js WebGL Engine Integration
+    assert(htmlContent.contains("three.min.js")) { "Missing Three.js CDN script import" }
+    assert(htmlContent.contains("class ThreeStudioEngine")) { "Missing ThreeStudioEngine class" }
+    assert(htmlContent.contains("globalThreeStudioEngine")) { "Missing globalThreeStudioEngine instance" }
+
+    // Stage 4: Verify producer credit is preserved
     assert(htmlContent.contains("Mr. Zaafouri Abdelmalek")) { "Producer attribution credit missing" }
   }
 }
