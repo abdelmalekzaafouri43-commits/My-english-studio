@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My English Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" async></script>
     <style>
         :root {
             --primary: #4F46E5;
@@ -2085,6 +2085,7 @@
 
     <!-- JavaScript App Logic -->
     <script>
+        console.log('Script block starting execution...');
         // Universal Polyfill for CanvasRenderingContext2D.prototype.roundRect for cross-browser / WebView compatibility
         if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
             CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
@@ -2620,6 +2621,7 @@
 
         // Navigation Switcher
         function switchSection(sectionId) {
+            console.log('switchSection called for:', sectionId);
             AppState.activeSection = sectionId;
             document.querySelectorAll('.nav-item').forEach(el => {
                 el.classList.toggle('active', el.getAttribute('data-section') === sectionId);
@@ -5628,6 +5630,7 @@
 
         // Direct Event Listener Bindings for 100% Reliability
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOMContentLoaded firing - initializing app...');
             try {
                 // Restore dark theme preference
                 try {
@@ -5637,18 +5640,19 @@
                 } catch (e) {}
                 applyTheme();
 
-                document.getElementById('btn-open-worksheet-modal')?.addEventListener('click', openWorksheetUploadModal);
-                document.getElementById('btn-open-student-modal')?.addEventListener('click', openAddStudentModal);
-                document.getElementById('btn-open-ai-lesson-modal')?.addEventListener('click', openAiLessonPlanModal);
-                document.getElementById('btn-open-character-modal')?.addEventListener('click', openAddCharacterModal);
-                document.getElementById('btn-open-script-modal')?.addEventListener('click', openAddScriptModal);
-                document.getElementById('btn-open-ai-script-modal')?.addEventListener('click', openAiScriptModal);
-                document.getElementById('btn-open-video-modal')?.addEventListener('click', openAddVideoModal);
+                document.getElementById('btn-open-worksheet-modal')?.addEventListener('click', () => { console.log('Worksheet upload button clicked'); openWorksheetUploadModal(); });
+                document.getElementById('btn-open-student-modal')?.addEventListener('click', () => { console.log('Add student button clicked'); openAddStudentModal(); });
+                document.getElementById('btn-open-ai-lesson-modal')?.addEventListener('click', () => { console.log('AI lesson button clicked'); openAiLessonPlanModal(); });
+                document.getElementById('btn-open-character-modal')?.addEventListener('click', () => { console.log('Add character button clicked'); openAddCharacterModal(); });
+                document.getElementById('btn-open-script-modal')?.addEventListener('click', () => { console.log('Add script button clicked'); openAddScriptModal(); });
+                document.getElementById('btn-open-ai-script-modal')?.addEventListener('click', () => { console.log('AI script button clicked'); openAiScriptModal(); });
+                document.getElementById('btn-open-video-modal')?.addEventListener('click', () => { console.log('Add video button clicked'); openAddVideoModal(); });
 
                 // Overlay click to close modals
                 document.querySelectorAll('.modal-overlay').forEach(overlay => {
                     overlay.addEventListener('click', (e) => {
                         if (e.target === overlay) {
+                            console.log('Modal overlay clicked - closing');
                             overlay.classList.remove('show');
                         }
                     });
