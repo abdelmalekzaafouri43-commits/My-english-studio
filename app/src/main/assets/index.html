@@ -5628,31 +5628,48 @@
 
         // Direct Event Listener Bindings for 100% Reliability
         document.addEventListener('DOMContentLoaded', () => {
-            // Restore dark theme preference
             try {
-                if (localStorage.getItem('studio_theme') === 'dark') {
-                    AppState.isDarkMode = true;
-                }
-            } catch (e) {}
-            applyTheme();
-
-            document.getElementById('btn-open-worksheet-modal')?.addEventListener('click', openWorksheetUploadModal);
-            document.getElementById('btn-open-student-modal')?.addEventListener('click', openAddStudentModal);
-            document.getElementById('btn-open-ai-lesson-modal')?.addEventListener('click', openAiLessonPlanModal);
-            document.getElementById('btn-open-character-modal')?.addEventListener('click', openAddCharacterModal);
-            document.getElementById('btn-open-script-modal')?.addEventListener('click', openAddScriptModal);
-            document.getElementById('btn-open-ai-script-modal')?.addEventListener('click', openAiScriptModal);
-            document.getElementById('btn-open-video-modal')?.addEventListener('click', openAddVideoModal);
-
-            // Overlay click to close modals
-            document.querySelectorAll('.modal-overlay').forEach(overlay => {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        overlay.classList.remove('show');
+                // Restore dark theme preference
+                try {
+                    if (localStorage.getItem('studio_theme') === 'dark') {
+                        AppState.isDarkMode = true;
                     }
-                });
-            });
+                } catch (e) {}
+                applyTheme();
 
+                document.getElementById('btn-open-worksheet-modal')?.addEventListener('click', openWorksheetUploadModal);
+                document.getElementById('btn-open-student-modal')?.addEventListener('click', openAddStudentModal);
+                document.getElementById('btn-open-ai-lesson-modal')?.addEventListener('click', openAiLessonPlanModal);
+                document.getElementById('btn-open-character-modal')?.addEventListener('click', openAddCharacterModal);
+                document.getElementById('btn-open-script-modal')?.addEventListener('click', openAddScriptModal);
+                document.getElementById('btn-open-ai-script-modal')?.addEventListener('click', openAiScriptModal);
+                document.getElementById('btn-open-video-modal')?.addEventListener('click', openAddVideoModal);
+
+                // Overlay click to close modals
+                document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                    overlay.addEventListener('click', (e) => {
+                        if (e.target === overlay) {
+                            overlay.classList.remove('show');
+                        }
+                    });
+                });
+
+                renderStudents();
+                renderWorksheets();
+                renderLessons();
+                renderCharacters();
+                renderScripts();
+                renderVideos();
+                updateDashboardCounts();
+                console.log('App initialization successful');
+            } catch (err) {
+                console.error('App initialization error:', err);
+            }
+        });
+
+        // Initialize immediately as fallback
+        try {
+            applyTheme();
             renderStudents();
             renderWorksheets();
             renderLessons();
@@ -5660,17 +5677,9 @@
             renderScripts();
             renderVideos();
             updateDashboardCounts();
-        });
-
-        // Initialize immediately as fallback
-        applyTheme();
-        renderStudents();
-        renderWorksheets();
-        renderLessons();
-        renderCharacters();
-        renderScripts();
-        renderVideos();
-        updateDashboardCounts();
+        } catch (err) {
+            console.error('Fall-back initialization error:', err);
+        }
     </script>
 </body>
 </html>
